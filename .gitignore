@@ -1,0 +1,4 @@
+/venv/
+/cogs/__pycache__
+/cogs/test.py
+/.idea/

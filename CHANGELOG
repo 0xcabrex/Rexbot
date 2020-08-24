@@ -1,0 +1,9 @@
+CHANGELOG
+
+[V1.0.0]
+Initial Commit
+
+- Added moderation support
+- Added some general stuff (8ball)
+- Added embed support
+- Added error handling with some commands
