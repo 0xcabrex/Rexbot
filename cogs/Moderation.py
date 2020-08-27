@@ -27,6 +27,12 @@ class ModerationCog(commands.Cog):
         except:
             await ctx.send("<:nope:742029970502713385> You cant kick a mod!")
 
+    # Kick members: Error handling
+    @kick.error
+    async def kick_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx,send('```\n$kick {member_name} {reason}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
     # Ban members
 
     @commands.command()
@@ -48,6 +54,13 @@ class ModerationCog(commands.Cog):
                 await channel.send(embed=emb)
         except:
             await ctx.send("<:nope:742029970502713385> I dont have sufficient privelages!")
+
+    # Ban members: Error handling
+
+    @ban.error
+    async def ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('```\n$ban {member_name} {reason}\n     ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
 
     # Unban members
 
@@ -139,20 +152,23 @@ class ModerationCog(commands.Cog):
     @commands.command(aliases=['mute'])
     async def _mute(self, ctx, member: discord.Member, *, reason=None):
         if ctx.message.author.guild_permissions.manage_roles:
-            if reason is None:
-                await ctx.send("What is the reason for the mute?")
+            if member == str(ctx.author):
+                await ctx.send("**You can't mute yourself**")
             else:
-                muted = discord.utils.get(ctx.guild.roles, name='Muted')
-                if muted is not None:
-                    role = discord.utils.get(ctx.guild.roles, name='Muted')
-                    await member.add_roles(role)
-                    emb = discord.Embed(description=f'You have been muted in **Zerodeaths** server for **{reason}**')
-                    embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=discord.Color.red())
-                    await ctx.send(embed=embed)
-                    await member.send(embed=emb)
+                if reason is None:
+                    await ctx.send("What is the reason for the mute?")
                 else:
-                    embed = discord.Embed(description='Member already muted')
-                    await ctx.send(embed=embed)
+                    muted = discord.utils.get(ctx.guild.roles, name='Muted')
+                    if muted is not None:
+                        role = discord.utils.get(ctx.guild.roles, name='Muted')
+                        await member.add_roles(role)
+                        emb = discord.Embed(description=f'You have been muted in **Zerodeaths** server for **{reason}**')
+                        embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=discord.Color.red())
+                        await ctx.send(embed=embed)
+                        await member.send(embed=emb)
+                    else:
+                        embed = discord.Embed(description='Member already muted')
+                        await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
@@ -161,15 +177,24 @@ class ModerationCog(commands.Cog):
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author} Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
 
+    # Mute member: Error handling
+    @_mute.error
+    async def mute_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('```\n$mute {member_name}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
     # Unmute member
 
     @commands.command(aliases=['unmute'])
     async def _unmute(self, ctx, member: discord.Member):
         if ctx.message.author.guild_permissions.manage_roles:
-            role = discord.utils.get(ctx.guild.roles, name='Muted')
-            await member.remove_roles(role)
-            embed = discord.Embed(title='User unmuted!', description='**{0}** was unmuted by **{1}**\n\nDon\'t be naughty again'.format(member, ctx.message.author), colour=discord.Color.green())
-            await ctx.send(embed=embed)
+            role = discord.utils.get(member.roles, name='Muted')
+            if role is not None:
+                await member.remove_roles(role)
+                embed = discord.Embed(title='User unmuted!', description='**{0}** was unmuted by **{1}**\n\nDon\'t be naughty again'.format(member, ctx.message.author), colour=discord.Color.green())
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(f'**{str(member)}** not muted lol')
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
@@ -177,7 +202,68 @@ class ModerationCog(commands.Cog):
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
-                        
+
+    # Unmute member : Error handling
+
+    @_unmute.error
+    async def unmute_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('```\n$unmute {member_name}\n        ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+        
+
+    # Adding roles
+
+    @commands.command()
+    async def addrole(self, ctx, member: discord.Member, role=None):
+        if ctx.message.author.guild_permissions.manage_roles:
+            if role is None:
+                await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
+            else:
+                add_role = discord.utils.get(ctx.guild.roles, name=role)
+                await member.add_roles(add_role)
+                embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=discord.Color.green())
+                await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
+            await ctx.send(embed=embed)
+            channel = self.bot.get_channel(732199652757340283)
+            author = message.author.id
+            emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
+            await channel.send(embed=emb)
+
+    # Add roles: Error handling
+
+    @addrole.error
+    async def addrole_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('```\n$addrole {member_name} {role}\n         ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+
+    # Remove roles
+
+    @commands.command(aliases=['removeroles'])
+    async def purgerole(self, ctx, member: discord.Member, role=None):
+        if ctx.message.author.guild_permissions.manage_roles:
+            if role is None:
+                await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
+            else:
+                add_role = discord.utils.get(ctx.guild.roles, name=role)
+                await member.remove_roles(add_role)
+                embed = discord.Embed(title='**REMOVED ROLE**', description=f'**{str(member)}** has **{role}** stripped out cos he doesn\'t deserve it lol', colour=discord.Color.green())
+                await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
+            await ctx.send(embed=embed)
+            channel = self.bot.get_channel(732199652757340283)
+            author = message.author.id
+            emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
+            await channel.send(embed=emb)
+
+    # Remove roles: Error handling
+
+    @purgerole.error
+    async def addrole_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('```\n$removerole {member_name} {role}\n            ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
 
 
 def setup(bot):
