@@ -53,7 +53,9 @@ class GeneralCog(commands.Cog):
                               '**mute**- mutes the user\n'
                               '**unmute**- unmutes the user\n'
                               '**clear/remove**- clears `n` messages from that channel\n'
-                              '**embedpost**- Will post an announcement in #general\n',
+                              '**embedpost**- Will post an announcement in #general\n'
+                              '**addrole**- Adds role to member'
+                              '**removerole**- Removes role from member',
                 colour=discord.Colour.green()
             )
             general_embed = discord.Embed(
