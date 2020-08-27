@@ -1,6 +1,10 @@
 CHANGELOG
 
-[V1.0.0]
+[v1.1.0]
+- Added error handling
+- Added new feature - add and remove roles
+
+[v1.0.0]
 Initial Commit
 
 - Added moderation support
