@@ -240,7 +240,7 @@ class ModerationCog(commands.Cog):
 
     # Remove roles
 
-    @commands.command(aliases=['removeroles'])
+    @commands.command(aliases=['removerole'])
     async def purgerole(self, ctx, member: discord.Member, role=None):
         if ctx.message.author.guild_permissions.manage_roles:
             if role is None:
