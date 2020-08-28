@@ -53,6 +53,12 @@ async def on_member_remove(member):
 async def ping(ctx):
     await ctx.send(f'+[PING] ping: {round(bot.latency * 1000)}ms')
 
+# If the user enters something bonkers
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx("Bruh what is that?")
+
 
 TOKEN = os.getenv("REXBOT_TOKEN")
 if TOKEN is None:
