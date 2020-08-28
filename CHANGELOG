@@ -1,5 +1,10 @@
 CHANGELOG
 
+[v1.2.0]
+- Added missing error handlings
+- Fixed some bad programming habits
+- Added serverinfo command
+
 [v1.1.0]
 - Added error handling
 - Added new feature - add and remove roles
