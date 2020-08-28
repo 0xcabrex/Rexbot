@@ -43,6 +43,16 @@ class GeneralCog(commands.Cog):
     async def help(self, ctx, helprole=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
+        general_embed = discord.Embed(
+                title = 'Bot commands for @Rexbot',
+                description='**8ball**- Uses AI to give you the best answers to your questions\n'
+                            '**avatar**- Shows the avatar of the user entered\n'
+                            '**userinfo**- Gives the info of the entered user\n'
+                            '**serverinfo**- Gives the info of the server',
+                colour=discord.Colour.green()
+            )
+        general_embed.set_footer(text='Made by CABREX with ❤')
+
         if (str(ctx.message.channel) == '🤖-bot-commands' or mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):
             mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
@@ -55,32 +65,16 @@ class GeneralCog(commands.Cog):
                               '**clear/remove**- clears `n` messages from that channel\n'
                               '**embedpost**- Will post an announcement in #general\n'
                               '**addrole**- Adds role to member'
-                              '**removerole**- Removes role from member',
-                colour=discord.Colour.green()
-            )
-            general_embed = discord.Embed(
-                title = 'Bot commands for @Rexbot',
-                description='**8ball**- Uses AI to give you the best answers to your questions\n'
-                            '**avatar**- Shows the avatar of the user entered\n'
-                            '**userinfo**- Gives the info of the entered user\n',
+                              '**removerole/purgerole**- Removes role from member',
                 colour=discord.Colour.green()
             )
             mod_embed.set_footer(text='Made by CABREX with ❤')
-            general_embed.set_footer(text='Made by CABREX with ❤')
+            
             await ctx.send(embed=general_embed)
             user = ctx.author
             await user.send(embed=mod_embed)
 
         elif (str(ctx.message.channel) == '🤖-bot-commands'):
-
-            general_embed = discord.Embed(
-                title = 'Bot commands for @Rexbot',
-                description='**8ball**- Uses AI to give you the best answers to your questions'
-                            '**avatar**- Shows the avatar of the user entered\n'
-                            '**userinfo**- Gives the info of the entered user\n',
-                colour=discord.Colour.green()
-            )
-            general_embed.set_footer(text='made by CABREX with ❤')
             await ctx.send(embed=general_embed)
 
         elif (str(ctx.message.channel) != '🤖-bot-commands'):
@@ -105,27 +99,54 @@ class GeneralCog(commands.Cog):
         for role in member.roles:
             roles.append(role)
 
-        if member is None:
-            await ctx.send("Whose info do you want?")
-        else:
-            embed = discord.Embed(
-                colour = discord.Colour.blue(),
-            )
-            embed.set_author(name=f'User Info - {member}')
-            embed.set_thumbnail(url=member.avatar_url)
-            embed.set_footer(text='made by CABREX with ❤')
+        embed = discord.Embed(
+            colour = discord.Colour.blue(),
+        )
+        embed.set_author(name=f'User Info - {member}')
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.set_footer(text='made by CABREX with ❤')
 
-            embed.add_field(name='ID:', value=member.id)
-            embed.add_field(name='Guild Name:', value=member.display_name)
+        embed.add_field(name='ID:', value=member.id)
+        embed.add_field(name='Member Name:', value=member.display_name)
 
-            embed.add_field(name='Created at: ', value=member.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
-            embed.add_field(name='Joined at:', value=member.joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='Created at: ', value=member.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='Joined at:', value=member.joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
-            embed.add_field(name=f'Roles ({len(roles)})', value=' '.join([role.mention for role in roles]))
+        embed.add_field(name=f'Roles ({len(roles)})', value=' '.join([role.mention for role in roles]))
 
-            embed.add_field(name='Bot?', value=member.bot)
+        embed.add_field(name='Bot?', value=member.bot)
 
-            await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
+
+    # Userinfo: Error handling
+    @userinfo.error
+    async def userinfo_error(self, ctx, error):
+      if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
+
+    # Server info
+    @commands.command()
+    async def serverinfo(self, ctx):
+      embed = discord.Embed(
+            title = f'{ctx.guild.name} info',
+            colour = discord.Color.blue()
+        )
+      embed.set_thumbnail(url=ctx.guild.icon_url)
+
+      embed.add_field(name='Owner name:', value=ctx.guild.owner.display_name)
+      embed.add_field(name='Server ID:', value=ctx.guild.id)
+
+      embed.add_field(name='Server region:', value=ctx.guild.region)
+      embed.add_field(name='Members:', value=len(ctx.guild.members))
+
+      embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
+      embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
+
+      embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+
+      await ctx.send(embed=embed)
+
 
 
 def setup(bot):
