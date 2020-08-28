@@ -28,11 +28,11 @@ class ModerationCog(commands.Cog):
             await ctx.send("<:nope:742029970502713385> You cant kick a mod!")
 
     # Kick members: Error handling
-    
+
     @kick.error
     async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx,send('```\n$kick {member_name} {reason}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+            await ctx.send('```\n$kick {member_name} {reason}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
 
     # Ban members
 
@@ -88,6 +88,7 @@ class ModerationCog(commands.Cog):
             await channel.send(embed=emb)
 
     # Clear command
+    
     @commands.command(aliases=['remove'])
     async def clear(self, ctx, amount=0):
         if ctx.message.author.guild_permissions.manage_messages:
