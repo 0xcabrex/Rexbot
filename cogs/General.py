@@ -1,6 +1,7 @@
 import discord
 import random
 from discord.ext import commands
+from aiohttp import request
 
 
 class GeneralCog(commands.Cog):
@@ -84,6 +85,7 @@ class GeneralCog(commands.Cog):
             await ctx.send(embed=embed)
 
     # Avatar fetcher
+
     @commands.command()
     async def avatar(self, ctx, member: discord.Member):
         User_Avatar = member.avatar_url
@@ -92,6 +94,7 @@ class GeneralCog(commands.Cog):
         await ctx.send(embed=embed)
 
     # Userinfo
+
     @commands.command()
     async def userinfo(self, ctx, member: discord.Member):
 
@@ -121,31 +124,61 @@ class GeneralCog(commands.Cog):
     # Userinfo: Error handling
     @userinfo.error
     async def userinfo_error(self, ctx, error):
-      if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+        if isinstance(error, commands.MissingRequiredArgument):
+          await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
 
 
     # Server info
+
     @commands.command()
     async def serverinfo(self, ctx):
-      embed = discord.Embed(
-            title = f'{ctx.guild.name} info',
-            colour = discord.Color.blue()
-        )
-      embed.set_thumbnail(url=ctx.guild.icon_url)
+        embed = discord.Embed(
+              title = f'{ctx.guild.name} info',
+              colour = discord.Color.blue()
+          )
+        embed.set_thumbnail(url=ctx.guild.icon_url)
 
-      embed.add_field(name='Owner name:', value=ctx.guild.owner.display_name)
-      embed.add_field(name='Server ID:', value=ctx.guild.id)
+        embed.add_field(name='Owner name:', value=ctx.guild.owner.display_name)
+        embed.add_field(name='Server ID:', value=ctx.guild.id)
 
-      embed.add_field(name='Server region:', value=ctx.guild.region)
-      embed.add_field(name='Members:', value=len(ctx.guild.members))
+        embed.add_field(name='Server region:', value=ctx.guild.region)
+        embed.add_field(name='Members:', value=len(ctx.guild.members))
 
-      embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
-      embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
+        embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
+        embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
 
-      embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
-      await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
+
+    # Memes
+
+    @commands.command()
+    async def meme(self, ctx):
+
+        colour_choices= [0x400000,0x997379]
+
+        meme_url = "https://meme-api.herokuapp.com/gimme?nsfw=false"
+        async with request("GET", meme_url, headers={}) as response:
+          if response.status==200:
+            data = await response.json()
+            image_link = data["url"]
+          else:
+            image_link = None
+
+        async with request("GET", meme_url, headers={}) as response:
+          if response.status==200:
+            data = await response.json()
+            embed = discord.Embed(
+              title=data["title"],
+              colour=random.choice(colour_choices)
+            )
+            if image_link is not None:
+              embed.set_image(url=image_link)
+              await ctx.send(embed=embed)
+
+          else:
+            await ctx.send(f"The API seems down, say status as {response.status}")
 
 
 
