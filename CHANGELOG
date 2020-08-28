@@ -4,6 +4,7 @@ CHANGELOG
 - Added missing error handlings
 - Fixed some bad programming habits
 - Added serverinfo command
+- Added the memes command
 
 [v1.1.0]
 - Added error handling
