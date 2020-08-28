@@ -28,6 +28,7 @@ class ModerationCog(commands.Cog):
             await ctx.send("<:nope:742029970502713385> You cant kick a mod!")
 
     # Kick members: Error handling
+    
     @kick.error
     async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
