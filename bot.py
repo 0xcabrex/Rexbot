@@ -57,7 +57,7 @@ async def ping(ctx):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx("Bruh what is that?")
+        await ctx.send("Bruh what is that?")
 
 
 TOKEN = os.getenv("REXBOT_TOKEN")
