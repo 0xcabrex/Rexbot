@@ -20,7 +20,7 @@ class ModerationCog(commands.Cog):
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
                 await ctx.send(embed=embed)
-                channel = self.bot.get_channel(732199652757340283)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 author = message.author.id
                 emb = discord.Embed(title='Illegal use of command **kick**', description=f'<@&732211099264352268>\n<@{author}> Used the `kick` command, Who is not a moderator', colour=discord.Color.red())
                 await channel.send(embed=emb)
@@ -49,7 +49,7 @@ class ModerationCog(commands.Cog):
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
                 await ctx.send(embed=embed)
-                channel = self.bot.get_channel(732199652757340283)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 author = message.author.id
                 emb = discord.Embed(title='Illegal use of command **ban**', description=f'<@&732211099264352268>\n`<@{author}` Used the `ban` command, Who is not a moderator>', colour=discord.Color.red())
                 await channel.send(embed=emb)
@@ -82,7 +82,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **unban**', description=f'<@&732211099264352268>\n`<@{author}` Used the `unban` command, Who is not a moderator>', colour=discord.Color.red())
             await channel.send(embed=emb)
@@ -104,7 +104,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **clear**', description=f'<@&732211099264352268>\n`<@{author}` Used the `clear` command, Who is not a moderator>', colour=discord.Color.red())
             await channel.send(embed=emb)
@@ -118,12 +118,12 @@ class ModerationCog(commands.Cog):
                 if message is None:
                     await ctx.send("What is the message?")
                 else:
-                    channel = self.bot.get_channel(732197521711038586)
+                    channel = discord.utils.get(ctx.guild.channels, name='general')
                     await channel.send(message)
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
                 await ctx.send(embed=embed)
-                channel = self.bot.get_channel(732199652757340283)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 author = message.author.id
                 emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n`<@{author}` Used the `userpost` command, Who is not a moderator>', colour=discord.Color.red())
                 await channel.send(embed=emb)
@@ -137,13 +137,13 @@ class ModerationCog(commands.Cog):
             if message is None:
                 await ctx.send("What is the message to send")
             else:
-                channel = self.bot.get_channel(732197521711038586)
+                channel = discord.utils.get(ctx.guild.channels, name='general')
                 embed = discord.Embed(title=f'Announcement by **{ctx.message.author}**', description=f'*{message}*', colour=discord.Color.blue())
                 await channel.send(embed=embed)
         else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
                 await ctx.send(embed=embed)
-                channel = self.bot.get_channel(732199652757340283)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 author = message.author.id
                 emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n`<@{author}` Used the `userpost` command, Who is not a moderator>', colour=discord.Color.red())
                 await channel.send(embed=emb)
@@ -174,7 +174,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author} Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
@@ -200,7 +200,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
@@ -228,7 +228,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
@@ -255,7 +255,7 @@ class ModerationCog(commands.Cog):
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=discord.Color.red())
             await ctx.send(embed=embed)
-            channel = self.bot.get_channel(732199652757340283)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             author = message.author.id
             emb = discord.Embed(title='Illegal use of command **userpost**', description=f'<@&732211099264352268>\n<@{author}> Used the `userpost` command, Who is not a moderator', colour=discord.Color.red())
             await channel.send(embed=emb)
