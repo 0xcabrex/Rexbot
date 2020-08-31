@@ -62,6 +62,12 @@ async def on_command_error(ctx, error):
 
 TOKEN = os.getenv("REXBOT_TOKEN")
 if TOKEN is None:
-    print("\033[1;31;40mEnvironment variable not set, please run outside virtual Environment\033[1;31;40m")
+    with open('token.0', 'r', encoding='utf-8') as file_handle:
+        TOKEN = file_handle.read()
+        if TOKEN is not None:
+            bot.run(TOKEN)
+        else:
+            print("Token error: Token not found")
+
 else:
     bot.run(TOKEN)
