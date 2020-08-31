@@ -35,7 +35,7 @@ class GeneralCog(commands.Cog):
                      "Very doubtful."
                      ]
 
-        embed = discord.Embed(title='*The 8ball*', description=f'**{ctx.message.author}** asked a question.\n\nThe question was: **{question}**\n\n\n{random.choice(responses)}', colour=discord.Colour.blue())
+        embed = discord.Embed(title='*The 8ball*', description=f'**{ctx.message.author}** asked a question.\n\nThe question was: **{question}**\n\n\n{random.choice(responses)}', colour=0x0000ff)
         await ctx.send(embed=embed)
 
     # Help console
@@ -49,8 +49,10 @@ class GeneralCog(commands.Cog):
                 description='**8ball**- Uses AI to give you the best answers to your questions\n'
                             '**avatar**- Shows the avatar of the user entered\n'
                             '**userinfo**- Gives the info of the entered user\n'
-                            '**serverinfo**- Gives the info of the server',
-                colour=discord.Colour.green()
+                            '**serverinfo**- Gives the info of the server'
+                            '**meme**- Sends a beautiful meme'
+                            '**dog**-Gets you a dog picture',
+                colour=0x01a901
             )
         general_embed.set_footer(text='Made by CABREX with ❤')
 
@@ -67,7 +69,7 @@ class GeneralCog(commands.Cog):
                               '**embedpost**- Will post an announcement in #general\n'
                               '**addrole**- Adds role to member'
                               '**removerole/purgerole**- Removes role from member',
-                colour=discord.Colour.green()
+                colour=0x01a901
             )
             mod_embed.set_footer(text='Made by CABREX with ❤')
             
@@ -80,7 +82,7 @@ class GeneralCog(commands.Cog):
 
         elif (str(ctx.message.channel) != '🤖-bot-commands'):
 
-            embed = discord.Embed(title='Wrong channel', description='**Please use this command in #bot-commands**', colour=discord.Colour.red())
+            embed = discord.Embed(title='Wrong channel', description='**Please use this command in #bot-commands**', colour=0xff0000)
             embed.set_image('https://cdn.discordapp.com/emojis/742029970502713385.png?v=1')
             await ctx.send(embed=embed)
 
@@ -89,7 +91,7 @@ class GeneralCog(commands.Cog):
     @commands.command()
     async def avatar(self, ctx, member: discord.Member):
         User_Avatar = member.avatar_url
-        embed = discord.Embed(colour=discord.Colour.dark_blue())
+        embed = discord.Embed(colour=0x0000ff)
         embed.set_image(url='{}'.format(member.avatar_url))
         await ctx.send(embed=embed)
 
@@ -103,7 +105,7 @@ class GeneralCog(commands.Cog):
             roles.append(role)
 
         embed = discord.Embed(
-            colour = discord.Colour.blue(),
+            colour = 0x0000ff,
         )
         embed.set_author(name=f'User Info - {member}')
         embed.set_thumbnail(url=member.avatar_url)
@@ -134,7 +136,7 @@ class GeneralCog(commands.Cog):
     async def serverinfo(self, ctx):
         embed = discord.Embed(
               title = f'{ctx.guild.name} info',
-              colour = discord.Color.blue()
+              colour = 0x0000ff
           )
         embed.set_thumbnail(url=ctx.guild.icon_url)
 
@@ -156,7 +158,7 @@ class GeneralCog(commands.Cog):
     @commands.command()
     async def meme(self, ctx):
 
-        colour_choices= [0x400000,0x997379]
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
 
         meme_url = "https://meme-api.herokuapp.com/gimme?nsfw=false"
         async with request("GET", meme_url, headers={}) as response:
@@ -178,7 +180,51 @@ class GeneralCog(commands.Cog):
               await ctx.send(embed=embed)
 
           else:
-            await ctx.send(f"The API seems down, say status as {response.status}")
+            await ctx.send(f"The API seems down, says {response.status}")
+
+    # Dog pictures
+
+    @commands.command()
+    async def dog(self, ctx):
+      
+      colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+
+      dog_url="https://random.dog/woof.json"
+      async with request("GET", dog_url, headers={}) as response:
+        if response.status == 200:
+          data = await response.json()
+          image_link = data["url"]
+          embed = discord.Embed(
+              colour = random.choice(colour_choices)
+          )
+          embed.set_image(url=image_link)
+          await ctx.send(embed=embed)
+
+        else:
+          await ctx.send(f"The API seems down, says {response.status}")
+
+
+    # Cat Pics
+
+    @commands.command()
+    async def cat(self, ctx):
+      
+      colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+
+      cat_url="https://api.thecatapi.com/v1/images/search"
+      async with response("GET", cat_url, headers={}) as response:
+        if response.status == 200:
+          data = await response.json()
+          image_link = data["url"]
+          embed = discord.Embed(
+              colour = random.choice(colour_choices)
+          )
+          embed.set_image(url=image_link)
+          await ctx.send(embed=embed)
+
+        else:
+          await ctx.send(f"The API seems down, says {response.status}")
+
 
 
 
