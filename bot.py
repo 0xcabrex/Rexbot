@@ -21,14 +21,14 @@ async def unload(ctx, extension):
     bot.unload_extension(f"cogs.{extension}")
 
 
-if working_directory !='/home/tron/ZeroDeaths/rexbot':
-	print("Cogs error: Cannot load cogs")
-	print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
-	print("Functionality limited!\n")
-else:
-	for filename in os.listdir('./cogs'):
-	    if filename.endswith('.py'):
-	        bot.load_extension(f"cogs.{filename[:-3]}")
+#if working_directory !='/home/tron/ZeroDeaths/rexbot':
+#	print("Cogs error: Cannot load cogs")
+#	print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
+#	print("Functionality limited!\n")
+#else:
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        bot.load_extension(f"cogs.{filename[:-3]}")
 
 
 # Basic stuff
@@ -62,7 +62,7 @@ async def on_command_error(ctx, error):
 
 TOKEN = os.getenv("REXBOT_TOKEN")
 if TOKEN is None:
-    with open('token.0', 'r', encoding='utf-8') as file_handle:
+    with open('./token.0', 'r', encoding='utf-8') as file_handle:
         TOKEN = file_handle.read()
         if TOKEN is not None:
             bot.run(TOKEN)
