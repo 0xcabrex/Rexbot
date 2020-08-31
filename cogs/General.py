@@ -204,27 +204,6 @@ class GeneralCog(commands.Cog):
           await ctx.send(f"The API seems down, says {response.status}")
 
 
-    # Cat Pics
-
-    @commands.command()
-    async def cat(self, ctx):
-      
-      colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
-
-      cat_url="https://api.thecatapi.com/v1/images/search"
-      async with response("GET", cat_url, headers={}) as response:
-        if response.status == 200:
-          data = await response.json()
-          image_link = data["url"]
-          embed = discord.Embed(
-              colour = random.choice(colour_choices)
-          )
-          embed.set_image(url=image_link)
-          await ctx.send(embed=embed)
-
-        else:
-          await ctx.send(f"The API seems down, says {response.status}")
-
 
 
 
