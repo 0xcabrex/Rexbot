@@ -62,7 +62,7 @@ async def on_command_error(ctx, error):
 
 TOKEN = os.getenv("REXBOT_TOKEN")
 if TOKEN is None:
-    with open('./token.0', 'r', encoding='utf-8') as file_handle:
+    with open('.Zerodeaths/rexbot/token.0', 'r', encoding='utf-8') as file_handle:
         TOKEN = file_handle.read()
         if TOKEN is not None:
             bot.run(TOKEN)
