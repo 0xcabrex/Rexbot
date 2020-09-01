@@ -61,7 +61,7 @@ class GeneralCog(commands.Cog):
         if (str(ctx.message.channel) == '🤖-bot-commands' or mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):
             mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
-                description = '**help**\ngives you this dialogue\n'
+                description = '**help**\ngives you this dialogue\n\n'
                               '**kick**\nKicks the member out of the server\nUsage: $kick {member_name} {reason}, reason is neccessary\n\n'
                               '**ban**\nbans the user from the server\nUsage: $ban {member_name} {reason}, reason is necessary\n\n'
                               '**unban**\nunbans the user, you need to know the member\'s name\nUsgae: $unban {member_name}\n\n'
