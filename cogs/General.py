@@ -61,16 +61,17 @@ class GeneralCog(commands.Cog):
         if (str(ctx.message.channel) == '🤖-bot-commands' or mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):
             mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
-                description = '**help**- gives you this dialogue\n'
-                              '**kick**- Kicks a user\n'
-                              '**ban**- bans the user from the server\n'
-                              '**unban**- unbans the user, you need to know the member\'s name\n'
-                              '**mute**- mutes the user\n'
-                              '**unmute**- unmutes the user\n'
-                              '**clear/remove**- clears `n` messages from that channel\n'
-                              '**embedpost**- Will post an announcement in #general\n'
-                              '**addrole**- Adds role to member\n'
-                              '**removerole/purgerole**- Removes role from member\n',
+                description = '**help**\ngives you this dialogue\n'
+                              '**kick**\nKicks the member out of the server\nUsage: $kick {member_name} {reason}, reason is neccessary\n\n'
+                              '**ban**\nbans the user from the server\nUsage: $ban {member_name} {reason}, reason is necessary\n\n'
+                              '**unban**\nunbans the user, you need to know the member\'s name\nUsgae: $unban {member_name}\n\n'
+                              '**mute**\nmutes the user\nUsage: $mute {member_name} {reason}, reason is necessary\n\n'
+                              '**unmute**\nunmutes the user\nUsage: {member_name}'
+                              '**clear | remove | purge**\n clears messages from that channel\nUsage $clear {n} where `n` is the number of messages to be purged\n\n'
+                              '**embedpost**\nWill post an embedded announcement\nUsage: $embedpost {message}\n\n'
+                              '**userpost**\nWill send message instead of you\nUsage:$userpost {message}\n\n'
+                              '**addrole**\nAdds role to member\n:Usage: $addrole {role_name}\n\n'
+                              '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name}',
                 colour=0x01a901
             )
             mod_embed.set_footer(text='Made by CABREX with ❤')

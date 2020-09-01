@@ -89,7 +89,7 @@ class ModerationCog(commands.Cog):
 
     # Clear command
     
-    @commands.command(aliases=['remove'])
+    @commands.command(aliases=['remove','purge'])
     async def clear(self, ctx, amount=0):
         if ctx.message.author.guild_permissions.manage_messages:
             if amount == 0:
