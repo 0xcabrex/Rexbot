@@ -1,6 +1,7 @@
 import discord
 import random
 from discord.ext import commands
+from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
 
 
@@ -41,7 +42,7 @@ class GeneralCog(commands.Cog):
     # Help console
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def help(self, ctx, helprole=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
@@ -90,7 +91,7 @@ class GeneralCog(commands.Cog):
     # Avatar fetcher
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def avatar(self, ctx, member: discord.Member):
         User_Avatar = member.avatar_url
         embed = discord.Embed(colour=0x0000ff)
@@ -100,7 +101,7 @@ class GeneralCog(commands.Cog):
     # Userinfo
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def userinfo(self, ctx, member: discord.Member):
 
         roles = []
@@ -136,7 +137,7 @@ class GeneralCog(commands.Cog):
     # Server info
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def serverinfo(self, ctx):
         embed = discord.Embed(
               title = f'{ctx.guild.name} info',
@@ -160,7 +161,7 @@ class GeneralCog(commands.Cog):
     # Memes
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def meme(self, ctx):
 
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
@@ -190,7 +191,7 @@ class GeneralCog(commands.Cog):
     # Dog pictures
 
     @commands.command()
-    @commands.cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.guild)
     async def dog(self, ctx):
       
       colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
