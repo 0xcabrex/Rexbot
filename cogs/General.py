@@ -62,13 +62,13 @@ class GeneralCog(commands.Cog):
                 description = '**help**- gives you this dialogue\n'
                               '**kick**- Kicks a user\n'
                               '**ban**- bans the user from the server\n'
-                              '**unban**- unbans the user, you need to know the member\'s name'
+                              '**unban**- unbans the user, you need to know the member\'s name\n'
                               '**mute**- mutes the user\n'
                               '**unmute**- unmutes the user\n'
                               '**clear/remove**- clears `n` messages from that channel\n'
                               '**embedpost**- Will post an announcement in #general\n'
-                              '**addrole**- Adds role to member'
-                              '**removerole/purgerole**- Removes role from member',
+                              '**addrole**- Adds role to member\n'
+                              '**removerole/purgerole**- Removes role from member\n',
                 colour=0x01a901
             )
             mod_embed.set_footer(text='Made by CABREX with ❤')
