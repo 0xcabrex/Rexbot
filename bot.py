@@ -20,18 +20,18 @@ async def load(ctx, extension):
 async def unload(ctx, extension):
     bot.unload_extension(f"cogs.{extension}")
 
-
-#if working_directory !='/home/tron/ZeroDeaths/rexbot':
-#	print("Cogs error: Cannot load cogs")
-#	print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
-#	print("Functionality limited!\n")
-#else:
-for filename in os.listdir('./cogs'):
-    if filename.endswith('.py'):
-        bot.load_extension(f"cogs.{filename[:-3]}")
+try:
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            bot.load_extension(f"cogs.{filename[:-3]}")
+except:
+    print("Cogs error: Cannot load cogs")
+    print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
+    print("Functionality limited!\n")
 
 
 # Basic stuff
+
 @bot.event
 async def on_ready():
     await bot.change_presence(status=discord.Status.idle, activity=discord.Game('with your lives'))
@@ -54,10 +54,11 @@ async def ping(ctx):
     await ctx.send(f'+[PING] ping: {round(bot.latency * 1000)}ms')
 
 # If the user enters something bonkers
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send("Bruh what is that?")
+        await ctx.send(f"command not found\nPlease use `$help` to see all commands")
 
 
 TOKEN = os.getenv("REXBOT_TOKEN")

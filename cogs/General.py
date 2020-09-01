@@ -49,9 +49,9 @@ class GeneralCog(commands.Cog):
                 description='**8ball**- Uses AI to give you the best answers to your questions\n'
                             '**avatar**- Shows the avatar of the user entered\n'
                             '**userinfo**- Gives the info of the entered user\n'
-                            '**serverinfo**- Gives the info of the server'
-                            '**meme**- Sends a beautiful meme'
-                            '**dog**-Gets you a dog picture',
+                            '**serverinfo**- Gives the info of the server\n'
+                            '**meme**- Sends a beautiful meme\n'
+                            '**dog**-Gets you a dog picture\n',
                 colour=0x01a901
             )
         general_embed.set_footer(text='Made by CABREX with ❤')

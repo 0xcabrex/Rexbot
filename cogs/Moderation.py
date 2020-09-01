@@ -13,7 +13,7 @@ class ModerationCog(commands.Cog):
     @commands.command()
     async def kick(self, ctx, member: discord.Member, *, reason=None):
         try:
-            if ctx.message.author.guild_permissions.manage_members:
+            if ctx.message.author.guild_permissions.kick_members:
                 await member.kick(reason=reason)
                 embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **{reason}**', colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -39,7 +39,7 @@ class ModerationCog(commands.Cog):
     @commands.command()
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         try:
-            if ctx.message.author.guild_permissions.manage_members:
+            if ctx.message.author.guild_permissions.ban_members:
                 if reason is None:
                     await ctx.send("What is the reason for the ban?")
                 else:
@@ -67,7 +67,7 @@ class ModerationCog(commands.Cog):
 
     @commands.command()
     async def unban(self, ctx, *, member):
-        if ctx.message.author.guild_permissions.manage_members:
+        if ctx.message.author.guild_permissions.ban_members:
             banned_users = await ctx.guild.ban()
             member_name, member_discriminator = member.split('#')
 
@@ -164,7 +164,7 @@ class ModerationCog(commands.Cog):
                     if muted is not None:
                         role = discord.utils.get(ctx.guild.roles, name='Muted')
                         await member.add_roles(role)
-                        emb = discord.Embed(description=f'You have been muted in **Zerodeaths** server for **{reason}**')
+                        emb = discord.Embed(description=f'You have been muted in **{ctx.guild.name}** server for **{reason}**')
                         embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=0xff0000)
                         await ctx.send(embed=embed)
                         await member.send(embed=emb)
