@@ -66,7 +66,7 @@ class GeneralCog(commands.Cog):
                               '**ban**\nbans the user from the server\nUsage: $ban {member_name} {reason}, reason is necessary\n\n'
                               '**unban**\nunbans the user, you need to know the member\'s name\nUsgae: $unban {member_name}\n\n'
                               '**mute**\nmutes the user\nUsage: $mute {member_name} {reason}, reason is necessary\n\n'
-                              '**unmute**\nunmutes the user\nUsage: {member_name}'
+                              '**unmute**\nunmutes the user\nUsage: {member_name}\n\n'
                               '**clear | remove | purge**\n clears messages from that channel\nUsage $clear {n} where `n` is the number of messages to be purged\n\n'
                               '**embedpost**\nWill post an embedded announcement\nUsage: $embedpost {message}\n\n'
                               '**userpost**\nWill send message instead of you\nUsage:$userpost {message}\n\n'
