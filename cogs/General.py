@@ -64,7 +64,7 @@ class GeneralCog(commands.Cog):
                 description = '**help**\ngives you this dialogue\n\n'
                               '**kick**\nKicks the member out of the server\nUsage: $kick {member_name} {reason}, reason is neccessary\n\n'
                               '**ban**\nbans the user from the server\nUsage: $ban {member_name} {reason}, reason is necessary\n\n'
-                              '**unban**\nunbans the user, you need to know the member\'s name\nUsgae: $unban {member_name}\n\n'
+                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name}\n\n'
                               '**mute**\nmutes the user\nUsage: $mute {member_name} {reason}, reason is necessary\n\n'
                               '**unmute**\nunmutes the user\nUsage: {member_name}\n\n'
                               '**clear | remove | purge**\n clears messages from that channel\nUsage $clear {n} where `n` is the number of messages to be purged\n\n'
