@@ -216,7 +216,7 @@ class ModerationCog(commands.Cog):
     # Adding roles
 
     @commands.command()
-    async def addrole(self, ctx, member: discord.Member, role=None):
+    async def addrole(self, ctx, member: discord.Member, *, role=None):
         if ctx.message.author.guild_permissions.manage_roles:
             if role is None:
                 await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
@@ -243,7 +243,7 @@ class ModerationCog(commands.Cog):
     # Remove roles
 
     @commands.command(aliases=['removerole'])
-    async def purgerole(self, ctx, member: discord.Member, role=None):
+    async def purgerole(self, ctx, member: discord.Member, *, role=None):
         if ctx.message.author.guild_permissions.manage_roles:
             if role is None:
                 await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
