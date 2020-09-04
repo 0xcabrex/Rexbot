@@ -13,6 +13,7 @@ class GeneralCog(commands.Cog):
     # the eight ball
 
     @commands.command(aliases=['8ball'])
+    @cooldown(1,3,BucketType.channel)
     async def eight_ball(self, ctx, *, question):
         responses = ["It is certain.",
                      "It is decidedly so.",
@@ -42,10 +43,11 @@ class GeneralCog(commands.Cog):
     # Help console
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,3,BucketType.channel)
     async def help(self, ctx, helprole=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
+
         general_embed = discord.Embed(
                 title = 'Bot commands for @Rexbot',
                 description='**8ball**- Uses AI to give you the best answers to your questions\n'
@@ -58,8 +60,7 @@ class GeneralCog(commands.Cog):
             )
         general_embed.set_footer(text='Made by CABREX with ❤')
 
-        if (str(ctx.message.channel) == '🤖-bot-commands' or mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):
-            mod_embed = discord.Embed(
+        mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
                 description = '**help**\ngives you this dialogue\n\n'
                               '**kick**\nKicks the member out of the server\nUsage: $kick {member_name} {reason}, reason is neccessary\n\n'
@@ -67,42 +68,51 @@ class GeneralCog(commands.Cog):
                               '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name}\n\n'
                               '**mute**\nmutes the user\nUsage: $mute {member_name} {reason}, reason is necessary\n\n'
                               '**unmute**\nunmutes the user\nUsage: {member_name}\n\n'
-                              '**clear | remove | purge**\n clears messages from that channel\nUsage $clear {n} where `n` is the number of messages to be purged\n\n'
+                              '**clear | remove | purge**\n clears messages from that channel\nUsage: $clear {n} where `n` is the number of messages to be purged\n\n'
                               '**embedpost**\nWill post an embedded announcement\nUsage: $embedpost {message}\n\n'
-                              '**userpost**\nWill send message instead of you\nUsage:$userpost {message}\n\n'
-                              '**addrole**\nAdds role to member\n:Usage: $addrole {role_name}\n\n'
+                              '**userpost**\nWill send message instead of you\nUsage: $userpost {message}\n\n'
+                              '**addrole**\nAdds role to member\nUsage: $addrole {role_name}\n\n'
                               '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name}',
                 colour=0x01a901
             )
-            mod_embed.set_footer(text='Made by CABREX with ❤')
+        mod_embed.set_footer(text='Made by CABREX with ❤')
+
+        if (mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):            
             
             await ctx.send(embed=general_embed)
             user = ctx.author
             await user.send(embed=mod_embed)
 
-        elif (str(ctx.message.channel) == '🤖-bot-commands'):
-            await ctx.send(embed=general_embed)
+        else:
 
-        elif (str(ctx.message.channel) != '🤖-bot-commands'):
+          if (str(ctx.message.channel) == 'bot-commands'):
+              await ctx.send(embed=general_embed)
 
-            embed = discord.Embed(title='Wrong channel', description='**Please use this command in #bot-commands**', colour=0xff0000)
-            embed.set_image('https://cdn.discordapp.com/emojis/742029970502713385.png?v=1')
-            await ctx.send(embed=embed)
+          else:
+
+              embed = discord.Embed(title='Wrong channel', description='**Please use this command in #bot-commands**', colour=0xff0000)
+              await ctx.send(embed=embed)
 
     # Avatar fetcher
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,5,BucketType.channel)
     async def avatar(self, ctx, member: discord.Member):
-        User_Avatar = member.avatar_url
-        embed = discord.Embed(colour=0x0000ff)
-        embed.set_image(url='{}'.format(member.avatar_url))
-        await ctx.send(embed=embed)
+      try:
+          if member is None:
+            embed = discord.Embed(colour=0x0000ff)
+            embed.set_image(url=f'{ctx.author.avatar_url}')
+          else:
+            embed = discord.Embed(colour=0x0000ff)
+            embed.set_image(url=f'{member.avatar_url}')
+            await ctx.send(embed=embed)
+      except Exception as e:
+            await ctx.send(f'Exception thrown: {e}')
 
     # Userinfo
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,3,BucketType.channel)
     async def userinfo(self, ctx, member: discord.Member):
 
         roles = []
@@ -138,7 +148,7 @@ class GeneralCog(commands.Cog):
     # Server info
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,4,BucketType.channel)
     async def serverinfo(self, ctx):
         embed = discord.Embed(
               title = f'{ctx.guild.name} info',
@@ -162,7 +172,7 @@ class GeneralCog(commands.Cog):
     # Memes
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,3,BucketType.channel)
     async def meme(self, ctx):
 
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
@@ -192,7 +202,7 @@ class GeneralCog(commands.Cog):
     # Dog pictures
 
     @commands.command()
-    @cooldown(1,1,BucketType.guild)
+    @cooldown(1,1,BucketType.channel)
     async def dog(self, ctx):
       
       colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]

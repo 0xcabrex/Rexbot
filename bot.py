@@ -6,6 +6,8 @@ import time
 import os
 from discord.ext import commands
 
+command_prefix='$'
+
 bot = commands.Bot(command_prefix=('$'))
 bot.remove_command('help')
 working_directory = os.getcwd()
@@ -24,10 +26,11 @@ try:
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             bot.load_extension(f"cogs.{filename[:-3]}")
-except:
+except Exception as e:
     print("Cogs error: Cannot load cogs")
     print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
     print("Functionality limited!\n")
+    print(f"exception thrown:\n{e}")
 
 
 # Basic stuff
@@ -41,17 +44,38 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     print(f'+[NEW_MEMBER]    {member} has joined the server!')
+    channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+    if channel is not None:
+        embed = discord.Embed(
+                title = 'Member joined the server',
+                description=f'Member **{member.name}** joined the server!',
+                colour=0x008000
+            )
+        await channel.send(embed=embed)
+    else:
+        pass
+
+
 
 
 @bot.event
 async def on_member_remove(member):
     print(f'+[REMOVE_MEMBER]   {member} has left the server!')
-
+    channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+    if channel is not None:
+        embed = discord.Embed(
+            title = 'Member left the server',
+            description=f'Member **{member.name}** has left the server!',
+            colour=0xFF0000
+        )
+        await channel.send(embed=embed)
+    else:
+        pass
 
 # Ping
 @bot.command()
 async def ping(ctx):
-    await ctx.send(f'+[PING] ping: {round(bot.latency * 1000)}ms')
+    await ctx.send(f'Ping: {round(bot.latency * 1000)}ms')
 
 # If the user enters something bonkers
 
@@ -63,12 +87,14 @@ async def on_command_error(ctx, error):
 
 TOKEN = os.getenv("REXBOT_TOKEN")
 if TOKEN is None:
-    with open('./token.0', 'r', encoding='utf-8') as file_handle:
-        TOKEN = file_handle.read()
-        if TOKEN is not None:
-            bot.run(TOKEN)
-        else:
-            print("Token error: Token not found")
-
+    try:
+        with open('./token.0', 'r', encoding='utf-8') as file_handle:
+            TOKEN = file_handle.read()
+            if TOKEN is not None:
+                bot.run(TOKEN)
+            else:
+                print("Token error: Token not found")
+    except:
+        print("File handle error")
 else:
     bot.run(TOKEN)
