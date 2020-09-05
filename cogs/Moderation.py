@@ -154,7 +154,7 @@ class ModerationCog(commands.Cog):
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **userpost**', description=f'`<@{author}>` Used the `userpost` command, Who is not a moderator', colour=0xff0000)
                     
-            except Exception as e:
+        except Exception as e:
             await ctx.send(f"Some weird error bot is mad about {e}")
 
     # Embeded Announcements
