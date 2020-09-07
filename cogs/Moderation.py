@@ -276,24 +276,37 @@ class ModerationCog(commands.Cog):
             if ctx.message.author.guild_permissions.manage_roles:
                 if role is None:
                     await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
+                if member is None:
+                    await ctx.send(f'Please enter a valid member\nMember **{str(member)}** does not exist')
                 else:
                     add_role = discord.utils.get(ctx.guild.roles, name=role)
-                    await member.add_roles(add_role)
-                    embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=0x008000)
-                    await ctx.send(embed=embed)
+                    if add_role is not None:
+                        await member.add_roles(add_role)
+                        embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=0x008000)
+                        await ctx.send(embed=embed)
+                    elif role is None:
+                        pass
+                    else:
+                        await ctx.send(f'the role **{role}** does not exist!')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-                await channel
                 if channel is not None:
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
         except Exception as e:
-            if e == "403 Forbidden (error code: 50013): Missing Permissions":
+            error_1 = "403 Forbidden (error code: 50013): Missing Permissions"
+            error_2 = "\'NoneType\' object has no attribute \'id\'"
+            if e == error_1:
                 await ctx.send(f'Sorry! I dont have enough permissions! Try putting Rexbot role higher than **{role}**')
+            elif e == error_2:
+                await ctx.send(f'**{role}** does not exist!')
             else:
                 await ctx.send(f'Bot is mad about **{e}**')
+                print(f'{e}')
+
     
     # Add roles: Error handling
 
@@ -304,12 +317,26 @@ class ModerationCog(commands.Cog):
                 await ctx.send('```\n$addrole {member_name} {role}\n         ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-            await ctx.send(embed=embed)
-            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-            await channel
-            if channel is not None:
-                author = ctx.author.id
-                emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=embed)
+        elif isinstance(error, commands.BadArgument):
+            if ctx.author.guild_permissions.manage_roles:
+                await ctx.send(f'Member not found!')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
+
+        else:
+            await ctx.send(f'**{error}**')
                 
     
 
@@ -323,17 +350,22 @@ class ModerationCog(commands.Cog):
                     await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
                 else:
                     add_role = discord.utils.get(ctx.guild.roles, name=role)
-                    await member.remove_roles(add_role)
-                    embed = discord.Embed(title='**REMOVED ROLE**', description=f'Remved **{role}** from user **{str(member)}**', colour=0x008000)
-                    await ctx.send(embed=embed)
+                    if add_role is not None:
+                        await member.remove_roles(add_role)
+                        embed = discord.Embed(title='**REMOVED ROLE**', description=f'Remved **{role}** from user **{str(member)}**', colour=0x008000)
+                        await ctx.send(embed=embed)
+                    elif role is None:
+                        pass
+                    else:
+                        await ctx.send(f'Role **{role}** does not exist!')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-                await channel
                 if channel is not None:
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **removerole**', description=f'<@{author}> Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
         except Exception as e:
             if e == '403 Forbidden (error code: 50013): Missing Permissions':
                 await ctx.send(f'Sorry! I dont have enough permissions! Try putting Rexbot role higher than **{role}**')
@@ -352,10 +384,24 @@ class ModerationCog(commands.Cog):
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-                await channel
                 if channel is not None:
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **removerole**', description=f'<@{author}> Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.semd(embed=embed)
+        elif isinstance(error, commands.BadArgument):
+            if ctx.author.guild_permissions.manage_roles:
+                await ctx.send(f'Member not found!')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
+
+        else:
+            await ctx.send(f'**{error}**')
                     
     
 

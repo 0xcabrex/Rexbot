@@ -95,10 +95,12 @@ if TOKEN is None:
         with open('./token.0', 'r', encoding='utf-8') as file_handle:
             TOKEN = file_handle.read()
             if TOKEN is not None:
+                print('Usingtoken found in token file..')
                 bot.run(TOKEN)
             else:
                 print("Token error: Token not found")
     except:
         print("File handle error")
 else:
+    print('Using token found in Environment variable....')
     bot.run(TOKEN)
