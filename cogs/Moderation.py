@@ -17,8 +17,8 @@ class ModerationCog(commands.Cog):
                 await member.kick(reason=reason)
                 embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **{reason}**', colour=0xff0000)
                 await ctx.send(embed=embed)
-            except:
-                await ctx.send(f"I do not have sufficient privelages to kick {str(member)}")
+            except Exception as e:
+                await ctx.send(f"I do not have sufficient privelages to kick **{str(member)}**")
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -272,23 +272,28 @@ class ModerationCog(commands.Cog):
 
     @commands.command()
     async def addrole(self, ctx, member: discord.Member, *, role=None):
-        if ctx.message.author.guild_permissions.manage_roles:
-            if role is None:
-                await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
+        try:
+            if ctx.message.author.guild_permissions.manage_roles:
+                if role is None:
+                    await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
+                else:
+                    add_role = discord.utils.get(ctx.guild.roles, name=role)
+                    await member.add_roles(add_role)
+                    embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=0x008000)
+                    await ctx.send(embed=embed)
             else:
-                add_role = discord.utils.get(ctx.guild.roles, name=role)
-                await member.add_roles(add_role)
-                embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=0x008000)
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
-        else:
-            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-            await ctx.send(embed=embed)
-            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-            await channel
-            if channel is not None:
-                author = ctx.author.id
-                emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
-                
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{author}> Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+        except Exception as e:
+            if e == "403 Forbidden (error code: 50013): Missing Permissions":
+                await ctx.send(f'Sorry! I dont have enough permissions! Try putting Rexbot role higher than **{role}**')
+            else:
+                await ctx.send(f'Bot is mad about **{e}**')
     
     # Add roles: Error handling
 
@@ -312,22 +317,28 @@ class ModerationCog(commands.Cog):
 
     @commands.command(aliases=['removerole'])
     async def purgerole(self, ctx, member: discord.Member, *, role=None):
-        if ctx.message.author.guild_permissions.manage_roles:
-            if role is None:
-                await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
+        try:
+            if ctx.message.author.guild_permissions.manage_roles:
+                if role is None:
+                    await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
+                else:
+                    add_role = discord.utils.get(ctx.guild.roles, name=role)
+                    await member.remove_roles(add_role)
+                    embed = discord.Embed(title='**REMOVED ROLE**', description=f'Remved **{role}** from user **{str(member)}**', colour=0x008000)
+                    await ctx.send(embed=embed)
             else:
-                add_role = discord.utils.get(ctx.guild.roles, name=role)
-                await member.remove_roles(add_role)
-                embed = discord.Embed(title='**REMOVED ROLE**', description=f'**{str(member)}** has **{role}** stripped out cos he doesn\'t deserve it lol', colour=0x008000)
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
-        else:
-            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-            await ctx.send(embed=embed)
-            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-            await channel
-            if channel is not None:
-                author = ctx.author.id
-                emb = discord.Embed(title='Illegal use of command **removerole**', description=f'<@{author}> Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **removerole**', description=f'<@{author}> Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+        except Exception as e:
+            if e == '403 Forbidden (error code: 50013): Missing Permissions':
+                await ctx.send(f'Sorry! I dont have enough permissions! Try putting Rexbot role higher than **{role}**')
+            else:
+                await ctx.send(f'Bot is mad about **{e}**')
                 
     
     # Remove roles: Error handling

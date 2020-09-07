@@ -161,6 +161,7 @@ class GeneralCog(commands.Cog):
 
         embed.add_field(name='Server region:', value=ctx.guild.region)
         embed.add_field(name='Members:', value=len(ctx.guild.members))
+        #embed.add_field(name='bots:', value=ctx.guild)
 
         embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
         embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))

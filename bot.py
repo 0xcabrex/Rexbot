@@ -43,7 +43,7 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print(f'+[NEW_MEMBER]    {member} has joined the server!')
+    print(f'+[NEW_MEMBER]    {member} has joined the server: {member.guild.name}')
     channel = discord.utils.get(member.guild.channels, name='moderation-logs')
     if channel is not None:
         embed = discord.Embed(
@@ -51,6 +51,8 @@ async def on_member_join(member):
                 description=f'Member **{member.name}** joined the server!',
                 colour=0x008000
             )
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.add_field(name='Number of members', value=str(member.guild.members))
         await channel.send(embed=embed)
     else:
         pass
@@ -60,7 +62,7 @@ async def on_member_join(member):
 
 @bot.event
 async def on_member_remove(member):
-    print(f'+[REMOVE_MEMBER]   {member} has left the server!')
+    print(f'+[REMOVE_MEMBER]   {member} has left the server: {member.guild.name}')
     channel = discord.utils.get(member.guild.channels, name='moderation-logs')
     if channel is not None:
         embed = discord.Embed(
@@ -68,6 +70,8 @@ async def on_member_remove(member):
             description=f'Member **{member.name}** has left the server!',
             colour=0xFF0000
         )
+        embed.set_thumbnail(url=member.avatar_url)
+        embed.add_field(name='Number of members', value=str(member.guild.members))
         await channel.send(embed=embed)
     else:
         pass
