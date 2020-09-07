@@ -85,7 +85,7 @@ class GeneralCog(commands.Cog):
 
         else:
 
-          if (str(ctx.message.channel) == 'bot-commands'):
+          if (str(ctx.message.channel) == 'bot-commands') or (str(ctx.message.channel) == '🤖bot-commands') or (str(ctx.message.channel) == '🤖-bot-commands'):
               await ctx.send(embed=general_embed)
 
           else:
