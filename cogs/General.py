@@ -109,6 +109,16 @@ class GeneralCog(commands.Cog):
       except Exception as e:
             await ctx.send(f'Exception thrown: {e}')
 
+    # Avatar fetcher: Error handling
+    @avatar.error
+    async def avatar_error(self, ctx, error):
+      if isinstance(error, commands.MissingRequiredArgument):
+        embed = discord.Embed(colour=0x0000ff)
+        embed.set_image(url=f'{ctx.author.avatar_url}')
+        await ctx.send(embed=embed)
+      else:
+        await ctx.send(f'{error}')
+
     # Userinfo
 
     @commands.command()
@@ -138,11 +148,15 @@ class GeneralCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
+
     # Userinfo: Error handling
+
     @userinfo.error
     async def userinfo_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
           await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+        else:
+          await ctx.send(f'**{error}**')
 
 
     # Server info
@@ -150,6 +164,14 @@ class GeneralCog(commands.Cog):
     @commands.command()
     @cooldown(1,4,BucketType.channel)
     async def serverinfo(self, ctx):
+
+        count = 0
+        for people in ctx.guild.members:
+          if people.bot:
+            count = count + 1
+          else:
+            pass
+
         embed = discord.Embed(
               title = f'{ctx.guild.name} info',
               colour = 0x0000ff
@@ -161,7 +183,7 @@ class GeneralCog(commands.Cog):
 
         embed.add_field(name='Server region:', value=ctx.guild.region)
         embed.add_field(name='Members:', value=len(ctx.guild.members))
-        #embed.add_field(name='bots:', value=ctx.guild)
+        embed.add_field(name='bots:', value=count)
 
         embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
         embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))

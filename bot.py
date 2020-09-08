@@ -71,7 +71,7 @@ async def on_member_remove(member):
             colour=0xFF0000
         )
         embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name='Number of members', value=str(member.guild.members))
+        embed.add_field(name='Number of members', value=len(member.guild.members))
         await channel.send(embed=embed)
     else:
         pass
