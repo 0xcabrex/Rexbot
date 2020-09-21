@@ -19,6 +19,7 @@ class ModerationCog(commands.Cog):
                 embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **{reason}**', colour=0xff0000)
                 await ctx.send(embed=embed)
                 kick_embed = discord.Embed(title=f'You have been kicked from {member.guild.name} server', description=f'You have been kicked from the server **{member.guild.name}** for **{reason}**', colour=0xff0000)
+                kick_embed.set_thumbnail(url=member.guild.icon_url)
                 await member.send(embed=kick_embed)
             except Exception as e:
                 await ctx.send(f"I do not have sufficient privelages to kick **{str(member)}**")
@@ -31,7 +32,7 @@ class ModerationCog(commands.Cog):
                 emb = discord.Embed(title='Illegal use of command **kick**', description=f'<@{author}> Used the `kick` command, Who is not a moderator', colour=0xff0000)
                 await channel.send(embed=emb)
 
-
+ 
     # Kick members: Error handling
 
     @kick.error
@@ -72,11 +73,13 @@ class ModerationCog(commands.Cog):
                 if reason is None:
                     await ctx.send("What is the reason for the ban?")
                 else:
-                    await member.ban(reason=reason)
                     embed = discord.Embed(title='**USER BANNED**',description=f'User **{member}** has been banned due to:\n **{reason}**', colour=0xff0000)
                     await ctx.send(embed=embed)
                     ban_embed = discord.Embed(title=f'You have been banned from {member.guild.name} server', description=f'You have been banned from the server **{member.guild.name}** for **{reason}**', colour=0xff0000)
+                    ban_embed.set_thumbnail(url=member.guild.icon_url)
                     await member.send(embed=ban_embed)
+
+                    await member.ban(reason=reason)
             except:
                 await ctx.send(f"I dont have sufficient privelages to ban {str(member)}!")        
         else:
@@ -124,27 +127,41 @@ class ModerationCog(commands.Cog):
 
     @commands.command()
     async def unban(self, ctx, *, member):
-        if ctx.message.author.guild_permissions.ban_members:
-            banned_users = await ctx.guild.bans()
-            member_name, member_discriminator = member.split('#')
+        try:
+            if ctx.message.author.guild_permissions.ban_members:
+                banned_users = await ctx.guild.bans()
+                member_name, member_discriminator = member.split('#')
 
-            for ban_entry in banned_users:
-                user = ban_entry.user
+                for ban_entry in banned_users:
+                    user = ban_entry.user
 
-                if (user.name, user.discriminator) == (member_name, member_discriminator):
-                    await ctx.guild.unban(user)
-                    embed = discord.Embed(description=f'***Unbanned user {user.mention}***', colour=0x008000)
-                    await ctx.send(embed=embed)
-                    return
+                    if (user.name, user.discriminator) == (member_name, member_discriminator):
+                        await ctx.guild.unban(user)
+                        embed = discord.Embed(description=f'***Unbanned user {user.mention}***', colour=0x008000)
+                        await ctx.send(embed=embed)
+                        return
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id.mention
+                    emb = discord.Embed(title='Illegal use of command **unban**', description=f'`<@{author}>` Used the `unban` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
+        except ValueError:
+            await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
+        except Exception as e:
+            print(f'{e}')
+
+
+    # Unban mambers: Error handling
+    @unban.error
+    async def unban_error(self, ctx, error):
+        if isinstance(error, ValueError):
+            await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
         else:
-            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-            await ctx.send(embed=embed)
-            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-            await channel
-            if channel is not None:
-                author = ctx.author.id.mention
-                emb = discord.Embed(title='Illegal use of command **unban**', description=f'`<@{author}>` Used the `unban` command, Who is not a moderator', colour=0xff0000)
-                await channel.send(embed=emb)
+            await ctx.send(f'**{error}**')
                 
     
     # Clear command
@@ -223,22 +240,35 @@ class ModerationCog(commands.Cog):
     @commands.command(aliases=['mute'])
     async def _mute(self, ctx, member: discord.Member, *, reason=None):
         if ctx.message.author.guild_permissions.manage_roles:
-            if member == str(ctx.author):
-                await ctx.send("**You can't mute yourself**")
+            if str(member.name) == str(ctx.author.name):
+                await ctx.send(f"**You can't mute yourself {ctx.author.mention}**")
             else:
                 if reason is None:
                     await ctx.send("What is the reason for the mute?")
                 else:
-                    muted = discord.utils.get(ctx.guild.roles, name='Muted')
-                    if muted is not None:
-                        role = discord.utils.get(ctx.guild.roles, name='Muted')
-                        await member.add_roles(role)
-                        emb = discord.Embed(title=f'You have been muted in {member.guild.name}', description=f'You have been muted in **{ctx.guild.name}** server for **{reason}**')
-                        embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=0xff0000)
-                        await ctx.send(embed=embed)
-                        await member.send(embed=emb)
+                    mute_role_exist = True
+                    is_user_muted = False
+
+                    muted1 = discord.utils.get(ctx.guild.roles, name='Muted')
+
+                    for role in member.roles:
+                        if role.id == muted1.id:
+                            is_user_muted = True
+                        else:
+                            is_user_muted = False
+
+                    if mute_role_exist:
+                        if is_user_muted:
+                            embed = discord.Embed(title='Already muted', description=f'**{member.name}** is already muted!', colour=0xf86000)
+                            await ctx.send(embed=embed)
+                        else:
+                            await member.add_roles(muted1)
+                            emb = discord.Embed(title=f'You have been muted in {member.guild.name}', description=f'You have been muted in **{ctx.guild.name}** server for **{reason}**', colour=0xff0000)
+                            embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=0xff0000)
+                            await ctx.send(embed=embed)
+                            await member.send(embed=emb)
                     else:
-                        embed = discord.Embed(description='Member already muted')
+                        embed = discord.Embed(title='ERROR', description=f'Mute role does not exist in this server!\n I cannot mute {member.mention}', colour=0xff0000)
                         await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
@@ -267,6 +297,20 @@ class ModerationCog(commands.Cog):
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **mute**', description=f'<@{author}> Used the `mute` command, Who is not a moderator', colour=0xff0000)
                     await channel.send(embed=emb)
+        elif isinstance(error, commands.BadArgument):
+            if ctx.author.guild_permissions.manage_roles:
+                await ctx.send('Member does not exist!')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **mute**', description=f'<@{author}> Used the `mute` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
+        else:
+            await ctx.send(f'**{error}**')
                 
     
 
@@ -283,7 +327,12 @@ class ModerationCog(commands.Cog):
                 emb = discord.Embed(title='Unmuted', description=f'You have been unmuted from the server **{member.guild.name}**\nDon\'t be naughty again', colour=0x008000)
                 await member.send(embed=emb)
             else:
-                await ctx.send(f'**{str(member)}** not muted lol')
+                embed = discord.Embed(
+                    title = 'User not muted',
+                    description = f'{member.mention} is not muted!',
+                    colour=0xf86000
+                )
+                await ctx.send(embed=embed)
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -304,13 +353,25 @@ class ModerationCog(commands.Cog):
                 await ctx.send('```\n$unmute {member_name}\n        ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-            await ctx.send(embed=embed)
-            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-            await channel
-            if channel is not None:
-                author = ctx.author.id
-                emb = discord.Embed(title='Illegal use of command **unmute**', description=f'<@{author}> Used the `unmute` command, Who is not a moderator', colour=0xff0000)
-                await channel.send(embed=emb)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'<@{author}> Used the `unmute` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
+        elif isinstance(error, commands.BadArgument):
+            if ctx.author.guild_permissions.manage_roles:
+                await ctx.send('The user does not exist!')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                await ctx.send(embed=embed)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await channel
+                if channel is not None:
+                    author = ctx.author.id
+                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'<@{author}> Used the `unmute` command, Who is not a moderator', colour=0xff0000)
+                    await channel.send(embed=emb)
                 
 
     # Adding roles
@@ -332,7 +393,7 @@ class ModerationCog(commands.Cog):
                     elif role is None:
                         pass
                     else:
-                        await ctx.send(f'the role **{role}** does not exist!')
+                        await ctx.send(f'the role **{role}** does not exist!\n**NOTE:** the addrole command is **case sensitive**')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -395,7 +456,7 @@ class ModerationCog(commands.Cog):
                     elif role is None:
                         pass
                     else:
-                        await ctx.send(f'Role **{role}** does not exist!')
+                        await ctx.send(f'Role **{role}** does not exist!\n**NOTE**: the removerole/purgerole command is **case sensitive**')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)

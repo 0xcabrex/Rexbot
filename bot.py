@@ -8,7 +8,7 @@ from discord.ext import commands
 
 command_prefix='$'
 
-bot = commands.Bot(command_prefix=('$'))
+bot = commands.Bot(command_prefix=(f'{command_prefix}'))
 bot.remove_command('help')
 working_directory = os.getcwd()
 
@@ -52,7 +52,8 @@ async def on_member_join(member):
                 colour=0x008000
             )
         embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name='Number of members', value=str(member.guild.members))
+        embed.add_field(name='Number of members', value=len(member.guild.members))
+        embed.set_footer(text=f'id: {member.id}')
         await channel.send(embed=embed)
     else:
         pass
@@ -72,6 +73,7 @@ async def on_member_remove(member):
         )
         embed.set_thumbnail(url=member.avatar_url)
         embed.add_field(name='Number of members', value=len(member.guild.members))
+        embed.set_footer(text=f'id: {member.id}')
         await channel.send(embed=embed)
     else:
         pass

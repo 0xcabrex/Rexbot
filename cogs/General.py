@@ -85,13 +85,7 @@ class GeneralCog(commands.Cog):
 
         else:
 
-          if (str(ctx.message.channel) == 'bot-commands') or (str(ctx.message.channel) == '🤖bot-commands') or (str(ctx.message.channel) == '🤖-bot-commands'):
-              await ctx.send(embed=general_embed)
-
-          else:
-
-              embed = discord.Embed(title='Wrong channel', description='**Please use this command in #bot-commands**', colour=0xff0000)
-              await ctx.send(embed=embed)
+          await ctx.send(embed=general_embed)
 
     # Avatar fetcher
 
