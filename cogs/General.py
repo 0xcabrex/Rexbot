@@ -141,10 +141,13 @@ class GeneralCog(commands.Cog):
 
           multiple_member_array_duplicate_array = []
           for multiple_member_array_duplicate in multiple_member_array:
+            if len(multiple_member_array_duplicate_array) < 10:
               multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+            else:
+              break
 
           embed = discord.Embed(
-                  title=f'Search for {member}\nFound multiple results',
+                  title=f'Search for {member}\nFound multiple results (Max 10)',
                   description=f'\n'.join(multiple_member_array_duplicate_array),
                   colour=0x808080
               )
@@ -234,10 +237,13 @@ class GeneralCog(commands.Cog):
 
         multiple_member_array_duplicate_array = []
         for multiple_member_array_duplicate in multiple_member_array:
+          if len(multiple_member_array_duplicate_array) < 10:
             multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+          else:
+            break
 
         embed = discord.Embed(
-              title=f'Search for {member}\nFound multiple results',
+              title=f'Search for {member}\nFound multiple results (Max 10)',
               description=f'\n'.join(multiple_member_array_duplicate_array),
               colour=0x808080
           )
