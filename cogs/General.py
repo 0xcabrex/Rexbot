@@ -63,16 +63,16 @@ class GeneralCog(commands.Cog):
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
                 description = '**help**\ngives you this dialogue\n\n'
-                              '**kick**\nKicks the member out of the server\nUsage: $kick {member_name} {reason}, reason is neccessary\n\n'
-                              '**ban**\nbans the user from the server\nUsage: $ban {member_name} {reason}, reason is necessary\n\n'
-                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name}\n\n'
-                              '**mute**\nmutes the user\nUsage: $mute {member_name} {reason}, reason is necessary\n\n'
-                              '**unmute**\nunmutes the user\nUsage: {member_name}\n\n'
-                              '**clear | remove | purge**\n clears messages from that channel\nUsage: $clear {n} where `n` is the number of messages to be purged\n\n'
+                              '**kick**\nKicks the member out of the server\nUsage: $kick {member_name | member_id | member_tag} {reason}, reason is neccessary\n\n'
+                              '**ban**\nbans the user from the server\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is necessary\n\n'
+                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name#discriminator}\n\n'
+                              '**mute**\nmutes the user\nUsage: $mute {member_name | member_id | member_tag} {reason}, reason is necessary\n\n'
+                              '**unmute**\nunmutes the user\nUsage: {member_name | member_id | member_tag}\n\n'
+                              '**clear | remove | purge**\n clears messages from the channel where it is used\nUsage: $clear {n} where `n` is the number of messages to be purged\n\n'
                               '**embedpost**\nWill post an embedded announcement\nUsage: $embedpost {message}\n\n'
-                              '**userpost**\nWill send message instead of you\nUsage: $userpost {message}\n\n'
-                              '**addrole**\nAdds role to member\nUsage: $addrole {role_name}\n\n'
-                              '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name}',
+                              '**userpost**\nWill send message instead of you in general\nUsage: $userpost {message}\n\n'
+                              '**addrole**\nAdds role to member\nUsage: $addrole {member_name | member_id | member_tag} {role_name}\n\n'
+                              '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name | member_id | member_tag} {role_name}',
                 colour=0x01a901
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
@@ -89,21 +89,75 @@ class GeneralCog(commands.Cog):
 
     # Avatar fetcher
 
-    @commands.command()
+    @commands.command(aliases=['av'])
     @cooldown(1,5,BucketType.channel)
-    async def avatar(self, ctx, member: discord.Member):
+    async def avatar(self, ctx, member):
       try:
-          if member is None:
+
+        if member[0] == '<' and member[1] == '@':
+                converter = MemberConverter()
+                member = await converter.convert(ctx, member)
+        elif member.isnumeric():
+            member = int(member)
+
+        members = await ctx.guild.fetch_members().flatten()
+        multiple_member_array = []
+            
+        if isinstance(member, discord.Member):
+          for members_list in members:
+            if member.name.lower() in members_list.name.lower():
+              multiple_member_array.append(members_list)
+            else:
+              pass
+        elif isinstance(member, int):
+          for member_list in members:
+              if member_list.id == member:
+                multiple_member_array.append(member_list)
+              else:
+                pass
+        else:
+          for members_list in members:
+            if member.lower() in members_list.name.lower():
+              multiple_member_array.append(members_list)
+            else:
+              pass
+
+
+        if len(multiple_member_array) == 1:
+
+          if isinstance(member, int):
             embed = discord.Embed(colour=0x0000ff)
-            embed.set_image(url=f'{ctx.author.avatar_url}')
+            embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
           else:
-            embed = discord.Embed(colour=0x0000ff)
-            embed.set_image(url=f'{member.avatar_url}')
-            await ctx.send(embed=embed)
+            if member is None or multiple_member_array[0].name.lower() == 'me':
+              embed = discord.Embed(colour=0x0000ff)
+              embed.set_image(url=f'{ctx.author.avatar_url}')
+            else:
+              embed = discord.Embed(colour=0x0000ff)
+              embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
+          await ctx.send(embed=embed)
+
+        elif len(multiple_member_array) > 1:
+
+          multiple_member_array_duplicate_array = []
+          for multiple_member_array_duplicate in multiple_member_array:
+              multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+          embed = discord.Embed(
+                  title=f'Search for {member}\nFound multiple results',
+                  description=f'\n'.join(multiple_member_array_duplicate_array),
+                  colour=0x808080
+              )
+          await ctx.send(embed=embed)
+
+        else:
+          await ctx.send(f'The member `{member}` does not exist!')
       except Exception as e:
-            await ctx.send(f'Exception thrown: {e}')
+        await ctx.send(f'Exception thrown: {e}')
+
 
     # Avatar fetcher: Error handling
+
     @avatar.error
     async def avatar_error(self, ctx, error):
       if isinstance(error, commands.MissingRequiredArgument):
@@ -113,34 +167,84 @@ class GeneralCog(commands.Cog):
       else:
         await ctx.send(f'{error}')
 
+
     # Userinfo
 
     @commands.command()
     @cooldown(1,3,BucketType.channel)
-    async def userinfo(self, ctx, member: discord.Member):
+    async def userinfo(self, ctx, member):
+
+      if member[0] == '<' and member[1] == '@':
+          converter = MemberConverter()
+          member = await converter.convert(ctx, member)
+      elif member.isnumeric():
+        member = int(member)
+
+      members = await ctx.guild.fetch_members().flatten()
+      multiple_member_array = []
+      
+      if isinstance(member, discord.Member):
+        for members_list in members:
+            if member.name.lower() in members_list.name.lower():
+                multiple_member_array.append(members_list)
+            else:
+                pass
+
+      elif isinstance(member, int):
+        for member_list in members:
+          if member_list.id == member:
+            multiple_member_array.append(member_list)
+          else:
+            pass
+
+      else:
+        for members_list in members:
+          if member.lower() in members_list.name.lower():
+              multiple_member_array.append(members_list)
+          else:
+              pass
+
+      if len(multiple_member_array) == 1:
 
         roles = []
-        for role in member.roles:
+        for role in multiple_member_array[0].roles:
             roles.append(role)
 
         embed = discord.Embed(
             colour = 0x0000ff,
         )
-        embed.set_author(name=f'User Info - {member}')
-        embed.set_thumbnail(url=member.avatar_url)
+        embed.set_author(name=f'User Info - {multiple_member_array[0]}')
+        embed.set_thumbnail(url=multiple_member_array[0].avatar_url)
         embed.set_footer(text='made by CABREX with ❤')
 
-        embed.add_field(name='ID:', value=member.id)
-        embed.add_field(name='Member Name:', value=member.display_name)
+        embed.add_field(name='ID:', value=multiple_member_array[0].id)
+        embed.add_field(name='\nMember Name:', value=multiple_member_array[0].display_name)
 
-        embed.add_field(name='Created at: ', value=member.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
-        embed.add_field(name='Joined at:', value=member.joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='\nCreated at: ', value=multiple_member_array[0].created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='\nJoined at:', value=multiple_member_array[0].joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
-        embed.add_field(name=f'Roles ({len(roles)})', value=' '.join([role.mention for role in roles]))
+        embed.add_field(name=f'\nRoles ({len(roles)})', value=' '.join([role.mention for role in roles]))
 
-        embed.add_field(name='Bot?', value=member.bot)
+        embed.add_field(name='\nBot?', value=multiple_member_array[0].bot)
 
         await ctx.send(embed=embed)
+
+
+      elif len(multiple_member_array) > 1:
+
+        multiple_member_array_duplicate_array = []
+        for multiple_member_array_duplicate in multiple_member_array:
+            multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+        embed = discord.Embed(
+              title=f'Search for {member}\nFound multiple results',
+              description=f'\n'.join(multiple_member_array_duplicate_array),
+              colour=0x808080
+          )
+        await ctx.send(embed=embed)
+
+      else:
+        await ctx.send(f'The member `{member}` does not exist!')
 
 
     # Userinfo: Error handling
@@ -185,6 +289,7 @@ class GeneralCog(commands.Cog):
         embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
         await ctx.send(embed=embed)
+
 
     # Memes
 

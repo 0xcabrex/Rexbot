@@ -1,6 +1,7 @@
 import discord
 import time
 from discord.ext import commands
+from discord.ext.commands import MemberConverter
 
 
 class ModerationCog(commands.Cog):
@@ -8,21 +9,68 @@ class ModerationCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     # Kick members
 
     @commands.command()
-    async def kick(self, ctx, member: discord.Member, *, reason=None):
+    async def kick(self, ctx, member, *, reason=None):
         if ctx.message.author.guild_permissions.kick_members:
+
+            if member[0] == '<' and member[1] == '@':
+                converter = MemberConverter()
+                member = await converter.convert(ctx, member)
+            elif member.isnumeric():
+                member = int(member)
+
+            members = await ctx.guild.fetch_members().flatten()
+            multiple_member_array = []
             try:
-                await member.kick(reason=reason)
-                embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **{reason}**', colour=0xff0000)
-                await ctx.send(embed=embed)
-                kick_embed = discord.Embed(title=f'You have been kicked from {member.guild.name} server', description=f'You have been kicked from the server **{member.guild.name}** for **{reason}**', colour=0xff0000)
-                kick_embed.set_thumbnail(url=member.guild.icon_url)
-                await member.send(embed=kick_embed)
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+
+
+                else:
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+
+                    await multiple_member_array[0].kick(reason=reason)
+                    if reason is None:
+                        embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **No Reason Specified**', colour=0xff0000)
+                    else:
+                        embed = discord.Embed(title='**USER KICKED**',description=f'User **{member}** has been kicked due to:\n **{reason}**', colour=0xff0000)
+                    await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
             except Exception as e:
-                await ctx.send(f"I do not have sufficient privelages to kick **{str(member)}**")
+                await ctx.send(f"I do not have sufficient privelages to kick **{multiple_member_array.name}**")
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -48,17 +96,6 @@ class ModerationCog(commands.Cog):
                     author = ctx.author.id
                     emb = discord.Embed(title='Illegal use of command **kick**', description=f'<@{author}> Used the `kick` command, Who is not a moderator', colour=0xff0000)
                     await channel.send(embed=emb)
-        elif isinstance(error, commands.BadArgument):
-            if ctx.message.author.guild_permissions.kick_members:
-                await ctx.send('Member not found!')
-            else:
-                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
-                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
-                await ctx.send(embed=embed)
-                if channel is not None:
-                    author = ctx.author.id
-                    emb = discord.Embed(title='Illegal use of command **kick**', description=f'<@{author}> Used the `kick` command, Who is not a moderator', colour=0xff0000)
-                    await channel.send(embed=emb)
         else:
             await ctx.send(f'**{error}**')
 
@@ -66,22 +103,64 @@ class ModerationCog(commands.Cog):
     # Ban members
 
     @commands.command()
-    async def ban(self, ctx, member: discord.Member, *, reason=None):
+    async def ban(self, ctx, member, *, reason=None):
         
         if ctx.message.author.guild_permissions.ban_members:
             try:
-                if reason is None:
-                    await ctx.send("What is the reason for the ban?")
-                else:
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{member}** has been banned due to:\n **{reason}**', colour=0xff0000)
-                    await ctx.send(embed=embed)
-                    ban_embed = discord.Embed(title=f'You have been banned from {member.guild.name} server', description=f'You have been banned from the server **{member.guild.name}** for **{reason}**', colour=0xff0000)
-                    ban_embed.set_thumbnail(url=member.guild.icon_url)
-                    await member.send(embed=ban_embed)
+                
+                if member[0] == '<' and member[1] == '@':
+                    converter = MemberConverter()
+                    member = await converter.convert(ctx, member)
+                elif member.isnumeric():
+                    member = int(member)
 
-                    await member.ban(reason=reason)
-            except:
-                await ctx.send(f"I dont have sufficient privelages to ban {str(member)}!")        
+                members = await ctx.guild.fetch_members().flatten()
+                multiple_member_array = []
+        
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+                else:
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+                    if reason is None:
+                        embed = discord.Embed(title='**USER BANNED**',description=f'User **{member}** has been banned due to:\n **No Reason Specified**', colour=0xff0000)
+                    else:
+                        embed = discord.Embed(title='**USER BANNED**',description=f'User **{member}** has been banned due to:\n **{reason}**', colour=0xff0000)
+                    await multiple_member_array[0].ban(reason=reason)
+                    await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+
+            except Exception as e:
+                await ctx.send(f"I dont have sufficient privelages to ban `{multiple_member_array.name}`!\n{e}\n{member}")
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -156,6 +235,7 @@ class ModerationCog(commands.Cog):
 
 
     # Unban mambers: Error handling
+
     @unban.error
     async def unban_error(self, ctx, error):
         if isinstance(error, ValueError):
@@ -238,38 +318,92 @@ class ModerationCog(commands.Cog):
     # Mute members
 
     @commands.command(aliases=['mute'])
-    async def _mute(self, ctx, member: discord.Member, *, reason=None):
+    async def _mute(self, ctx, member, *, reason=None):
         if ctx.message.author.guild_permissions.manage_roles:
-            if str(member.name) == str(ctx.author.name):
-                await ctx.send(f"**You can't mute yourself {ctx.author.mention}**")
-            else:
-                if reason is None:
-                    await ctx.send("What is the reason for the mute?")
+            
+            if member[0] == '<' and member[1] == '@':
+                converter = MemberConverter()
+                member = await converter.convert(ctx, member)
+            elif member.isnumeric():
+                member = int(member)
+
+            members = await ctx.guild.fetch_members().flatten()
+            multiple_member_array = []
+            try:
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+
+
                 else:
-                    mute_role_exist = True
-                    is_user_muted = False
-
-                    muted1 = discord.utils.get(ctx.guild.roles, name='Muted')
-
-                    for role in member.roles:
-                        if role.id == muted1.id:
-                            is_user_muted = True
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
                         else:
-                            is_user_muted = False
+                            pass
 
-                    if mute_role_exist:
-                        if is_user_muted:
-                            embed = discord.Embed(title='Already muted', description=f'**{member.name}** is already muted!', colour=0xf86000)
-                            await ctx.send(embed=embed)
-                        else:
-                            await member.add_roles(muted1)
-                            emb = discord.Embed(title=f'You have been muted in {member.guild.name}', description=f'You have been muted in **{ctx.guild.name}** server for **{reason}**', colour=0xff0000)
-                            embed = discord.Embed(title='User muted!', description=f'**{member}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=0xff0000)
-                            await ctx.send(embed=embed)
-                            await member.send(embed=emb)
+                if len(multiple_member_array) == 1:
+                    if str(multiple_member_array[0].name) == str(ctx.author.name):
+                        await ctx.send(f"**You can't mute yourself {ctx.author.mention}**")
                     else:
-                        embed = discord.Embed(title='ERROR', description=f'Mute role does not exist in this server!\n I cannot mute {member.mention}', colour=0xff0000)
-                        await ctx.send(embed=embed)
+                        mute_role_exist = True
+                        is_user_muted = False
+
+                        muted1 = discord.utils.get(ctx.guild.roles, name='Muted')
+
+                        for role in multiple_member_array[0].roles:
+                            if role.id == muted1.id:
+                                is_user_muted = True
+                            else:
+                                is_user_muted = False
+
+                        if mute_role_exist:
+                            if is_user_muted:
+                                embed = discord.Embed(title='Already muted', description=f'**{multiple_member_array[0].name}** is already muted!', colour=0xf86000)
+                                await ctx.send(embed=embed)
+                            else:
+                                await multiple_member_array[0].add_roles(muted1)
+                                if reason is not None:
+                                    emb = discord.Embed(title=f'You have been muted in {ctx.guild.name}', description=f'You have been muted in **{ctx.guild.name}** server for **{reason}**', colour=0xff0000)
+                                    embed = discord.Embed(title='User muted!', description=f'**{multiple_member_array[0]}** was muted by **{ctx.message.author}** for:\n\n**{reason}**', colour=0xff0000)
+                                else:
+                                    emb = discord.Embed(title=f'You have been muted in {ctx.guild.name}', description=f'You have been muted in **{ctx.guild.name}** server for **No Reason At All**', colour=0xff0000)
+                                    embed = discord.Embed(title='User muted!', description=f'**{multiple_member_array[0]}** was muted by **{ctx.message.author}** for:\n\n**No Reason At All**', colour=0xff0000)
+                                await ctx.send(embed=embed)
+                                await multiple_member_array[0].send(embed=emb)
+                        else:
+                            embed = discord.Embed(title='ERROR', description=f'Mute role does not exist in this server!\n I cannot mute {member.mention}', colour=0xff0000)
+                            await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+            except Exception as e:
+                await ctx.send(f"I do not have sufficient privelages to mute **{multiple_member_array[0].name}**\n{e}")
+
+
+                
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -317,22 +451,75 @@ class ModerationCog(commands.Cog):
     # Unmute member
 
     @commands.command(aliases=['unmute'])
-    async def _unmute(self, ctx, member: discord.Member):
+    async def _unmute(self, ctx, member):
         if ctx.message.author.guild_permissions.manage_roles:
-            role = discord.utils.get(member.roles, name='Muted')
-            if role is not None:
-                await member.remove_roles(role)
-                embed = discord.Embed(title='User unmuted!', description='**{0}** was unmuted by **{1}**\n\nDon\'t be naughty again'.format(member, ctx.message.author), colour=0x008000)
-                await ctx.send(embed=embed)
-                emb = discord.Embed(title='Unmuted', description=f'You have been unmuted from the server **{member.guild.name}**\nDon\'t be naughty again', colour=0x008000)
-                await member.send(embed=emb)
-            else:
-                embed = discord.Embed(
-                    title = 'User not muted',
-                    description = f'{member.mention} is not muted!',
-                    colour=0xf86000
-                )
-                await ctx.send(embed=embed)
+
+            if member[0] == '<' and member[1] == '@':
+                converter = MemberConverter()
+                member = await converter.convert(ctx, member)
+            elif member.isnumeric():
+                member = int(member)
+
+            members = await ctx.guild.fetch_members().flatten()
+            multiple_member_array = []
+            try:
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+
+
+                else:
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+                    role = discord.utils.get(multiple_member_array[0].roles, name='Muted')
+                    if role is not None:
+                        await multiple_member_array[0].remove_roles(role)
+                        embed = discord.Embed(title='User unmuted!', description=f'**{multiple_member_array[0]}** was unmuted by **{ctx.message.author}**\n\nDon\'t be naughty again', colour=0x008000)
+                        await ctx.send(embed=embed)
+                        emb = discord.Embed(title='Unmuted', description=f'You have been unmuted from the server **{multiple_member_array[0].guild.name}**\nDon\'t be naughty again', colour=0x008000)
+                        await multiple_member_array[0].send(embed=emb)
+                    else:
+                        embed = discord.Embed(
+                            title = 'User not muted',
+                            description = f'{multiple_member_array[0].mention} is not muted!',
+                            colour=0xf86000
+                        )
+                        await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+            except Exception as e:
+                await ctx.send(f"I do not have sufficient privelages to mute **{multiple_member_array[0].name}**\n{e}")
+
+
+            
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -377,23 +564,69 @@ class ModerationCog(commands.Cog):
     # Adding roles
 
     @commands.command()
-    async def addrole(self, ctx, member: discord.Member, *, role=None):
+    async def addrole(self, ctx, member, *, role=None):
         try:
             if ctx.message.author.guild_permissions.manage_roles:
-                if role is None:
-                    await ctx.send(f"Which role do you want to give to **{str(member)}**? ")
-                if member is None:
-                    await ctx.send(f'Please enter a valid member\nMember **{str(member)}** does not exist')
+
+                if member[0] == '<' and member[1] == '@':
+                    converter = MemberConverter()
+                    member = await converter.convert(ctx, member)
+                elif member.isnumeric():
+                    member = int(member)
+
+                members = await ctx.guild.fetch_members().flatten()
+                multiple_member_array = []
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
                 else:
-                    add_role = discord.utils.get(ctx.guild.roles, name=role)
-                    if add_role is not None:
-                        await member.add_roles(add_role)
-                        embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(member)}** has been given the role **{role}**', colour=0x008000)
-                        await ctx.send(embed=embed)
-                    elif role is None:
-                        pass
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+
+                    if role is None:
+                        await ctx.send(f"Which role do you want to give to **{multiple_member_array[0].name}**? ")
+                    if member is None:
+                        await ctx.send(f'Please enter a valid member\nMember **{multiple_member_array[0].name}** does not exist')
                     else:
-                        await ctx.send(f'the role **{role}** does not exist!\n**NOTE:** the addrole command is **case sensitive**')
+                        add_role = discord.utils.get(ctx.guild.roles, name=role)
+                        if add_role is not None:
+                            await multiple_member_array[0].add_roles(add_role)
+                            embed = discord.Embed(title='**ADDED ROLE**', description=f'**{str(multiple_member_array[0])}** has been given the role **{role}**', colour=0x008000)
+                            await ctx.send(embed=embed)
+                        elif role is None:
+                            pass
+                        else:
+                            await ctx.send(f'the role **{role}** does not exist!\n**NOTE:** the addrole command is **case sensitive**')
+
+                elif len(multiple_member_array) > 1:
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+                
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -442,21 +675,67 @@ class ModerationCog(commands.Cog):
     # Remove roles
 
     @commands.command(aliases=['removerole'])
-    async def purgerole(self, ctx, member: discord.Member, *, role=None):
+    async def purgerole(self, ctx, member, *, role=None):
         try:
             if ctx.message.author.guild_permissions.manage_roles:
-                if role is None:
-                    await ctx.send(f"Which role do you want to remove from **{str(member)}**? ")
+
+                if member[0] == '<' and member[1] == '@':
+                    converter = MemberConverter()
+                    member = await converter.convert(ctx, member)
+                elif member.isnumeric():
+                    member = int(member)
+
+                members = await ctx.guild.fetch_members().flatten()
+                multiple_member_array = []
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
                 else:
-                    add_role = discord.utils.get(ctx.guild.roles, name=role)
-                    if add_role is not None:
-                        await member.remove_roles(add_role)
-                        embed = discord.Embed(title='**REMOVED ROLE**', description=f'Remved **{role}** from user **{str(member)}**', colour=0x008000)
-                        await ctx.send(embed=embed)
-                    elif role is None:
-                        pass
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+
+                    if role is None:
+                        await ctx.send(f"Which role do you want to remove from **{str(multiple_member_array[0])}**? ")
                     else:
-                        await ctx.send(f'Role **{role}** does not exist!\n**NOTE**: the removerole/purgerole command is **case sensitive**')
+                        add_role = discord.utils.get(ctx.guild.roles, name=role)
+                        if add_role is not None:
+                            await multiple_member_array[0].remove_roles(add_role)
+                            embed = discord.Embed(title='**REMOVED ROLE**', description=f'Removed **{role}** from user **{str(multiple_member_array[0])}**', colour=0x008000)
+                            await ctx.send(embed=embed)
+                        elif role is None:
+                            pass
+                        else:
+                            await ctx.send(f'Role **{role}** does not exist!\n**NOTE**: the removerole/purgerole command is **case sensitive**')
+
+                elif len(multiple_member_array) > 1:
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
