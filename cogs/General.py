@@ -3,6 +3,7 @@ import random
 from discord.ext import commands
 from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
+import aiohttp
 
 
 class GeneralCog(commands.Cog):
@@ -44,48 +45,53 @@ class GeneralCog(commands.Cog):
 
     @commands.command()
     @cooldown(1,3,BucketType.channel)
-    async def help(self, ctx, helprole=None):
+    async def help(self, ctx, argument=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
 
         general_embed = discord.Embed(
                 title = 'Bot commands for @Rexbot',
-                description='**8ball**- Uses AI to give you the best answers to your questions\n'
-                            '**avatar**- Shows the avatar of the user entered\n'
-                            '**userinfo**- Gives the info of the entered user\n'
-                            '**serverinfo**- Gives the info of the server\n'
-                            '**meme**- Sends a beautiful meme\n'
-                            '**dog**-Gets you a dog picture\n',
+                description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: $8ball {question}\n\n'
+                            '**avatar** | **av**\nShows the avatar of the user entered\nUsage: $avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
+                            '**userinfo**\nGives the info of the entered user\nUsage: $userinfo {member_name | member_tag | member_id}\n\n'
+                            '**serverinfo**\nGives the info of the server(No Arguments required)\n\n'
+                            '**meme**\nSends you a beautiful meme\n\n'
+                            '**dog | doggo | pupper**\nGets you a dog picture\n\n'
+                            '**cat | kitty**\nGets you a cat picture',
                 colour=0x01a901
             )
         general_embed.set_footer(text='Made by CABREX with ❤')
 
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
-                description = '**help**\ngives you this dialogue\n\n'
-                              '**kick**\nKicks the member out of the server\nUsage: $kick {member_name | member_id | member_tag} {reason}, reason is neccessary\n\n'
-                              '**ban**\nbans the user from the server\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is necessary\n\n'
+                description = '**kick**\nKicks the member out of the server\nUsage: $kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
+                              '**ban**\nbans the user from the server\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name#discriminator}\n\n'
-                              '**mute**\nmutes the user\nUsage: $mute {member_name | member_id | member_tag} {reason}, reason is necessary\n\n'
+                              '**mute**\nmutes the user\nUsage: $mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**unmute**\nunmutes the user\nUsage: {member_name | member_id | member_tag}\n\n'
                               '**clear | remove | purge**\n clears messages from the channel where it is used\nUsage: $clear {n} where `n` is the number of messages to be purged\n\n'
-                              '**embedpost**\nWill post an embedded announcement\nUsage: $embedpost {message}\n\n'
-                              '**userpost**\nWill send message instead of you in general\nUsage: $userpost {message}\n\n'
                               '**addrole**\nAdds role to member\nUsage: $addrole {member_name | member_id | member_tag} {role_name}\n\n'
                               '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name | member_id | member_tag} {role_name}',
                 colour=0x01a901
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
 
-        if (mod_role is not None or admin_role is not None or ctx.message.author.guild_permissions.manage_messages):            
-            
-            await ctx.send(embed=general_embed)
-            user = ctx.author
-            await user.send(embed=mod_embed)
+        initial_help_dialogue = discord.Embed(
+                title = 'Help command',
+                description = '`$help Fun`- Some fun commands\n`$help Moderation` | `$help mod` - Moderation commands',
+                colour=0x01a901
+            )
+        initial_help_dialogue.set_footer(text='Made by CABREX with ❤')
 
-        else:
-
+        if argument is None:
+          await ctx.send(embed=initial_help_dialogue)
+        elif argument.lower() == 'fun':
           await ctx.send(embed=general_embed)
+        elif argument.lower() == 'moderation' or argument.lower() == 'mod':
+          await ctx.send(embed=mod_embed)
+        else:
+          pass
+
 
     # Avatar fetcher
 
@@ -268,38 +274,45 @@ class GeneralCog(commands.Cog):
     @commands.command()
     @cooldown(1,4,BucketType.channel)
     async def serverinfo(self, ctx):
+        try:
+          count = 0
 
-        count = 0
-        for people in ctx.guild.members:
-          if people.bot:
-            count = count + 1
-          else:
-            pass
+          members = await ctx.guild.fetch_members().flatten()
 
-        embed = discord.Embed(
-              title = f'{ctx.guild.name} info',
-              colour = 0x0000ff
-          )
-        embed.set_thumbnail(url=ctx.guild.icon_url)
+          for people in members:
+            if people.bot:
+              count = count + 1
+            #elif people.guild.owner:
+            #  guild_owner = people
+            else:
+              pass
 
-        embed.add_field(name='Owner name:', value=ctx.guild.owner.display_name)
-        embed.add_field(name='Server ID:', value=ctx.guild.id)
+          embed = discord.Embed(
+                title = f'{ctx.guild.name} info',
+                colour = 0x0000ff
+            )
+          embed.set_thumbnail(url=ctx.guild.icon_url)
 
-        embed.add_field(name='Server region:', value=ctx.guild.region)
-        embed.add_field(name='Members:', value=len(ctx.guild.members))
-        embed.add_field(name='bots:', value=count)
+          embed.add_field(name='Owner name:', value=ctx.guild.owner)
+          embed.add_field(name='Server ID:', value=ctx.guild.id)
 
-        embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
-        embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
+          embed.add_field(name='Server region:', value=ctx.guild.region)
+          embed.add_field(name='Members:', value=ctx.guild.member_count)
+          embed.add_field(name='bots:', value=count)
 
-        embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+          embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
+          embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
 
-        await ctx.send(embed=embed)
+          embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+
+          await ctx.send(embed=embed)
+        except Exception as e:
+          await ctx.send(f'{e}')
 
 
     # Memes
 
-    @commands.command()
+    @commands.command(aliases=['Meme'])
     @cooldown(1,3,BucketType.channel)
     async def meme(self, ctx):
 
@@ -329,7 +342,7 @@ class GeneralCog(commands.Cog):
 
     # Dog pictures
 
-    @commands.command()
+    @commands.command(aliases=['doggo','pupper'])
     @cooldown(1,1,BucketType.channel)
     async def dog(self, ctx):
       
@@ -348,6 +361,29 @@ class GeneralCog(commands.Cog):
 
         else:
           await ctx.send(f"The API seems down, says {response.status}")
+
+
+    # Cat pictures
+
+    @commands.command(aliases=['Cat'])
+    @cooldown(1,1,BucketType.channel)
+    async def cat(self, ctx):
+      
+      colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+
+      cat_url = "http://aws.random.cat/meow"
+      async with request("GET", cat_url, headers={}) as response:
+        if response.status == 200:
+          data = await response.json()
+          image_link = data["file"]
+          embed = discord.Embed(
+                colour= random.choice(colour_choices)
+            )
+          embed.set_image(url=image_link)
+          await ctx.send(embed=embed)
+
+        else:
+          await ctx.send(f'The API seems down, says {response.status}')
 
 
 
