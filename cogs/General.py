@@ -227,7 +227,8 @@ class GeneralCog(commands.Cog):
         embed.set_footer(text='made by CABREX with ❤')
 
         embed.add_field(name='ID:', value=multiple_member_array[0].id)
-        embed.add_field(name='\nMember Name:', value=multiple_member_array[0].display_name)
+        embed.add_field(name='\nMember Name:', value=multiple_member_array[0])
+        embed.add_field(name='\nMember Nickname:', value=multiple_member_array[0].display_name)
 
         embed.add_field(name='\nCreated at: ', value=multiple_member_array[0].created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
         embed.add_field(name='\nJoined at:', value=multiple_member_array[0].joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))

@@ -12,7 +12,9 @@ bot = commands.Bot(command_prefix=(f'{command_prefix}'))
 bot.remove_command('help')
 working_directory = os.getcwd()
 
+
 # Loading cogs
+
 @bot.command()
 async def load(ctx, extension):
     bot.load_extension(f"cogs.{extension}")
@@ -32,6 +34,27 @@ except Exception as e:
     print("Functionality limited!\n")
     print(f"exception thrown:\n{e}")
 
+# Shows command prefix if asked
+
+@bot.event
+async def on_message(message):
+
+    message_var = message.content
+
+    if message.author.bot:
+        return
+    elif 'rexbot' in message.content.lower().split() and 'prefix' in message.content.lower().split():
+        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
+    elif 'rexbot' in message.content.lower().split():
+        await message.channel.send(f'Hello {message.author.mention}')
+    elif '<@!732538419787595846>' in message_var.lower().split():
+        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
+    else:
+        pass
+
+    await bot.process_commands(message)
+
+
 
 # Basic stuff
 
@@ -43,42 +66,50 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print(f'+[NEW_MEMBER]    {member} has joined the server: {member.guild.name}')
-    channel = discord.utils.get(member.guild.channels, name='moderation-logs')
-    if channel is not None:
-        embed = discord.Embed(
-                title = 'Member joined the server',
-                description=f'Member **{member.name}** joined the server!',
-                colour=0x008000
-            )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name='Number of members', value=len(member.guild.members))
-        embed.set_footer(text=f'id: {member.id}')
-        await channel.send(embed=embed)
-    else:
-        pass
+    try:
+        print(f'+[NEW_MEMBER]    {member} has joined the server: {member.guild.name}')
+        channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+        if channel is not None:
+            embed = discord.Embed(
+                    title = 'Member joined the server',
+                    description=f'Member **{member.name}** joined the server!',
+                    colour=0x008000
+                )
+            embed.set_thumbnail(url=member.avatar_url)
+            embed.add_field(name='Number of members', value=len(member.guild.members))
+            embed.set_footer(text=f'id: {member.id}')
+            await channel.send(embed=embed)
+        else:
+            pass
+    except Exception as e:
+        print(e)
 
 
 
 
 @bot.event
 async def on_member_remove(member):
-    print(f'+[REMOVE_MEMBER]   {member} has left the server: {member.guild.name}')
-    channel = discord.utils.get(member.guild.channels, name='moderation-logs')
-    if channel is not None:
-        embed = discord.Embed(
-            title = 'Member left the server',
-            description=f'Member **{member.name}** has left the server!',
-            colour=0xFF0000
-        )
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name='Number of members', value=len(member.guild.members))
-        embed.set_footer(text=f'id: {member.id}')
-        await channel.send(embed=embed)
-    else:
-        pass
+    try:
+        print(f'+[REMOVE_MEMBER]   {member} has left the server: {member.guild.name}')
+        channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+        if channel is not None:
+            embed = discord.Embed(
+                title = 'Member left the server',
+                description=f'Member **{member.name}** has left the server!',
+                colour=0xFF0000
+            )
+            embed.set_thumbnail(url=member.avatar_url)
+            embed.add_field(name='Number of members', value=len(member.guild.members))
+            embed.set_footer(text=f'id: {member.id}')
+            await channel.send(embed=embed)
+        else:
+            pass
+    except Exception as e:
+        print(e)
+
 
 # Ping
+
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Ping: {round(bot.latency * 1000)}ms')
