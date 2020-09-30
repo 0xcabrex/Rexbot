@@ -97,7 +97,7 @@ class GeneralCog(commands.Cog):
 
     @commands.command(aliases=['av'])
     @cooldown(1,5,BucketType.channel)
-    async def avatar(self, ctx, member):
+    async def avatar(self, ctx, member, override=None):
       try:
 
         if member[0] == '<' and member[1] == '@':
@@ -128,8 +128,12 @@ class GeneralCog(commands.Cog):
             else:
               pass
 
+        if member.lower() == 'me' and override == 'override':
+          embed = discord.Embed(colour=0x0000ff)
+          embed.set_image(url=f'{ctx.author.avatar_url}')
+          await ctx.send(embed=embed)
 
-        if len(multiple_member_array) == 1:
+        elif len(multiple_member_array) == 1:
 
           if isinstance(member, int):
             embed = discord.Embed(colour=0x0000ff)
