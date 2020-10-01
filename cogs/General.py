@@ -13,9 +13,9 @@ class GeneralCog(commands.Cog):
 
     # the eight ball
 
-    @commands.command(aliases=['8ball'])
-    @cooldown(1,3,BucketType.channel)
-    async def eight_ball(self, ctx, *, question):
+    @commands.command(name='8ball')
+    @cooldown(1,5,BucketType.channel)
+    async def eight_ball(self, ctx, *, question=None):
         responses = ["It is certain.",
                      "It is decidedly so.",
                      "Without a doubt.",
@@ -38,13 +38,25 @@ class GeneralCog(commands.Cog):
                      "Very doubtful."
                      ]
 
-        embed = discord.Embed(title='*The 8ball*', description=f'**{ctx.message.author}** asked a question.\n\nThe question was: **{question}**\n\n\n{random.choice(responses)}', colour=0x0000ff)
-        await ctx.send(embed=embed)
+        if question is not None:
+          embed = discord.Embed(title='*The 8ball*', description=f'**{ctx.message.author}** asked a question.\n\nThe question was: **{question}**\n\n\n{random.choice(responses)}', colour=0x0000ff)
+          await ctx.send(embed=embed)
+        else:
+          await ctx.send('Ask me a question!')
+
+
+    # eightball: Error handling
+
+    @eight_ball.error
+    async def eightball_error(self, ctx, error):
+      if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
+
 
     # Help console
 
     @commands.command()
-    @cooldown(1,3,BucketType.channel)
+    @cooldown(1,5,BucketType.channel)
     async def help(self, ctx, argument=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
@@ -93,6 +105,14 @@ class GeneralCog(commands.Cog):
           pass
 
 
+    # Help console: Error handling
+
+    @help.error
+    async def help_error(self, ctx, error):
+      if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
+
+
     # Avatar fetcher
 
     @commands.command(aliases=['av'])
@@ -128,7 +148,8 @@ class GeneralCog(commands.Cog):
             else:
               pass
 
-        if member.lower() == 'me' and override == 'override':
+
+        if member.isnumeric() and member.lower() == 'me' and override == 'override':
           embed = discord.Embed(colour=0x0000ff)
           embed.set_image(url=f'{ctx.author.avatar_url}')
           await ctx.send(embed=embed)
@@ -139,12 +160,8 @@ class GeneralCog(commands.Cog):
             embed = discord.Embed(colour=0x0000ff)
             embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
           else:
-            if member is None or multiple_member_array[0].name.lower() == 'me':
-              embed = discord.Embed(colour=0x0000ff)
-              embed.set_image(url=f'{ctx.author.avatar_url}')
-            else:
-              embed = discord.Embed(colour=0x0000ff)
-              embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
+            embed = discord.Embed(colour=0x0000ff)
+            embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
           await ctx.send(embed=embed)
 
         elif len(multiple_member_array) > 1:
@@ -177,14 +194,16 @@ class GeneralCog(commands.Cog):
         embed = discord.Embed(colour=0x0000ff)
         embed.set_image(url=f'{ctx.author.avatar_url}')
         await ctx.send(embed=embed)
+      elif isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
       else:
-        await ctx.send(f'{error}')
+        await ctx.send(error)
 
 
     # Userinfo
 
-    @commands.command()
-    @cooldown(1,3,BucketType.channel)
+    @commands.command(aliases=['ui', 'Ui'])
+    @cooldown(1,5,BucketType.channel)
     async def userinfo(self, ctx, member):
 
       if member[0] == '<' and member[1] == '@':
@@ -270,13 +289,15 @@ class GeneralCog(commands.Cog):
     async def userinfo_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
           await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+        elif isinstance(error, commands.CommandOnCooldown):
+          await ctx.send(error)
         else:
           await ctx.send(f'**{error}**')
 
 
     # Server info
 
-    @commands.command()
+    @commands.command(aliases=['si', 'Si'])
     @cooldown(1,4,BucketType.channel)
     async def serverinfo(self, ctx):
         try:
@@ -315,6 +336,14 @@ class GeneralCog(commands.Cog):
           await ctx.send(f'{e}')
 
 
+    # Serverinfo: Error handling
+
+    @serverinfo.error
+    async def serverinfo_error(self, ctx, error):
+      if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
+
+
     # Memes
 
     @commands.command(aliases=['Meme'])
@@ -345,6 +374,15 @@ class GeneralCog(commands.Cog):
           else:
             await ctx.send(f"The API seems down, says {response.status}")
 
+
+    # Memes: Error handling
+
+    @meme.error
+    async def meme_error(self, ctx, error):
+      if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
+
+
     # Dog pictures
 
     @commands.command(aliases=['doggo','pupper'])
@@ -368,6 +406,14 @@ class GeneralCog(commands.Cog):
           await ctx.send(f"The API seems down, says {response.status}")
 
 
+    # Dog pictures: Error handling
+
+    @dog.error
+    async def dog_error(self, ctx, error):
+      if isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(error)
+
+
     # Cat pictures
 
     @commands.command(aliases=['Cat'])
@@ -389,6 +435,27 @@ class GeneralCog(commands.Cog):
 
         else:
           await ctx.send(f'The API seems down, says {response.status}')
+
+
+    # Cat pictures: Error handling
+
+    @cat.error
+    async def cat_picture_error(self, ctx, error):
+      await ctx.send(error)
+
+
+    # Servercount
+
+    @commands.command(name='servercount', aliases=['Servercount', 'Sc', 'sc'])
+    async def servercount(self, ctx):
+      try:
+        member_count = 0
+        for guild in self.bot.guilds:
+          member_count += guild.member_count
+
+        await ctx.send(f'Present in `{len(self.bot.guilds)}` servers, moderating `{member_count}` members')
+      except Exception as e:
+        await ctx.send(e)
 
 
 

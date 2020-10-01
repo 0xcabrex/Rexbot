@@ -39,6 +39,13 @@ sudo python3 -m pip install discord.py
 - `addrole` - adds the role to the user, if present in the guild (**CASE SENSITIVE**)
 - `removerole | purgerole` - Removes the role from the user, if present in the guild and if the user has it (**CASE SENSITIVE**)
 
+
+### Want to add my bot to your discord server?
+
+Use this [link](https://discord.com/api/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot) to invite rexbot to your server!
+
+
+
 For any bugs, please report to me and I will try to fix it, if I have time ':)
 
 
