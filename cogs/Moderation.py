@@ -79,7 +79,7 @@ class ModerationCog(commands.Cog):
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             await ctx.send(embed=embed)
             if channel is not None:
-                emb = discord.Embed(title='Illegal use of command **kick**', description=f'{ctx.author.mention} Used the `kick` command, Who is not a moderator', colour=0xff0000)
+                emb = discord.Embed(title='Illegal use of command **kick**', description=f'{ctx.author.mention} Used the `kick` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
 
  
@@ -95,7 +95,7 @@ class ModerationCog(commands.Cog):
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 await ctx.send(embed=embed)
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **kick**', description=f'{ctx.author.mention} Used the `kick` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **kick**', description=f'{ctx.author.mention} Used the `kick` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         else:
             await ctx.send(f'**{error}**')
@@ -170,7 +170,7 @@ class ModerationCog(commands.Cog):
             await ctx.send(embed=embed)
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             if channel is not None:
-                emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not a moderator', colour=0xff0000)
+                emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
                 
     
@@ -186,7 +186,7 @@ class ModerationCog(commands.Cog):
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 await ctx.send(embed=embed)
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         elif isinstance(error, commands.BadArgument):
             if ctx.message.author.guild_permissions.ban_members:
@@ -196,7 +196,7 @@ class ModerationCog(commands.Cog):
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 await ctx.send(embed=embed)
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **ban**', description=f'{ctx.author.mention} Used the `ban` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         else:
             await ctx.send(f'**{error}**')
@@ -224,7 +224,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **unban**', description=f'{ctx.author.mention} Used the `unban` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **unban**', description=f'{ctx.author.mention} Used the `unban` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         except ValueError:
             await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
@@ -244,7 +244,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **unban**', description=f'{ctx.author.mention} Used the `unban` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **unban**', description=f'{ctx.author.mention} Used the `unban` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         else:
             await ctx.send(f'**{error}**')
@@ -270,7 +270,7 @@ class ModerationCog(commands.Cog):
             await ctx.send(embed=embed)
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             if channel is not None:
-                emb = discord.Embed(title='Illegal use of command **clear**', description=f'{ctx.author.mention} Used the `clear` command, Who is not a moderator', colour=0xff0000)
+                emb = discord.Embed(title='Illegal use of command **clear**', description=f'{ctx.author.mention} Used the `clear` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
                 
     
@@ -372,7 +372,7 @@ class ModerationCog(commands.Cog):
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             await channel
             if channel is not None:
-                emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not a moderator', colour=0xff0000)
+                emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
                 
     
@@ -389,7 +389,7 @@ class ModerationCog(commands.Cog):
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 await channel
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
 
         elif isinstance(error, commands.BadArgument):
@@ -400,7 +400,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **mute**', description=f'{ctx.author.mention} Used the `mute` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         elif isinstance(error, errors.HTTPException):
             await ctx.send('Cant send DMs!')
@@ -489,7 +489,7 @@ class ModerationCog(commands.Cog):
             await ctx.send(embed=embed)
             channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
             if channel is not None:
-                emb = discord.Embed(title='Illegal use of command **unmute**', description=f'{ctx.author.mention} Used the `unmute` command, Who is not a moderator', colour=0xff0000)
+                emb = discord.Embed(title='Illegal use of command **unmute**', description=f'{ctx.author.mention} Used the `unmute` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
                 
     
@@ -505,7 +505,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'{ctx.author.mention} Used the `unmute` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'{ctx.author.mention} Used the `unmute` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         elif isinstance(error, commands.BadArgument):
             if ctx.author.guild_permissions.manage_roles:
@@ -515,7 +515,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'<@{ctx.author.mention} Used the `unmute` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **unmute**', description=f'{ctx.author.mention} Used the `unmute` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
                 
 
@@ -608,7 +608,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         except Exception as e:
             await ctx.send(f'Bot is mad about **{e}**')
@@ -626,7 +626,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=embed)
 
         elif isinstance(error, commands.BadArgument):
@@ -637,7 +637,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'<@{ctx.author.mention} Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
 
         else:
@@ -732,7 +732,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **removerole**', description=f'<@{ctx.author.mention} Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **removerole**', description=f'{ctx.author.mention} Used the `removerole` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
         except Exception as e:
             await ctx.send(f'Bot is mad about **{e}**')
@@ -750,7 +750,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **removerole**', description=f'{ctx.author.mention} Used the `removerole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **removerole**', description=f'{ctx.author.mention} Used the `removerole` command, Who is not authorized', colour=0xff0000)
                     await channel.semd(embed=embed)
 
         elif isinstance(error, commands.BadArgument):
@@ -761,7 +761,7 @@ class ModerationCog(commands.Cog):
                 await ctx.send(embed=embed)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
                 if channel is not None:
-                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not a moderator', colour=0xff0000)
+                    emb = discord.Embed(title='Illegal use of command **addrole**', description=f'{ctx.author.mention} Used the `addrole` command, Who is not authorized', colour=0xff0000)
                     await channel.send(embed=emb)
 
         else:

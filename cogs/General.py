@@ -3,6 +3,7 @@ import random
 from discord.ext import commands
 from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
+from discord.ext.commands import MemberConverter
 import aiohttp
 
 

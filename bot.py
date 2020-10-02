@@ -43,9 +43,9 @@ async def on_message(message):
 
     if message.author.bot:
         return
-    elif 'rexbot' in message.content.lower().split() and 'prefix' in message.content.lower().split():
+    elif message_var.lower().find('rexbot') != -1 and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif 'rexbot' in message.content.lower().split():
+    elif message_var.lower().find('rexbot') != -1:
         await message.channel.send(f'Hello {message.author.mention}')
     elif '<@!732538419787595846>' in message_var.lower().split() or '<@&750309678075871293>' in message_var.lower().split():
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
@@ -58,7 +58,7 @@ async def on_message(message):
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.idle, activity=discord.Game('with your lives'))
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game('with your lives'))
     print("+[ONLINE] Rexbot is online")
 
 
