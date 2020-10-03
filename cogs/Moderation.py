@@ -253,18 +253,38 @@ class ModerationCog(commands.Cog):
     # Clear command
     
     @commands.command(aliases=['remove','purge','Remove','Purge'])
-    async def clear(self, ctx, amount=0):
+    async def clear(self, ctx, amount: int):
         if ctx.message.author.guild_permissions.manage_messages:
-            if amount == 0:
-                await ctx.send("How many do you want to remove?")
-            elif amount < 30:
-                await ctx.channel.purge(limit=amount + 1)
-                time.sleep(0.5)
-                msg = await ctx.send(f"Removed {amount} messages!")
-                time.sleep(1.5)
-                await msg.delete()
+            try:
+                
+                if amount > 0 and amount < 30:
+                    await ctx.channel.purge(limit=amount + 1)
+                    time.sleep(0.5)
+                    msg = await ctx.send(f"Removed {amount} messages!")
+                    time.sleep(1.5)
+                    await msg.delete()
+                else:
+                    await ctx.send(f'{ctx.message.author.mention}, Enter an amount between 0 and 30, cannot delete {amount} messages!')
+            except Exception as e:
+                await ctx.send(e)
+        else:
+            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+            await ctx.send(embed=embed)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+            if channel is not None:
+                emb = discord.Embed(title='Illegal use of command **clear**', description=f'{ctx.author.mention} Used the `clear` command, Who is not authorized', colour=0xff0000)
+                await channel.send(embed=emb)
+
+    # Clear command: Error handling
+    @clear.error
+    async def clear_error(self, ctx, error):
+        if ctx.message.author.guild_permissions.manage_messages:
+            if isinstance(error, commands.MissingRequiredArgument):
+                await ctx.send(f'How many do you want to remove, {ctx.author.mention}?')
+            elif isinstance(error, commands.BadArgument):
+                await ctx.send(f'Please enter a valid amount {ctx.message.author.mention}')
             else:
-                await ctx.send(f'{ctx.message.author.mention}, the threshold is 30, cannot delete {amount} messages!')
+                raise error
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
