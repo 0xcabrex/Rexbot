@@ -49,7 +49,6 @@ async def on_message(message):
         await message.channel.send(f'Hello {message.author.mention}')
     elif '<@!732538419787595846>' in message_var.lower().split() or '<@&750309678075871293>' in message_var.lower().split():
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-
     await bot.process_commands(message)
 
 

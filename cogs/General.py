@@ -5,6 +5,7 @@ from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
 from discord.ext.commands import MemberConverter
 import aiohttp
+import pyfiglet
 
 
 class GeneralCog(commands.Cog):
@@ -66,11 +67,13 @@ class GeneralCog(commands.Cog):
                 title = 'Bot commands for @Rexbot',
                 description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: $8ball {question}\n\n'
                             '**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: $avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
-                            '**userinfo**\nGives the info of the mentioned user\nUsage: $userinfo {member_name | member_tag | member_id}\n\n'
-                            '**serverinfo**\nGives the info of the server(No Arguments required)\n\n'
+                            '**userinfo | ui**\nGives the info of the mentioned user\nUsage: $userinfo {member_name | member_tag | member_id}\n\n'
+                            '**serverinfo | si**\nGives the info of the server (No arguments required)\n\n'
                             '**meme**\nSends you a beautifully crafted meme\n\n'
                             '**dog | doggo | pupper**\nGets you a dog picture\n\n'
-                            '**cat | kitty**\nGets you a cat picture',
+                            '**cat | kitty**\nGets you a cat picture\n\n'
+                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n',
+                            '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n',
                 colour=0x01a901
             )
         general_embed.set_footer(text='Made by CABREX with ❤')
@@ -458,6 +461,24 @@ class GeneralCog(commands.Cog):
             await ctx.send(e)
 
 
+    # ASCIIfy your message
+
+    @commands.command(name='asciify')
+    async def asciify_message(self, ctx, *, message=None):
+        if message is not None:
+            if message[0] == '<' and (message[1] == ':'):
+                await ctx.send('im not doing that 😂')
+            elif message[0] == '<' and message[1] == '@':
+                await ctx.send('im not doing that 😂')
+            elif ctx.author.is_on_mobile and len(message) > 8:
+                await ctx.send('The output might look a bit weird on your phone! 😅\n Landscape mode might make it look Better')
+                msg = pyfiglet.figlet_format(message)
+                await ctx.send(f'```css\n{msg}\n```')
+            else:
+                msg = pyfiglet.figlet_format(message)
+                await ctx.send(f'```css\n{msg}\n```')
+        else:
+            await ctx.send('Whats it you want to asciify?')
 
 
 

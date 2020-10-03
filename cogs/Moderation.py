@@ -275,7 +275,9 @@ class ModerationCog(commands.Cog):
                 emb = discord.Embed(title='Illegal use of command **clear**', description=f'{ctx.author.mention} Used the `clear` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
 
+
     # Clear command: Error handling
+    
     @clear.error
     async def clear_error(self, ctx, error):
         if ctx.message.author.guild_permissions.manage_messages:

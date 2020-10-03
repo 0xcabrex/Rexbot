@@ -3,17 +3,20 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](CHANGELOG)
 
 A discord bot coded in `Python` for moderation and some fun.  
-The bot's command prefix is `$`.
+The bot's command prefix is `$`.  
+discord.py version : `1.4.2`
 
 
 ## Requirements
 
 ```
-sudo pip3 install discord.py
+cd Rexbot/
+sudo pip3 install -r requirements.txt
 ```
 OR
 ```
-sudo python3 -m pip install discord.py
+cd Rexbot/
+sudo python3 -m pip install -r requirements.txt
 ```
 
 ## Supported commands
@@ -22,11 +25,13 @@ sudo python3 -m pip install discord.py
 
 - `8ball` - Gives a yes, no or a maybe to a question asked, completely random but fun ;)
 - `avatar | av` - Shows the avatar of the user mentioned
-- `userinfo` - Gives the info of the user entered
-- `serverinfo` - Gives the info of the server 
+- `userinfo | ui` - Gives the info of the user entered
+- `serverinfo | si` - Gives the info of the server 
 - `meme` - Sends you a beautifully crafted meme
 - `dog | doggo | pupper` - Gets you a cute pupper using internet magic
-- `cat | kitty` - Gets you an adorable kitty picture from the internet 
+- `cat | kitty` - Gets you an adorable kitty picture from the internet
+- `asciify` - ASCIIfies your message.
+- `servercount | sc` - Shows you how many servers the bot is in and total number of members in those servers combined
 
 ### Moderation commands
 
@@ -42,7 +47,7 @@ sudo python3 -m pip install discord.py
 
 ### Want to add my bot to your discord server?
 
-Use this [link](https://discord.com/api/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot) to invite rexbot to your server!
+Use this [link](https://discord.com/api/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot) to invite rexbot to your server!  
 
 
 
