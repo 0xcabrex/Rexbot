@@ -23,15 +23,11 @@ sudo python3 -m pip install -r requirements.txt
 
 ### Fun commands
 
-- `8ball` - Gives a yes, no or a maybe to a question asked, completely random but fun ;)
-- `avatar | av` - Shows the avatar of the user mentioned
-- `userinfo | ui` - Gives the info of the user entered
-- `serverinfo | si` - Gives the info of the server 
+- `8ball` - Gives a yes, no or a maybe to a question asked, completely random but fun ;) 
 - `meme` - Sends you a beautifully crafted meme
 - `dog | doggo | pupper` - Gets you a cute pupper using internet magic
 - `cat | kitty` - Gets you an adorable kitty picture from the internet
 - `asciify` - ASCIIfies your message.
-- `servercount | sc` - Shows you how many servers the bot is in and total number of members in those servers combined
 
 ### Moderation commands
 
@@ -44,6 +40,13 @@ sudo python3 -m pip install -r requirements.txt
 - `clear | remove | purge` - Clears messages from the channel where the command has been used
 - `addrole` - adds the role to the user, if present in the guild (**CASE SENSITIVE**)
 - `removerole | purgerole` - Removes the role from the user, if present in the guild and if the user has it (**CASE SENSITIVE**)
+
+### Utility commands
+
+- `avatar | av` - Shows the avatar of the user mentioned
+- `userinfo | ui` - Gives the info of the user entered
+- `serverinfo | si` - Gives the info of the server
+- `servercount | sc` - Shows you how many servers the bot is in and total number of members in those servers combined
 
 
 ### Want to add my bot to your discord server?
