@@ -72,7 +72,7 @@ class GeneralCog(commands.Cog):
                             '**meme**\nSends you a beautifully crafted meme\n\n'
                             '**dog | doggo | pupper**\nGets you a dog picture\n\n'
                             '**cat | kitty**\nGets you a cat picture\n\n'
-                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n',
+                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n'
                             '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n',
                 colour=0x01a901
             )
@@ -81,7 +81,8 @@ class GeneralCog(commands.Cog):
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
                 description = '**kick**\nKicks the member out of the server\nUsage: $kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
-                              '**ban**\nbans the user from the server\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**ban**\nBans the user from the server,**with purging the messages**\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**softban**\nbans the user from the server, **without removing the messages**\nUsage: $softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name#discriminator}\n\n'
                               '**mute**\nmutes the user\nUsage: $mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**unmute**\nunmutes the user\nUsage: {member_name | member_id | member_tag}\n\n'

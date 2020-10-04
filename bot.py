@@ -39,6 +39,20 @@ except Exception as e:
 @bot.event
 async def on_message(message):
 
+    reply_choices = [
+                        "Hi",
+                        "Hi there",
+                        "Hey",
+                        "Hey there",
+                        "Whatsup",
+                        "Waddup",
+                        "Whats going on",
+                        "Hello",
+                        "Hello!",
+                        "Sup",
+                        "Howdy"
+                    ]
+
     message_var = message.content
 
     if message.author.bot:
@@ -46,7 +60,7 @@ async def on_message(message):
     elif message_var.lower().find('rexbot') != -1 and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
     elif message_var.lower().find('rexbot') != -1:
-        await message.channel.send(f'Hello {message.author.mention}')
+        await message.channel.send(f'{random.choice(reply_choices)}, {message.author.mention}')
     elif '<@!732538419787595846>' in message_var.lower().split() or '<@&750309678075871293>' in message_var.lower().split():
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
     await bot.process_commands(message)
