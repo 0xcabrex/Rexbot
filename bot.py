@@ -6,9 +6,9 @@ import time
 import os
 from discord.ext import commands
 
-command_prefix='$'
+command_prefix='r$'
 
-bot = commands.Bot(command_prefix=(f'{command_prefix}'))
+bot = commands.Bot(command_prefix=(f'{command_prefix}', 'R$'))
 bot.remove_command('help')
 working_directory = os.getcwd()
 
@@ -57,12 +57,12 @@ async def on_message(message):
 
     if message.author.bot:
         return
-    elif message_var.lower().find('rexbot') != -1 and message_var.lower().find('prefix') != -1:
+    elif '<@!732538419787595846>' in message_var.lower().split() and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif message_var.lower().find('rexbot') != -1:
-        await message.channel.send(f'{random.choice(reply_choices)}, {message.author.mention}')
+    elif '<@&750309678075871293>' in message_var.lower().split() and message_var.lower().find('prefix') != -1:
+        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
     elif '<@!732538419787595846>' in message_var.lower().split() or '<@&750309678075871293>' in message_var.lower().split():
-        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
+        await message.channel.send(f'{random.choice(reply_choices)}, {message.author.mention}')
     await bot.process_commands(message)
 
 
@@ -130,7 +130,7 @@ async def ping(ctx):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
-        await ctx.send(f"command not found\nPlease use `$help` to see all commands")
+        await ctx.send(f"command not found\nPlease use `r$help` to see all commands")
 
 
 TOKEN = os.getenv("REXBOT_TOKEN")
