@@ -3,7 +3,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](CHANGELOG)
 
 A discord bot coded in `Python` for moderation and some fun.  
-The bot's command prefix is `$`.  
+The bot's command prefix is `r$`.  
 discord.py version : `1.4.2`
 
 
@@ -28,6 +28,8 @@ sudo python3 -m pip install -r requirements.txt
 - `dog | doggo | pupper` - Gets you a cute pupper using internet magic
 - `cat | kitty` - Gets you an adorable kitty picture from the internet
 - `asciify` - ASCIIfies your message.
+- `wikipedia | wiki | ask | whatis` - Gets you information from the wiki
+- `howdoi` - Information from stackoverflow
 
 ### Moderation commands
 
