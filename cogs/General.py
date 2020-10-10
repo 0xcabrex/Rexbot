@@ -1,11 +1,15 @@
 import discord
 import random
+import os
 from discord.ext import commands
 from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
 from discord.ext.commands import MemberConverter
 import aiohttp
+import asyncio
 import pyfiglet
+import wikipedia
+from howdoi import howdoi
 
 
 class GeneralCog(commands.Cog):
@@ -53,6 +57,8 @@ class GeneralCog(commands.Cog):
     async def eightball_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
 
 
     # Help console
@@ -65,19 +71,22 @@ class GeneralCog(commands.Cog):
 
         fun_embed = discord.Embed(
                 title = 'Fun commands for @Rexbot',
-                description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: $8ball {question}\n\n'
+                description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: r$8ball {question}\n\n'
                             '**meme**\nSends you a beautifully crafted meme\n\n'
                             '**dog | doggo | pupper**\nGets you a dog picture\n\n'
                             '**cat | kitty**\nGets you a cat picture\n\n'
-                            '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n',
+                            '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n'
+                            '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: r$wiki {query}\nQuery is necessary\n\n'
+                            '**howdoi**\nInformation from stackoverflow\nUsage: r$howdoi {query}\nQuery is necessary\n\n'
+                            '**apod**\nGets you and Astronomy Picture Of the Day\nUsage: r$apod\n\n',
                 colour=0x01a901
             )
         fun_embed.set_footer(text='Made by CABREX with ❤')
 
         utils_embed = discord.Embed(
                 title = 'Utility commands for @Rexbot',
-                description='**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: $avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
-                            '**userinfo | ui**\nGives the info of the mentioned user\nUsage: $userinfo {member_name | member_tag | member_id}\n\n'
+                description='**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: r$avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
+                            '**userinfo | ui**\nGives the info of the mentioned user\nUsage: r$userinfo {member_name | member_tag | member_id}\n\n'
                             '**serverinfo | si**\nGives the info of the server (No arguments required)\n\n'
                             '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n',
                 colour=0x01a901
@@ -85,22 +94,22 @@ class GeneralCog(commands.Cog):
 
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
-                description = '**kick**\nKicks the member out of the server\nUsage: $kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
-                              '**ban**\nBans the user from the server,**with purging the messages**\nUsage: $ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**softban**\nbans the user from the server, **without removing the messages**\nUsage: $softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: $unban {member_name#discriminator}\n\n'
-                              '**mute**\nmutes the user\nUsage: $mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**unmute**\nunmutes the user\nUsage: {member_name | member_id | member_tag}\n\n'
-                              '**clear | remove | purge**\n clears messages from the channel where it is used\nUsage: $clear {n} where `n` is the number of messages to be purged\n\n'
-                              '**addrole**\nAdds role to member\nUsage: $addrole {member_name | member_id | member_tag} {role_name}\n\n'
-                              '**removerole | purgerole**\nRemoves role from member\nUsage: $removerole {member_name | member_id | member_tag} {role_name}',
+                description = '**kick**\nKicks the member out of the server\nUsage: r$kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
+                              '**ban**\nBans the user from the server,**with purging the messages**\nUsage: r$ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**softban**\nbans the user from the server, **without removing the messages**\nUsage: r$softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: r$unban {member_name#discriminator}\n\n'
+                              '**mute**\nmutes the user\nUsage: r$mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**unmute**\nunmutes the user\nUsage: r$unmute {member_name | member_id | member_tag}\n\n'
+                              '**clear | remove | purge**\n clears messages from the channel where it is used\nUsage: r$clear {n} where `n` is the number of messages to be purged\n\n'
+                              '**addrole**\nAdds role to member\nUsage: r$addrole {member_name | member_id | member_tag} {role_name}\n\n'
+                              '**removerole | purgerole**\nRemoves role from member\nUsage: r$removerole {member_name | member_id | member_tag} {role_name}',
                 colour=0x01a901
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
 
         initial_help_dialogue = discord.Embed(
                 title = 'Help command',
-                description = '`$help Fun`- Some fun commands\n`$help Moderation` | `$help mod` - Moderation commands\n`$help utils | $help util` - Utility commands',
+                description = '`r$help Fun`- Some fun commands\n`r$help Moderation` | `r$help mod` - Moderation commands\n`r$help utils` | `r$help util` - Utility commands',
                 colour=0x01a901
             )
         initial_help_dialogue.set_footer(text='Made by CABREX with ❤')
@@ -123,6 +132,9 @@ class GeneralCog(commands.Cog):
     async def help_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            raise error
 
 
     # Avatar fetcher
@@ -130,72 +142,70 @@ class GeneralCog(commands.Cog):
     @commands.command(aliases=['av'])
     @cooldown(1,5,BucketType.channel)
     async def avatar(self, ctx, member, override=None):
-        try:
 
-            if member[0] == '<' and member[1] == '@':
-                converter = MemberConverter()
-                member = await converter.convert(ctx, member)
-            elif member.isnumeric():
-                member = int(member)
+        if member[0] == '<' and member[1] == '@':
+            converter = MemberConverter()
+            member = await converter.convert(ctx, member)
+        elif member.isnumeric():
+            member = int(member)
 
-            members = await ctx.guild.fetch_members().flatten()
-            multiple_member_array = []
-                
-            if isinstance(member, discord.Member):
-                for members_list in members:
-                    if member.name.lower() in members_list.name.lower():
-                        multiple_member_array.append(members_list)
-                    else:
-                        pass
-            elif isinstance(member, int):
-                for member_list in members:
-                    if member_list.id == member:
-                        multiple_member_array.append(member_list)
-                    else:
-                        pass
-            else:
-                for members_list in members:
-                    if member.lower() in members_list.name.lower():
-                        multiple_member_array.append(members_list)
-                    else:
-                        pass
-
-
-            if member.isnumeric() and member.lower() == 'me' and override == 'override':
-                embed = discord.Embed(colour=0x0000ff)
-                embed.set_image(url=f'{ctx.author.avatar_url}')
-                await ctx.send(embed=embed)
-
-            elif len(multiple_member_array) == 1:
-
-                if isinstance(member, int):
-                    embed = discord.Embed(colour=0x0000ff)
-                    embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
+        members = await ctx.guild.fetch_members().flatten()
+        multiple_member_array = []
+            
+        if isinstance(member, discord.Member):
+            for members_list in members:
+                if member.name.lower() in members_list.name.lower():
+                    multiple_member_array.append(members_list)
                 else:
-                    embed = discord.Embed(colour=0x0000ff)
-                    embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
-                await ctx.send(embed=embed)
+                    pass
+        elif isinstance(member, int):
+            for member_list in members:
+                if member_list.id == member:
+                    multiple_member_array.append(member_list)
+                else:
+                    pass
+        else:
+            for members_list in members:
+                if member.lower() in members_list.name.lower():
+                    multiple_member_array.append(members_list)
+                else:
+                    pass
 
-            elif len(multiple_member_array) > 1:
 
-                multiple_member_array_duplicate_array = []
-                for multiple_member_array_duplicate in multiple_member_array:
-                    if len(multiple_member_array_duplicate_array) < 10:
-                        multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
-                    else:
-                        break
+        if member.isnumeric() and member.lower() == 'me' and override == 'override':
+            embed = discord.Embed(colour=0x0000ff)
+            embed.set_image(url=f'{ctx.author.avatar_url}')
+            await ctx.send(embed=embed)
 
-                embed = discord.Embed(
-                        title=f'Search for {member}\nFound multiple results (Max 10)',
-                        description=f'\n'.join(multiple_member_array_duplicate_array),
-                        colour=0x808080
-                    )
-                await ctx.send(embed=embed)
+        elif len(multiple_member_array) == 1:
 
+            if isinstance(member, int):
+                embed = discord.Embed(colour=0x0000ff)
+                embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
             else:
-                await ctx.send(f'The member `{member}` does not exist!')
-        except Exception as e:
-            await ctx.send(f'Exception thrown: {e}')
+                embed = discord.Embed(colour=0x0000ff)
+                embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
+            await ctx.send(embed=embed)
+
+        elif len(multiple_member_array) > 1:
+
+            multiple_member_array_duplicate_array = []
+            for multiple_member_array_duplicate in multiple_member_array:
+                if len(multiple_member_array_duplicate_array) < 10:
+                    multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+                else:
+                    break
+
+            embed = discord.Embed(
+                    title=f'Search for {member}\nFound multiple results (Max 10)',
+                    description=f'\n'.join(multiple_member_array_duplicate_array),
+                    colour=0x808080
+                )
+            await ctx.send(embed=embed)
+
+        else:
+            await ctx.send(f'The member `{member}` does not exist!')
+    
 
 
     # Avatar fetcher: Error handling
@@ -209,7 +219,8 @@ class GeneralCog(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(error)
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            raise error
 
 
     # Userinfo
@@ -313,38 +324,37 @@ class GeneralCog(commands.Cog):
     @commands.command(aliases=['si', 'Si'])
     @cooldown(1,4,BucketType.channel)
     async def serverinfo(self, ctx):
-        try:
-            count = 0
+    
+        count = 0
 
-            members = await ctx.guild.fetch_members().flatten()
+        members = await ctx.guild.fetch_members().flatten()
 
-            for people in members:
-                if people.bot:
-                    count = count + 1
-            else:
-                pass
+        for people in members:
+            if people.bot:
+                count = count + 1
+        else:
+            pass
 
-            embed = discord.Embed(
-                title = f'{ctx.guild.name} info',
-                colour = 0x0000ff
-            )
-            embed.set_thumbnail(url=ctx.guild.icon_url)
+        embed = discord.Embed(
+            title = f'{ctx.guild.name} info',
+            colour = 0x0000ff
+        )
+        embed.set_thumbnail(url=ctx.guild.icon_url)
 
-            embed.add_field(name='Owner name:', value=f'<@{ctx.guild.owner_id}>')
-            embed.add_field(name='Server ID:', value=ctx.guild.id)
+        embed.add_field(name='Owner name:', value=f'<@{ctx.guild.owner_id}>')
+        embed.add_field(name='Server ID:', value=ctx.guild.id)
 
-            embed.add_field(name='Server region:', value=ctx.guild.region)
-            embed.add_field(name='Members:', value=ctx.guild.member_count)
-            embed.add_field(name='bots:', value=count)
+        embed.add_field(name='Server region:', value=ctx.guild.region)
+        embed.add_field(name='Members:', value=ctx.guild.member_count)
+        embed.add_field(name='bots:', value=count)
 
-            embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
-            embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
+        embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
+        embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
 
-            embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+        embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
-            await ctx.send(embed=embed)
-        except Exception as e:
-            await ctx.send(f'{e}')
+        await ctx.send(embed=embed)
+
 
 
     # Serverinfo: Error handling
@@ -353,6 +363,10 @@ class GeneralCog(commands.Cog):
     async def serverinfo_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+            raise error
+        else:
+            await ctx.send(f"An error occured ({error})\nPlease check console for traceback.")
+            raise error
 
 
     # Memes
@@ -423,6 +437,8 @@ class GeneralCog(commands.Cog):
     async def dog_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+        else:
+            await ctx.send(f'**{error}**')
 
 
     # Cat pictures
@@ -452,26 +468,40 @@ class GeneralCog(commands.Cog):
 
     @cat.error
     async def cat_picture_error(self, ctx, error):
-        await ctx.send(error)
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'**{error}**')
 
 
     # Servercount
 
     @commands.command(name='servercount', aliases=['Servercount', 'Sc', 'sc'])
+    @cooldown(1,1,BucketType.channel)
     async def servercount(self, ctx):
-        try:
-            member_count = 0
-            for guild in self.bot.guilds:
-                member_count += guild.member_count
+        
+        member_count = 0
+        for guild in self.bot.guilds:
+            member_count += guild.member_count
 
-            await ctx.send(f'Present in `{len(self.bot.guilds)}` servers, moderating `{member_count}` members')
-        except Exception as e:
-            await ctx.send(e)
+        await ctx.send(f'Present in `{len(self.bot.guilds)}` servers, moderating `{member_count}` members')
+
+    
+    # Servercount: cooldown
+
+    @servercount.error
+    async def sc_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            raise error
 
 
     # ASCIIfy your message
 
     @commands.command(name='asciify')
+    @cooldown(1,1,BucketType.channel)
     async def asciify_message(self, ctx, *, message=None):
         if message is not None:
             if message[0] == '<' and (message[1] == ':'):
@@ -488,6 +518,120 @@ class GeneralCog(commands.Cog):
         else:
             await ctx.send('Whats it you want to asciify?')
 
+
+    # ASCIIfy: Error handling
+
+    @asciify_message.error
+    async def asciify_message_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            raise error
+
+
+    # Wikipedia support
+
+    @commands.command(name='wikipedia', aliases=['ask', 'whatis', 'wiki'])
+    @cooldown(1,2,BucketType.channel)
+    async def wiki(self, ctx, *, query=None):
+        if query is not None:
+            r = wikipedia.page(query)
+            embed = discord.Embed(
+                title = r.title,
+                description = r.summary[0 : 2000],
+                colour = 0x808080
+            )
+            async with ctx.typing():
+                await asyncio.sleep(2)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send(f"Your query is empty {ctx.author.mention}!\nEnter something!")
+
+
+    # Wikipedia: Error handling
+
+    @wiki.error
+    async def wiki_error(self, ctx, error):
+        if isinstance(error, wikipedia.exceptions.DisambiguationError):
+            await ctx.send(f'There are many articles that match your query, please be more specific {ctx.author.mention}')
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error has occured ({error})\nPlease check console for traceback')
+            raise error
+
+
+    # Howdoi stackoverflow API
+
+    @commands.command(name='howdoi')
+    @cooldown(1, 2, BucketType.channel)
+    async def howdoi(self, ctx, *, query=None):
+        if query is not None:
+            parser = howdoi.get_parser()
+            arguments = vars(parser.parse_args(query.split(' ')))
+
+            embed = discord.Embed(
+                title = f'how to {query}',
+                description = howdoi.howdoi(arguments)
+            )
+            async with ctx.typing():
+                await asyncio.sleep(2)
+            await ctx.channel.send(embed=embed)
+        else:
+            await ctx.send(f'Your query is empty, please ask a question {ctx.author.mention}')
+
+
+    # Howdoi: Error Handling
+
+    @howdoi.error
+    async def howdoi_error(self, ctx, error):
+        raise error
+
+
+    # APOD
+
+    @commands.command(name='apod')
+    @cooldown(1,2, BucketType.channel)
+    async def apod(self, ctx):
+
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff] 
+        
+
+        with open('./NASA_API_TOKEN.0', 'r', encoding='utf-8') as nasa_api_token_file_handle:
+            API = nasa_api_token_file_handle.read()
+
+        apod_url = f'https://api.nasa.gov/planetary/apod?api_key={API}'
+        data = None
+
+        async with request("GET", apod_url, headers={}) as response:    
+            data = await response.json()
+
+        if len(data["explanation"]) > 2048:
+            description = f"{data['explanation'][:2045].strip()}..."
+        else:
+            description = data["explanation"]
+
+        embed = discord.Embed(
+            title=data["title"],
+            description=description,
+            color=random.choice(colour_choices)
+        )
+        embed.set_image(url=data["hdurl"])
+        embed.set_footer(text=f"by {data['copyright']} ")
+
+        await ctx.send(embed=embed)
+
+
+    # APOD: Error handling
+
+    @apod.error
+    async def apod_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            raise error
 
 
 def setup(bot):
