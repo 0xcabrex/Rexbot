@@ -6,6 +6,13 @@ A discord bot coded in `Python` for moderation and some fun.
 The bot's command prefix is `r$`.  
 discord.py version : `1.4.2`
 
+## Downloading
+
+```
+git clone https://github.com/0xcabrex/Rexbot
+cd Rexbot/
+chmod +x bot.py
+```
 
 ## Requirements
 
@@ -18,6 +25,19 @@ OR
 cd Rexbot/
 sudo python3 -m pip install -r requirements.txt
 ```
+
+## Running the bot
+
+```
+cd Rexbot/
+./bot.py
+```
+OR
+```
+cd Rexbot/
+python3 bot.py
+```
+
 
 ## Supported commands
 
