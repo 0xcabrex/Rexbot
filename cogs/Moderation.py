@@ -90,7 +90,7 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.kick_members:
-                await ctx.send('```\n$kick {member_name} {reason}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+                await ctx.send('```\nr$kick {member_name | member_id | member_tag} {reason}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -101,8 +101,198 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
+
+
+    # Multi kick
+
+    @commands.command(name = 'multikick', aliases = ['Multikick'])
+    async def multikick(self, ctx, *, member):
+        if ctx.message.author.guild_permissions.kick_members:
+
+            list_of_users = member.split()
+            reason = 'Kicked during a multikick process'
+
+            for member in list_of_users:
+                if member[0] == '<' and member[1] == '@':
+                    converter = MemberConverter()
+                    member = await converter.convert(ctx, member)
+                elif member.isnumeric():
+                    member = int(member)
+
+                members = await ctx.guild.fetch_members().flatten()
+                multiple_member_array = []
+                
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+
+
+                else:
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+
+                    await multiple_member_array[0].kick(reason=reason)
+                    embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **{reason}**', colour=0xff0000)
+                    await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        if len(multiple_member_array_duplicate_array) < 10:
+                            multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+                        else:
+                            break
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results (Max 10)',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+        
+        else:
+            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+            await ctx.send(embed=embed)
+            if channel is not None:
+                emb = discord.Embed(title='Illegal use of command **multikick**', description=f'{ctx.author.mention} Used the `multikick` command, Who is not authorized', colour=0xff0000)
+                await channel.send(embed=emb)
+
+
+    # Multikick: error
+
+    @multikick.error
+    async def error_multikick(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            if ctx.message.author.guild_permissions.kick_members:
+                await ctx.send('```\nr$multikick ...{member_name | member_id | member_tag} {reason}\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await ctx.send(embed=embed)
+                if channel is not None:
+                    emb = discord.Embed(title='Illegal use of command **multikick**', description=f'{ctx.author.mention} Used the `multikick` command, Who is not authorized', colour=0xff0000)
+                    await channel.send(embed=emb)            
+        elif isinstance(error, discord.Forbidden):
+            await ctx.send('I do not have the required permissions to kick!')
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            raise error
+
+    # Multi ban
+
+    @commands.command(name = 'multiban', aliases = ['Multiban'])
+    async def multiban(self, ctx, *, member):
+        if ctx.message.author.guild_permissions.ban_members:
+
+            list_of_users = member.split()
+            reason = 'Banned during a multiban process'
+
+            for member in list_of_users:
+                if member[0] == '<' and member[1] == '@':
+                    converter = MemberConverter()
+                    member = await converter.convert(ctx, member)
+                elif member.isnumeric():
+                    member = int(member)
+
+                members = await ctx.guild.fetch_members().flatten()
+                multiple_member_array = []
+                
+                if isinstance(member, discord.Member):
+                    for members_list in members:
+                        if member.name.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+                elif isinstance(member, int):
+                    for member_list in members:
+                        if member_list.id == member:
+                            multiple_member_array.append(member_list)
+                        else:
+                            pass
+
+
+                else:
+                    for members_list in members:
+                        if member.lower() in members_list.name.lower():
+                            multiple_member_array.append(members_list)
+                        else:
+                            pass
+
+                if len(multiple_member_array) == 1:
+
+                    await multiple_member_array[0].ban(reason=reason)
+                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
+                    await ctx.send(embed=embed)
+
+                elif len(multiple_member_array) > 1:
+
+                    multiple_member_array_duplicate_array = []
+                    for multiple_member_array_duplicate in multiple_member_array:
+                        if len(multiple_member_array_duplicate_array) < 10:
+                            multiple_member_array_duplicate_array.append(multiple_member_array_duplicate.name)
+                        else:
+                            break
+
+                    embed = discord.Embed(
+                            title=f'Search for {member}\nFound multiple results (Max 10)',
+                            description=f'\n'.join(multiple_member_array_duplicate_array),
+                            colour=0x808080
+                        )
+                    await ctx.send(embed=embed)
+
+                else:
+                    await ctx.send(f'The member `{member}` does not exist!')
+        
+        else:
+            embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+            channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+            await ctx.send(embed=embed)
+            if channel is not None:
+                emb = discord.Embed(title='Illegal use of command **multiban**', description=f'{ctx.author.mention} Used the `multiban` command, Who is not authorized', colour=0xff0000)
+                await channel.send(embed=emb)
+
+
+    # Multiban: error
+
+    @multiban.error
+    async def error_multiban(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            if ctx.message.author.guild_permissions.ban_members:
+                await ctx.send('```\nr$multiban ...{member_name | member_id | member_tag} {reason}\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+            else:
+                embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
+                channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
+                await ctx.send(embed=embed)
+                if channel is not None:
+                    emb = discord.Embed(title='Illegal use of command **multiban**', description=f'{ctx.author.mention} Used the `multiban` command, Who is not authorized', colour=0xff0000)
+                    await channel.send(embed=emb)            
+        elif isinstance(error, discord.Forbidden):
+            await ctx.send('I do not have the required permissions to ban!')
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            raise error
+
         
 
     # Hard ban members
@@ -184,7 +374,7 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.ban_members:                
-                await ctx.send('```\n$ban {member_name} {reason}\n     ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+                await ctx.send('```\nr$ban {member_name | member_id | member_tag} {reason}\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -197,7 +387,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
 
@@ -280,7 +470,7 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.ban_members:
-                await ctx.send('```\n$ban {member_name} {reason}\n     ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+                await ctx.send('```\nr$softban {member_name | member_id | member_tag} {reason}\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -293,9 +483,8 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
-            raise error
-        
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            raise error        
 
 
     # Unban members
@@ -307,14 +496,17 @@ class ModerationCog(commands.Cog):
             banned_users = await ctx.guild.bans()
             member_name, member_discriminator = member.split('#')
 
-            for ban_entry in banned_users:
-                user = ban_entry.user
+            if member_discriminator.isnumeric():
+                for ban_entry in banned_users:
+                    user = ban_entry.user
 
-                if (user.name, user.discriminator) == (member_name, member_discriminator):
-                    await ctx.guild.unban(user)
-                    embed = discord.Embed(description=f'***Unbanned user {user.mention}***', colour=0x008000)
-                    await ctx.send(embed=embed)
-                    return
+                    if (user.name, user.discriminator) == (member_name, member_discriminator):
+                        await ctx.guild.unban(user)
+                        embed = discord.Embed(description=f'***Unbanned user {user.mention}***', colour=0x008000)
+                        await ctx.send(embed=embed)
+                        return
+            else:
+                await ctx.send(f'Member discriminator must be an integer, {member_discriminator} not allowed')
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -323,6 +515,7 @@ class ModerationCog(commands.Cog):
                 emb = discord.Embed(title='Illegal use of command **unban**', description=f'{ctx.author.mention} Used the `unban` command, Who is not authorized', colour=0xff0000)
                 await channel.send(embed=emb)
 
+
     # Unban mambers: Error handling
 
     @unban.error
@@ -330,7 +523,7 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, ValueError):
             if ctx.message.author.guild_permissions.ban_members:
-                await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
+                await ctx.send("Too few arguments\nSyntax: `r$unban <username>#<discriminator>`")
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -343,7 +536,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, ValueError):
             await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                 
@@ -393,7 +586,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have enough permissions!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                 
@@ -501,7 +694,7 @@ class ModerationCog(commands.Cog):
     async def mute_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.author.guild_permissions.manage_roles:                
-                await ctx.send('```\n$mute {member_name}\n      ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+                await ctx.send('```\nr$mute {member_name | member_id | member_tag}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -525,7 +718,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to mute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                 
@@ -617,7 +810,7 @@ class ModerationCog(commands.Cog):
     async def unmute_error(self, ctx, error):        
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.author.guild_permissions.manage_roles:         
-                await ctx.send('```\n$unmute {member_name}\n        ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+                await ctx.send('```\nr$unmute {member_name | member_id | member_tag}\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -630,7 +823,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to unmute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                 
@@ -734,7 +927,7 @@ class ModerationCog(commands.Cog):
     async def addrole_error(self, ctx, error):        
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.author.guild_permissions.manage_roles:            
-                await ctx.send('```\n$addrole {member_name} {role}\n         ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+                await ctx.send('```\nr$addrole {member_name | member_id | member_tag} {role}\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -746,7 +939,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough enough permissions to add roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                 
@@ -851,7 +1044,7 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.manage_roles:         
-                await ctx.send('```\n$removerole {member_name} {role}\n            ^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+                await ctx.send('```\nr$removerole {member_name | member_id | member_tag} {role}\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -862,7 +1055,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have the enough permissions to remove roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
             raise error
         
                     

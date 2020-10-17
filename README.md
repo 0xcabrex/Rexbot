@@ -34,8 +34,10 @@ sudo python3 -m pip install -r requirements.txt
 ### Moderation commands
 
 - `kick` - Kicks the mentioned user from the guild
+- `multikick` - Kicks Multiple people out of the guild
 - `ban | hardban` - Bans the infracted user from the guild, **with purging the member's messages**
 - `softban` - Bans the infracted user from the guild, **without purging the member's messages**
+- `multiban` - Bans multiple users out of the guild
 - `unban` - Unbans the user from the guild
 - `mute` - Mutes the mentioned user 
 - `unmute` - unmutes the mentioned user, if muted

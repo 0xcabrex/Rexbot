@@ -58,7 +58,7 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
 
 
     # Help console
@@ -95,14 +95,16 @@ class GeneralCog(commands.Cog):
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
                 description = '**kick**\nKicks the member out of the server\nUsage: r$kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
+                              '**multikick**\nKicks multiple users out of the guild\nUsage: r$multikick {member_name | member_id | member_tag}, reason is not needed\n\n'
                               '**ban**\nBans the user from the server,**with purging the messages**\nUsage: r$ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**softban**\nbans the user from the server, **without removing the messages**\nUsage: r$softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**unban**\nunbans the user, you need to know the member\'s name\nUsage: r$unban {member_name#discriminator}\n\n'
-                              '**mute**\nmutes the user\nUsage: r$mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**unmute**\nunmutes the user\nUsage: r$unmute {member_name | member_id | member_tag}\n\n'
-                              '**clear | remove | purge**\n clears messages from the channel where it is used\nUsage: r$clear {n} where `n` is the number of messages to be purged\n\n'
+                              '**softban**\nBans the user from the server, **without removing the messages**\nUsage: r$softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**multiban**\nBans multiple users out of the guild\nUsage: r$multiban {member_name | member_id | member_tag}, reason is not needed\n\n'
+                              '**unban**\nUnbans the user, you need to know the member\'s name\nUsage: r$unban {member_name#discriminator}\n\n'
+                              '**mute**\nMutes the user\nUsage: r$mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**unmute**\nUnmutes the user\nUsage: r$unmute {member_name | member_id | member_tag}\n\n'
+                              '**clear | remove | purge**\nClears messages from the channel where it is used\nUsage: r$clear {n} where `n` is the number of messages to be purged\n\n'
                               '**addrole**\nAdds role to member\nUsage: r$addrole {member_name | member_id | member_tag} {role_name}\n\n'
-                              '**removerole | purgerole**\nRemoves role from member\nUsage: r$removerole {member_name | member_id | member_tag} {role_name}',
+                              '**removerole | purgerole**\nRemoves role from mentioned member\nUsage: r$removerole {member_name | member_id | member_tag} {role_name}',
                 colour=0x01a901
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
@@ -133,7 +135,7 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
 
 
@@ -148,6 +150,8 @@ class GeneralCog(commands.Cog):
             member = await converter.convert(ctx, member)
         elif member.isnumeric():
             member = int(member)
+        else:
+            pass
 
         members = await ctx.guild.fetch_members().flatten()
         multiple_member_array = []
@@ -171,11 +175,11 @@ class GeneralCog(commands.Cog):
                 else:
                     pass
 
-
-        if member.isnumeric() and member.lower() == 'me' and override == 'override':
-            embed = discord.Embed(colour=0x0000ff)
-            embed.set_image(url=f'{ctx.author.avatar_url}')
-            await ctx.send(embed=embed)
+        if member is discord.Member:
+            if member.isnumeric() and member.lower() == 'me' and override == 'override':
+                embed = discord.Embed(colour=0x0000ff)
+                embed.set_image(url=f'{ctx.author.avatar_url}')
+                await ctx.send(embed=embed)
 
         elif len(multiple_member_array) == 1:
 
@@ -219,7 +223,7 @@ class GeneralCog(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
 
 
@@ -315,8 +319,11 @@ class GeneralCog(commands.Cog):
             await ctx.send('```\n$userinfo {member_name}\n          ^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+        elif isinstance(error, discord.errors.Forbidden):
+            await ctx.send('I am Forbidden from doing this command, please check if `server members intent` is enabled')
         else:
-            await ctx.send(f'**{error}**')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            raise error
 
 
     # Server info
@@ -365,7 +372,7 @@ class GeneralCog(commands.Cog):
             await ctx.send(error)
             raise error
         else:
-            await ctx.send(f"An error occured ({error})\nPlease check console for traceback.")
+            await ctx.send(f"An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141.")
             raise error
 
 
@@ -406,6 +413,9 @@ class GeneralCog(commands.Cog):
     async def meme_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            raise error
 
 
     # Dog pictures
@@ -438,7 +448,8 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'**{error}**')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            raise error
 
 
     # Cat pictures
@@ -471,7 +482,60 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'**{error}**')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            raise error
+
+
+    # Animal facts
+
+    @commands.command(name='fact', aliases=['facts'])
+    async def animal_facts(self, ctx, animal:str):
+
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+
+        if animal.lower() in {'dog', 'cat', 'bird'}:
+            fact_url = f"https://some-random-api.ml/facts/{animal}"
+            image_url=f"https://some-random-api.ml/img/{'birb' if animal=='bird' else animal}"
+            async with request("GET", image_url, headers={}) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    image_link = data["link"]
+                else:
+                    image_link = None
+
+            async with request("GET", fact_url, headers={}) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    description = data["fact"]
+                    if len(description) > 2045:
+                        description = f'{data["fact"][:2045].strip()}...'
+                    else:
+                        description = data["fact"]
+
+            embed = discord.Embed(
+                title = f'Facts about {animal.lower()}',
+                description=description,
+                colour=random.choice(colour_choices)
+            )
+
+            if image_link is not None:
+                embed.set_image(url = image_link)
+            embed.set_footer(text='Made by CABREX with ❤')
+
+            await ctx.send(embed=embed)
+
+
+    # Animal Facts: Error handling
+
+    @animal_facts.error
+    async def animal_facts_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Which animal do you want the facts for?")
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            raise error 
+
+
 
 
     # Servercount
@@ -494,7 +558,7 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
 
 
@@ -526,7 +590,7 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
 
 
@@ -558,7 +622,7 @@ class GeneralCog(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error has occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error has occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
 
 
@@ -586,6 +650,7 @@ class GeneralCog(commands.Cog):
 
     @howdoi.error
     async def howdoi_error(self, ctx, error):
+        await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
         raise error
 
 
@@ -607,10 +672,13 @@ class GeneralCog(commands.Cog):
         async with request("GET", apod_url, headers={}) as response:    
             data = await response.json()
 
-        if len(data["explanation"]) > 2048:
-            description = f"{data['explanation'][:2045].strip()}..."
-        else:
-            description = data["explanation"]
+        try:
+            if len(data["explanation"]) > 2048:
+                description = f"{data['explanation'][:2045].strip()}..."
+            else:
+                description = data["explanation"]
+        except KeyError:
+            await ctx.send('There is a problem in the content, please try again')
 
         embed = discord.Embed(
             title=data["title"],
@@ -620,6 +688,8 @@ class GeneralCog(commands.Cog):
         embed.set_image(url=data["hdurl"])
         embed.set_footer(text=f"by {data['copyright']} ")
 
+        async with ctx.typing():
+            await asyncio.sleep(2)
         await ctx.send(embed=embed)
 
 
@@ -630,8 +700,9 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
             raise error
+
 
 
 def setup(bot):
