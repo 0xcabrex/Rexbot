@@ -55,13 +55,14 @@ async def on_message(message):
 
     message_var = message.content
 
+
     if message.author.bot:
         return
-    elif '<@!732538419787595846>' in message_var.lower().split() and message_var.lower().find('prefix') != -1:
+    elif bot.user in message.mentions and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif '<@&750309678075871293>' in message_var.lower().split() and message_var.lower().find('prefix') != -1:
+    elif bot.user in message.mentions and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif '<@!732538419787595846>' in message_var.lower().split() or '<@&750309678075871293>' in message_var.lower().split():
+    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split():
         await message.channel.send(f'{random.choice(reply_choices)}, {message.author.mention}')
     await bot.process_commands(message)
 
@@ -143,7 +144,7 @@ if TOKEN is None:
                 bot.run(TOKEN)
             else:
                 print("Token error: Token not found")
-    except:
+    except FileNotFoundError:
         print("File handle error")
 else:
     print('Using token found in Environment variable....')
