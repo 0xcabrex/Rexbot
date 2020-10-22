@@ -101,7 +101,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -196,7 +196,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
     # Multi ban
@@ -290,7 +290,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to ban!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
         
@@ -387,7 +387,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
 
@@ -483,7 +483,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error        
 
 
@@ -536,7 +536,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, ValueError):
             await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -586,7 +586,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have enough permissions!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -718,7 +718,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to mute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -823,7 +823,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to unmute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -939,7 +939,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough enough permissions to add roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -1055,7 +1055,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have the enough permissions to remove roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                     

@@ -58,12 +58,10 @@ async def on_message(message):
 
     if message.author.bot:
         return
-    elif bot.user in message.mentions and message_var.lower().find('prefix') != -1:
-        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif bot.user in message.mentions and message_var.lower().find('prefix') != -1:
-        await message.channel.send(f'My command prefix is `{command_prefix}`, {message.author.mention}')
-    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split():
-        await message.channel.send(f'{random.choice(reply_choices)}, {message.author.mention}')
+    elif (bot.user in message.mentions or (message_var.lower().find('rexbot') != -1 )) and message_var.lower().find('prefix') != -1:
+        await message.channel.send(f'My command prefix is `{command_prefix}`, **{message.author.display_name}**')
+    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split() or (message_var.lower().find('rexbot') != -1) :
+        await message.channel.send(f'{random.choice(reply_choices)}, **{message.author.display_name}**!')
     await bot.process_commands(message)
 
 
