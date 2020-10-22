@@ -58,13 +58,13 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
 
 
     # Help console
 
     @commands.command()
-    @cooldown(1,5,BucketType.channel)
+    @cooldown(1, 3, BucketType.channel)
     async def help(self, ctx, argument=None):
         mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
         admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
@@ -78,7 +78,10 @@ class GeneralCog(commands.Cog):
                             '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n'
                             '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: r$wiki {query}\nQuery is necessary\n\n'
                             '**howdoi**\nInformation from stackoverflow\nUsage: r$howdoi {query}\nQuery is necessary\n\n'
-                            '**apod**\nGets you and Astronomy Picture Of the Day\nUsage: r$apod\n\n',
+                            '**apod**\nGets you and Astronomy Picture Of the Day\nUsage: r$apod\n\n'
+                            '**joke**\nRandom joke has been delivered!\nUsage r$joke\n\n'
+                            '**pjoke**\nGets you a programming related joke\nUsage: r$pjoke\n\n'
+                            '**quotes**\nA random quote\nUsage: r$quote\n\n',
                 colour=0x01a901
             )
         fun_embed.set_footer(text='Made by CABREX with ❤')
@@ -135,14 +138,14 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
 
 
     # Avatar fetcher
 
     @commands.command(aliases=['av'])
-    @cooldown(1,5,BucketType.channel)
+    @cooldown(1, 5, BucketType.channel)
     async def avatar(self, ctx, member, override=None):
 
         if member[0] == '<' and member[1] == '@':
@@ -223,14 +226,14 @@ class GeneralCog(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
 
 
     # Userinfo
 
     @commands.command(aliases=['ui', 'Ui'])
-    @cooldown(1,5,BucketType.channel)
+    @cooldown(1, 5, BucketType.channel)
     async def userinfo(self, ctx, member):
 
         if member[0] == '<' and member[1] == '@':
@@ -278,15 +281,18 @@ class GeneralCog(commands.Cog):
             embed.set_footer(text='made by CABREX with ❤')
 
             embed.add_field(name='ID:', value=multiple_member_array[0].id)
-            embed.add_field(name='\nMember Name:', value=multiple_member_array[0])
-            embed.add_field(name='\nMember Nickname:', value=multiple_member_array[0].display_name)
+            embed.add_field(name='Member Name:', value=multiple_member_array[0])
+            embed.add_field(name='Member Nickname:', value=multiple_member_array[0].display_name)
 
-            embed.add_field(name='\nCreated at: ', value=multiple_member_array[0].created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
-            embed.add_field(name='\nJoined at:', value=multiple_member_array[0].joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+            embed.add_field(name='Created at: ', value=multiple_member_array[0].created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
+            embed.add_field(name='Joined at:', value=multiple_member_array[0].joined_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
-            embed.add_field(name=f'\nRoles ({len(roles)})', value=' '.join([role.mention for role in roles]))
+            if len(roles) == 1:
+                embed.add_field(name=f'Roles ({len(roles) - 1})', value='**NIL**')
+            else:
+                embed.add_field(name=f'Roles ({len(roles) - 1})', value=' '.join([role.mention for role in roles if role.name != '@everyone']))
 
-            embed.add_field(name='\nBot?', value=multiple_member_array[0].bot)
+            embed.add_field(name='Bot?', value=multiple_member_array[0].bot)
 
             await ctx.send(embed=embed)
 
@@ -329,7 +335,7 @@ class GeneralCog(commands.Cog):
     # Server info
 
     @commands.command(aliases=['si', 'Si'])
-    @cooldown(1,4,BucketType.channel)
+    @cooldown(1, 4, BucketType.channel)
     async def serverinfo(self, ctx):
     
         count = 0
@@ -354,9 +360,14 @@ class GeneralCog(commands.Cog):
         embed.add_field(name='Server region:', value=ctx.guild.region)
         embed.add_field(name='Members:', value=ctx.guild.member_count)
         embed.add_field(name='bots:', value=count)
+        embed.add_field(name='Humans', value=ctx.guild.member_count - count)
+
+        embed.add_field(name='Number of roles', value=len(ctx.guild.roles))
+        embed.add_field(name='Number of boosts', value=ctx.guild.premium_subscription_count)
 
         embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
         embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
+        embed.add_field(name='Categories:', value=len(ctx.guild.categories))
 
         embed.add_field(name='Created On:', value=ctx.guild.created_at.strftime('%a, %#d %B %Y, %I:%M %p UTC'))
 
@@ -372,14 +383,14 @@ class GeneralCog(commands.Cog):
             await ctx.send(error)
             raise error
         else:
-            await ctx.send(f"An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141.")
+            await ctx.send(f"An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX.")
             raise error
 
 
     # Memes
 
     @commands.command(aliases=['Meme'])
-    @cooldown(1,3,BucketType.channel)
+    @cooldown(1, 3, BucketType.channel)
     async def meme(self, ctx):
 
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
@@ -421,7 +432,7 @@ class GeneralCog(commands.Cog):
     # Dog pictures
 
     @commands.command(aliases=['doggo','pupper'])
-    @cooldown(1,1,BucketType.channel)
+    @cooldown(1, 1, BucketType.channel)
     async def dog(self, ctx):
       
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
@@ -455,7 +466,7 @@ class GeneralCog(commands.Cog):
     # Cat pictures
 
     @commands.command(aliases=['Cat'])
-    @cooldown(1,1,BucketType.channel)
+    @cooldown(1, 1, BucketType.channel)
     async def cat(self, ctx):
       
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
@@ -532,7 +543,7 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Which animal do you want the facts for?")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error 
 
 
@@ -541,7 +552,7 @@ class GeneralCog(commands.Cog):
     # Servercount
 
     @commands.command(name='servercount', aliases=['Servercount', 'Sc', 'sc'])
-    @cooldown(1,1,BucketType.channel)
+    @cooldown(1, 1, BucketType.channel)
     async def servercount(self, ctx):
         
         member_count = 0
@@ -558,14 +569,14 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
 
 
     # ASCIIfy your message
 
     @commands.command(name='asciify')
-    @cooldown(1,1,BucketType.channel)
+    @cooldown(1, 1, BucketType.channel)
     async def asciify_message(self, ctx, *, message=None):
         if message is not None:
             if message[0] == '<' and (message[1] == ':'):
@@ -590,14 +601,14 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
 
 
     # Wikipedia support
 
     @commands.command(name='wikipedia', aliases=['ask', 'whatis', 'wiki'])
-    @cooldown(1,2,BucketType.channel)
+    @cooldown(1, 2,BucketType.channel)
     async def wiki(self, ctx, *, query=None):
         if query is not None:
             r = wikipedia.page(query)
@@ -622,7 +633,7 @@ class GeneralCog(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error has occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error has occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -650,14 +661,17 @@ class GeneralCog(commands.Cog):
 
     @howdoi.error
     async def howdoi_error(self, ctx, error):
-        await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
-        raise error
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+            raise error
 
 
     # APOD
 
     @commands.command(name='apod')
-    @cooldown(1,2, BucketType.channel)
+    @cooldown(1, 2, BucketType.channel)
     async def apod(self, ctx):
 
         colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff] 
@@ -700,8 +714,116 @@ class GeneralCog(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(error)
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX#4141')
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
+
+
+    # Random Jokes 
+
+    @commands.command(name='joke', aliases=['Joke','jokes','Jokes'])
+    @cooldown(1, 2, BucketType.channel)
+    async def jokes(self, ctx):
+
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+        
+        jokes_url = 'https://official-joke-api.appspot.com/random_joke'
+
+        async with request("GET", jokes_url, headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+                title = data["setup"]
+                description = data["punchline"]
+
+                embed = discord.Embed(
+                                title = title,
+                                description = description,
+                                colour = random.choice(colour_choices)
+                    )
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(f'The API seems down, say {response.status}')
+
+
+    # Random jokes: Error handling
+
+    @jokes.error
+    async def jokes_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error            
+
+
+    # Programming jokes
+
+    @commands.command(name='pjoke', aliases=['Pjoke','pjokes','Pjokes'])
+    @cooldown(1, 2, BucketType.channel)
+    async def programmingjokes(self, ctx):
+
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+        
+        jokes_url = 'https://official-joke-api.appspot.com/jokes/programming/random'
+
+        async with request("GET", jokes_url, headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+                title = data[0]["setup"]
+                description = data[0]["punchline"]
+
+                embed = discord.Embed(
+                                title = title,
+                                description = description,
+                                colour = random.choice(colour_choices)
+                    )
+                await ctx.send(embed=embed)
+            else:
+                await ctx.send(f'The API seems down, say {response.status}')
+
+
+    # Programming jokes: Error handling
+
+    @programmingjokes.error
+    async def programmingjokes_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Quotes 
+
+    @commands.command(name='quotes', aliases=['Quotes', 'quote', 'Quote'])
+    @cooldown(1, 2, BucketType.channel)
+    async def quotes(self, ctx):
+
+        colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
+        
+        quotes_url = 'http://staging.quotable.io/random'
+
+        async with request("GET", quotes_url, headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+                
+                quote = data["content"]
+                author = data["author"]
+
+                await ctx.send(f'```\n{quote}\n```\n**-{author}**')
+            else:
+                await ctx.send(f"API seems down, says {response.status} code")
+
+
+    # Quotes: Error handling
+
+    @quotes.error
+    async def quotes_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
 
 
 
