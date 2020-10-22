@@ -433,7 +433,7 @@ class ModerationCog(commands.Cog):
                     embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **No Reason Specified**', colour=0xff0000)
                 else:
                     embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
-                await multiple_member_array[0].ban(reason=reason)
+                await multiple_member_array[0].ban(reason=reason, delete_message_days=0)
                 await ctx.send(embed=embed)
 
             elif len(multiple_member_array) > 1:
