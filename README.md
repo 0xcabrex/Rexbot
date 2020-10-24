@@ -91,11 +91,9 @@ python3 bot.py
 
 Use this [link](https://discord.com/api/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot) to invite rexbot to your server!  
 
+For any bugs, please use the `bug` command and I will try to fix it, if I have time ':)   
 
-
-For any bugs, please use the `bug` command and I will try to fix it, if I have time ':)  
-
-Joint the [discord server](https://discord.gg/Gcv69JM) for support
+Join the [discord server](https://discord.gg/Gcv69JM) for support and other stuff.
 
 
 ### License
