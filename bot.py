@@ -62,6 +62,25 @@ async def on_message(message):
         await message.channel.send(f'My command prefix is `{command_prefix}`, **{message.author.display_name}**')
     elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split() or (message_var.lower().find('rexbot') != -1) :
         await message.channel.send(f'{random.choice(reply_choices)}, **{message.author.display_name}**!')
+    if str(message.channel.type) == 'private':
+    	if len(message.content) > 20:
+    		bugs_channel1 = discord.utils.get(bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
+    		bugs_channel2 = discord.utils.get(bot.get_all_channels(), guild__name='ZeroDeaths', name='bugs')
+    		embed = discord.Embed(
+    					title='BUG REPORTED',
+    					colour = 0x008000
+    			)
+    		embed.add_field(name='Username', value=message.author)
+    		embed.add_field(name='User id', value=message.author.id)
+    		embed.add_field(name='Bug: ', value=message.content)
+    		if bugs_channel1 is not None:
+    			await bugs_channel1.send(embed=embed)
+    		elif bugs_channel2 is not None:
+    			await bugs_channel2.send(embed=embed)
+    		await message.channel.send("Your bug has been reported")
+    	else:
+    		await message.channel.send("Please enter your bug in more than 20 words, try describing everything")
+
     await bot.process_commands(message)
 
 
