@@ -10,6 +10,7 @@ import asyncio
 import pyfiglet
 import wikipedia
 from howdoi import howdoi
+import base64
 
 
 class GeneralCog(commands.Cog):
@@ -76,9 +77,7 @@ class GeneralCog(commands.Cog):
                             '**dog | doggo | pupper**\nGets you a dog picture\n\n'
                             '**cat | kitty**\nGets you a cat picture\n\n'
                             '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n'
-                            '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: r$wiki {query}\nQuery is necessary\n\n'
-                            '**howdoi**\nInformation from stackoverflow\nUsage: r$howdoi {query}\nQuery is necessary\n\n'
-                            '**apod**\nGets you and Astronomy Picture Of the Day\nUsage: r$apod\n\n'
+                            '**apod**\nGets you an Astronomy Picture Of the Day\nUsage: r$apod\n\n'
                             '**joke**\nRandom joke has been delivered!\nUsage r$joke\n\n'
                             '**pjoke**\nGets you a programming related joke\nUsage: r$pjoke\n\n'
                             '**quotes**\nA random quote\nUsage: r$quote\n\n',
@@ -91,15 +90,21 @@ class GeneralCog(commands.Cog):
                 description='**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: r$avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
                             '**userinfo | ui**\nGives the info of the mentioned user\nUsage: r$userinfo {member_name | member_tag | member_id}\n\n'
                             '**serverinfo | si**\nGives the info of the server (No arguments required)\n\n'
-                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n',
+                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n'
+                            '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: r$wiki {query}\nQuery is necessary\n\n'
+                            '**howdoi**\nInformation from stackoverflow\nUsage: r$howdoi {query}\nQuery is necessary\n\n'
+                            '**cipher | morse**\nConverts your message to morse code\nUsage: r$cypher {message}\n\n'
+                            '**base64**\nEncodes your message to base64\nUsage: r$base64 "{message}" {iteration}\nMessage must be in **quotes**\n\n'
+                            '**dbase64**\nDecodes your base64 encoded message\nUsage: r$dbase64 "{message}"\nMessage must be in **quotes**\n\nUsage',
                 colour=0x01a901
             )
+        utils_embed.set_footer(text='Made by CABREX with ❤')
 
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
                 description = '**kick**\nKicks the member out of the server\nUsage: r$kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
                               '**multikick**\nKicks multiple users out of the guild\nUsage: r$multikick {member_name | member_id | member_tag}, reason is not needed\n\n'
-                              '**ban**\nBans the user from the server,**with purging the messages**\nUsage: r$ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
+                              '**ban | hardban**\nBans the user from the server, **purging the messages**\nUsage: r$ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**softban**\nBans the user from the server, **without removing the messages**\nUsage: r$softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
                               '**multiban**\nBans multiple users out of the guild\nUsage: r$multiban {member_name | member_id | member_tag}, reason is not needed\n\n'
                               '**unban**\nUnbans the user, you need to know the member\'s name\nUsage: r$unban {member_name#discriminator}\n\n'
@@ -112,9 +117,19 @@ class GeneralCog(commands.Cog):
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
 
+        support_embed = discord.Embed(
+                title = 'Support commands for @Rexbot',
+                description = '**bug | bugs**\nReport any bugs found in the bot\nUsage: r$bugs "{message}"\nMessage must be in **quotes** and must be greater than 20 charecters.\nYou can also direct message the bot instead of invoking the command\n\n'
+                              '**invite**\nInvite me to your server! 😁\nUsage: r$invite\nNo arguments required\n\n'
+                              '**source | sourcecode**\nWant to know what was I written in? I\'ll send you a github link 😉\nUsage: r$source\nNo argument required\n\n'
+                              '**supportserver | ss**\nLink to the support server\nUsage: r$ss\nNo arguments required\n\n',
+                colour=0x01a901
+            )
+        support_embed.set_footer(text='Made by CABREX with ❤')        
+
         initial_help_dialogue = discord.Embed(
                 title = 'Help command',
-                description = '`r$help Fun`- Some fun commands\n`r$help Moderation` | `r$help mod` - Moderation commands\n`r$help utils` | `r$help util` - Utility commands',
+                description = '`r$help Fun`- Some fun commands\n`r$help Moderation` | `r$help mod` - Moderation commands\n`r$help utils` | `r$help util` - Utility commands\n `r$help support` - Support commands',
                 colour=0x01a901
             )
         initial_help_dialogue.set_footer(text='Made by CABREX with ❤')
@@ -127,6 +142,8 @@ class GeneralCog(commands.Cog):
             await ctx.send(embed=mod_embed)
         elif argument.lower() == 'utils' or argument.lower() == 'util':
             await ctx.send(embed=utils_embed)
+        elif argument.lower() == 'support':
+            await ctx.send(embed=support_embed)
         else:
           pass
 
@@ -408,6 +425,7 @@ class GeneralCog(commands.Cog):
                 data = await response.json()
                 embed = discord.Embed(
                     title=data["title"],
+                    url=image_link,
                     colour=random.choice(colour_choices)
                 )
                 if image_link is not None:
@@ -700,7 +718,7 @@ class GeneralCog(commands.Cog):
             color=random.choice(colour_choices)
         )
         embed.set_image(url=data["hdurl"])
-        embed.set_footer(text=f"by {data['copyright']} ")
+        embed.set_footer(text=f"Here is the Astronomy Picture of the Day")
 
         async with ctx.typing():
             await asyncio.sleep(2)
@@ -825,6 +843,250 @@ class GeneralCog(commands.Cog):
             raise error
 
 
+    # Morse code cypher
+
+    @commands.command(name='cypher', aliases=['Cypher', 'morse', 'Morse'])
+    @cooldown(1, 2, BucketType.channel)
+    async def cypher(self, ctx, *, message):
+        
+        MORSE_DICT = { 'A':'.-', 'B':'-...', 
+                    'C':'-.-.', 'D':'-..', 'E':'.', 
+                    'F':'..-.', 'G':'--.', 'H':'....', 
+                    'I':'..', 'J':'.---', 'K':'-.-', 
+                    'L':'.-..', 'M':'--', 'N':'-.', 
+                    'O':'---', 'P':'.--.', 'Q':'--.-', 
+                    'R':'.-.', 'S':'...', 'T':'-', 
+                    'U':'..-', 'V':'...-', 'W':'.--', 
+                    'X':'-..-', 'Y':'-.--', 'Z':'--..', 
+                    '1':'.----', '2':'..---', '3':'...--', 
+                    '4':'....-', '5':'.....', '6':'-....', 
+                    '7':'--...', '8':'---..', '9':'----.', 
+                    '0':'-----', ', ':'--..--', '.':'.-.-.-', 
+                    '?':'..--..', '/':'-..-.', '-':'-....-', 
+                    '(':'-.--.', ')':'-.--.-'}
+
+        cipher = ''
+
+        for letter in message.upper():
+            if letter != ' ':
+                cipher += MORSE_DICT[letter] + ' '
+            else:
+                cipher += ' '
+
+        await ctx.send(f'Here is your cyphered text:\n```\n{cipher}\n```')
+
+
+    # Morse code cypher: Error handling
+
+    @cypher.error
+    async def cypher_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send('What do you want to cypher?')
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Base64 encoding
+
+    @commands.command(name='base64', aliases=['Base64'])
+    @cooldown(1, 2, BucketType.channel)
+    async def base64(self, ctx, message, iterations=1):
+
+        message_bytecode = message.encode('ascii')
+
+        for i in range(iterations):
+            message_bytecode = base64.b64encode(message_bytecode)
+            base64_message = message_bytecode.decode('ascii')
+
+        await ctx.send(f'Here is the base64 encoded version encoded {iterations} time(s):\n```\n{base64_message}\n```')
+        
+
+
+    # Base64 encoding: Error handling
+
+    @base64.error
+    async def base64_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('What are the arguments')
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Please enter your text to be encode in quotes")
+        elif isinstance(error, base64.binascii.Error):
+            await ctx.send("Please enter a valid base64 encoded message to decrypt {ctx.author.display_name}")
+        elif isinstance(error, commands.ExpectedClosingQuoteError):
+            await ctx.send("You didnt close the quotes!")
+        elif isinstance(error, commands.InvalidEndOfQuotedStringError):
+            await ctx.send("Too many quotes!")
+        elif isinstance(error, commands.UnexpectedQuoteError):
+            await ctx.send("Unexpected quote in non-quoted string")
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Base64 decoding
+
+    @commands.command(name='dbase64', aliases=['Dbase64'])
+    @cooldown(1, 2, BucketType.channel)
+    async def base64_decode(self, ctx, message):
+
+        message_bytecode = message.encode('ascii')
+
+        decode_bytecode = base64.b64decode(message_bytecode)
+        base64_message = decode_bytecode.decode('ascii')
+
+        await ctx.send(f'Here is the base64 decoded version:\n```\n{base64_message}\n```')
+        
+
+
+    # Base64 decoding: Error handling
+
+    @base64_decode.error
+    async def base64_decode_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('What are the arguments')
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Please enter your text to be encode in quotes")
+        elif isinstance(error, base64.binascii.Error) or isinstance(error, base64.binascii.Error):
+            await ctx.send("Please enter a valid base64 encoded message to decrypt {ctx.author.display_name}")
+        elif isinstance(error, UnicodeDecodeError):
+            await ctx.send("Please enter a valid base64 encoded message to decrypt {ctx.author.display_name}")
+        elif isinstance(error, commands.ExpectedClosingQuoteError):
+            await ctx.send("You didnt close the quotes!")
+        elif isinstance(error, commands.InvalidEndOfQuotedStringError):
+            await ctx.send("Too many quotes!")
+        elif isinstance(error, commands.UnexpectedQuoteError):
+            await ctx.send("Unexpected quote in non-quoted string")
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Bug reporting
+
+    @commands.command(name='bugs', aliases=['bug', 'Bug', 'Bugs'])
+    @cooldown(1, 10, BucketType.guild)
+    async def bug_report(self, ctx, message):
+
+        if len(message) > 20:
+            bugs_channel1 = discord.utils.get(self.bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
+            bugs_channel2 = discord.utils.get(self.bot.get_all_channels(), guild__name='ZeroDeaths', name='bugs')
+            embed = discord.Embed(
+                        title='BUG REPORTED',
+                        colour = 0x008000
+                )
+            embed.add_field(name='Username', value=ctx.message.author)
+            embed.add_field(name='User id', value=ctx.message.author.id)
+            embed.add_field(name='Bug: ', value=message)
+            if bugs_channel1 is not None:
+                await bugs_channel1.send(embed=embed)
+            elif bugs_channel2 is not None:
+                await bugs_channel2.send(embed=embed)
+            await ctx.send("Your bug has been reported")
+        else:
+            await ctx.send("Please enter your bug in more than 20 words, try describing everything\nOr you might have forgotten to use the quotes")
+
+
+    # Bug reporting: Error handling
+
+    @bug_report.error
+    async def bug_report_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please enter the bug to be reported')
+        elif isinstance(error, commands.ExpectedClosingQuoteError):
+            await ctx.send("You didnt close the quotes!")
+        elif isinstance(error, commands.InvalidEndOfQuotedStringError):
+            await ctx.send("Too many quotes!")
+        elif isinstance(error, commands.UnexpectedQuoteError):
+            await ctx.send("Unexpected quote in non-quoted string")
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+    
+
+
+    # Invite for the bot
+
+    @commands.command(name='invite', aliases=['invites'])
+    @cooldown(1, 5, BucketType.channel)
+    async def invite_link(self, ctx):
+        
+        embed = discord.Embed(
+                title = f'Here is the invite link to \nadd me to your server!',
+                description = '**[invite me](https://discord.com/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot)**',
+                colour=0x008000
+            )
+        await ctx.send(embed=embed)
+
+
+    # Source code: Error handling
+    
+    @invite_link.error
+    async def invite_link_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Source code to me
+
+    @commands.command(name='source', aliases=['sourcecode'])
+    @cooldown(1, 5, BucketType.channel)
+    async def source_code(self, ctx):
+
+        embed = discord.Embed(
+                title = f'Here is my source code\nGithub page link',
+                description = '**[Source code](https://github.com/0xcabrex/Rexbot)**',
+                colour=0x008000
+            )
+        await ctx.send(embed=embed)
+
+
+    # Source code: Error handling
+
+    @source_code.error
+    async def source_code_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+
+    # Support server
+
+    @commands.command(name='supportserver', aliases=['ss'])
+    @cooldown(1, 10, BucketType.channel)
+    async def support_server(self, ctx):
+        
+        embed = discord.Embed(
+                title = f'Support server link:',
+                description = '**[support server](https://discord.gg/Gcv69JM)**',
+                colour=0x008000
+            )
+        await ctx.send(embed=embed)
+
+
+    # Support server: Error handling
+    
+    @support_server.error
+    async def support_server_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
 
 
 def setup(bot):
