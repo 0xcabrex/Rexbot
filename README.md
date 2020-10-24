@@ -93,7 +93,9 @@ Use this [link](https://discord.com/api/oauth2/authorize?client_id=7325384197875
 
 
 
-For any bugs, please report to me and I will try to fix it, if I have time ':)
+For any bugs, please use the `bug` command and I will try to fix it, if I have time ':)  
+
+Joint the [discord server](https://discord.gg/Gcv69JM) for support
 
 
 ### License
