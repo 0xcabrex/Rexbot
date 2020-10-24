@@ -44,33 +44,47 @@ python3 bot.py
 ### Fun commands
 
 - `8ball` - Gives a yes, no or a maybe to a question asked, completely random but fun ;) 
-- `meme` - Sends you a beautifully crafted meme
-- `dog | doggo | pupper` - Gets you a cute pupper using internet magic
-- `cat | kitty` - Gets you an adorable kitty picture from the internet
-- `asciify` - ASCIIfies your message.
-- `wikipedia | wiki | ask | whatis` - Gets you information from the wiki
-- `howdoi` - Information from stackoverflow
+- `meme` - Sends you a beautifully crafted meme.
+- `dog | doggo | pupper` - Gets you a cute pupper using internet magic.
+- `cat | kitty` - Gets you an adorable kitty picture from the internet.
+- `asciify` - ASCIIfies your message..
+- `apod` - Gets you an Astronomy Picture of the Day.
+- `joke` - A random joke.
+- `pjoke` - Gets you a programming specific joke.
+- `quotes` - A random quote.
 
 ### Moderation commands
 
-- `kick` - Kicks the mentioned user from the guild
-- `multikick` - Kicks Multiple people out of the guild
-- `ban | hardban` - Bans the infracted user from the guild, **with purging the member's messages**
-- `softban` - Bans the infracted user from the guild, **without purging the member's messages**
-- `multiban` - Bans multiple users out of the guild
-- `unban` - Unbans the user from the guild
-- `mute` - Mutes the mentioned user 
-- `unmute` - unmutes the mentioned user, if muted
-- `clear | remove | purge` - Clears messages from the channel where the command has been used
+- `kick` - Kicks the mentioned user from the guild.
+- `multikick` - Kicks Multiple people out of the guild.
+- `ban | hardban` - Bans the infracted user from the guild, **with purging the member's messages**.
+- `softban` - Bans the infracted user from the guild, **without purging the member's messages**.
+- `multiban` - Bans multiple users out of the guild.
+- `unban` - Unbans the user from the guild.
+- `mute` - Mutes the mentioned user.
+- `unmute` - unmutes the mentioned user, if muted.
+- `clear | remove | purge` - Clears messages from the channel where the command has been used.
 - `addrole` - adds the role to the user, if present in the guild (**CASE SENSITIVE**)
 - `removerole | purgerole` - Removes the role from the user, if present in the guild and if the user has it (**CASE SENSITIVE**)
 
 ### Utility commands
 
-- `avatar | av` - Shows the avatar of the user mentioned
-- `userinfo | ui` - Gives the info of the user entered
-- `serverinfo | si` - Gives the info of the server
-- `servercount | sc` - Shows you how many servers the bot is in and total number of members in those servers combined
+- `avatar | av` - Shows the avatar of the user mentioned.
+- `userinfo | ui` - Gives the info of the user entered.
+- `serverinfo | si` - Gives the info of the server.
+- `servercount | sc` - Shows you how many servers the bot is in and total number of members in those servers combined.
+- `wikipedia | wiki | ask | whatis` - Gets you information from the wiki.
+- `howdoi` - Information from stackoverflow.
+- `cipher | morse` - Converts a string to morse code.
+- `base64` - Encodes your message to base64.
+- `dbase64` - Decodes your base64 encoded message.
+
+### Support commands
+
+- `bug | bugs` - Report any bugs found in the bot, You can also direct message the bot.
+- `invite` - Sends an embeded invite link for the bot.
+- `source | sourcecode` - Sends you a link the redirects you to this github page.
+- `supportserver | ss` - Gets the link to the support server so you can ask doubts there.
 
 
 ### Want to add my bot to your discord server?
