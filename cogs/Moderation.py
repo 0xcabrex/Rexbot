@@ -48,12 +48,15 @@ class ModerationCog(commands.Cog):
 
             if len(multiple_member_array) == 1:
 
-                await multiple_member_array[0].kick(reason=reason)
-                if reason is None:
-                    embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **No Reason Specified**', colour=0xff0000)
+                if ctx.guild.me.top_role > multiple_member_array[0].top_role:
+                    await multiple_member_array[0].kick(reason=reason)
+                    if reason is None:
+                        embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **No Reason Specified**', colour=0xff0000)
+                    else:
+                        embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **{reason}**', colour=0xff0000)
+                    await ctx.send(embed=embed)
                 else:
-                    embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **{reason}**', colour=0xff0000)
-                await ctx.send(embed=embed)
+                    await ctx.send(f"My role is either equal to or lesser than **{multiple_member_array[0].display_name}'s** roles\nHence cannot kick")
 
             elif len(multiple_member_array) > 1:
 
@@ -147,9 +150,12 @@ class ModerationCog(commands.Cog):
 
                 if len(multiple_member_array) == 1:
 
-                    await multiple_member_array[0].kick(reason=reason)
-                    embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **{reason}**', colour=0xff0000)
-                    await ctx.send(embed=embed)
+                    if ctx.guild.me.top_role > multiple_member_array[0].top_role:
+                        await multiple_member_array[0].kick(reason=reason)
+                        embed = discord.Embed(title='**USER KICKED**',description=f'User **{multiple_member_array[0]}** has been kicked due to:\n **{reason}**', colour=0xff0000)
+                        await ctx.send(embed=embed)
+                    else:
+                        await ctx.send(f"My role is either equal to or lesser than **{multiple_member_array[0].display_name}'s** roles\nHence cannot kick")
 
                 elif len(multiple_member_array) > 1:
 
@@ -241,9 +247,12 @@ class ModerationCog(commands.Cog):
 
                 if len(multiple_member_array) == 1:
 
-                    await multiple_member_array[0].ban(reason=reason)
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
-                    await ctx.send(embed=embed)
+                    if ctx.guild.me.top_role > multiple_member_array[0].top_role:
+                        await multiple_member_array[0].ban(reason=reason)
+                        embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
+                        await ctx.send(embed=embed)
+                    else:
+                        await ctx.send(f"My role is either equal to or lesser than **{multiple_member_array[0].display_name}'s** roles\nHence cannot ban")
 
                 elif len(multiple_member_array) > 1:
 
@@ -333,11 +342,14 @@ class ModerationCog(commands.Cog):
 
             if len(multiple_member_array) == 1:
                 if reason is None:
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **No Reason Specified**', colour=0xff0000)
+                    await ctx.send('What is the reason for the ban?')
                 else:
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
-                await multiple_member_array[0].ban(reason=reason, delete_message_days=7)
-                await ctx.send(embed=embed)
+                    if ctx.guild.me.top_role > multiple_member_array[0].top_role:
+                        embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
+                        await multiple_member_array[0].ban(reason=reason, delete_message_days=7)
+                        await ctx.send(embed=embed)
+                    else:
+                        await ctx.send(f"My role is either equal to or lesser than **{multiple_member_array[0].display_name}'s** roles\nHence cannot ban")
 
             elif len(multiple_member_array) > 1:
                 multiple_member_array_duplicate_array = []
@@ -391,8 +403,6 @@ class ModerationCog(commands.Cog):
             raise error
         
 
-
-
     # Soft Ban members
 
     @commands.command(aliases=['Softban'])
@@ -430,11 +440,14 @@ class ModerationCog(commands.Cog):
 
             if len(multiple_member_array) == 1:
                 if reason is None:
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **No Reason Specified**', colour=0xff0000)
+                    await ctx.send("What is the reason for the ban?")
                 else:
-                    embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
-                await multiple_member_array[0].ban(reason=reason, delete_message_days=0)
-                await ctx.send(embed=embed)
+                    if ctx.guild.me.top_role > multiple_member_array[0].top_role:
+                        embed = discord.Embed(title='**USER BANNED**',description=f'User **{multiple_member_array[0]}** has been banned due to:\n **{reason}**', colour=0xff0000)
+                        await multiple_member_array[0].ban(reason=reason, delete_message_days=0)
+                        await ctx.send(embed=embed)
+                    else:
+                        await ctx.send(f"My role is either equal to or lesser than **{multiple_member_array[0].display_name}'s** roles\nHence cannot ban")
 
             elif len(multiple_member_array) > 1:
                 multiple_member_array_duplicate_array = []
