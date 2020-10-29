@@ -3,3 +3,5 @@
 /cogs/test.py
 /.idea/
 /NASA_API_TOKEN.0
+/mongodbclient.0
+/cogs/usefullTools/__pycache__
