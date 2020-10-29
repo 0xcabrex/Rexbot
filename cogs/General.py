@@ -72,57 +72,62 @@ class GeneralCog(commands.Cog):
 
         fun_embed = discord.Embed(
                 title = 'Fun commands for @Rexbot',
-                description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: r$8ball {question}\n\n'
-                            '**meme**\nSends you a beautifully crafted meme\n\n'
-                            '**dog | doggo | pupper**\nGets you a dog picture\n\n'
-                            '**cat | kitty**\nGets you a cat picture\n\n'
-                            '**asciify**\nASCIIfies your message\nUsage: $asciify {message}\n\n'
-                            '**apod**\nGets you an Astronomy Picture Of the Day\nUsage: r$apod\n\n'
-                            '**joke**\nRandom joke has been delivered!\nUsage r$joke\n\n'
-                            '**pjoke**\nGets you a programming related joke\nUsage: r$pjoke\n\n'
-                            '**quotes**\nA random quote\nUsage: r$quote\n\n',
+                description='**8ball**\nUses AI to give you the best answers to your questions\nUsage: `r$8ball {question}`\n\n'
+                            '**meme**\nSends you a beautifully crafted meme\nUsage `r$meme`\n\n'
+                            '**dog | doggo | pupper**\nGets you a dog picture\nUsage: `r$dog`\n\n'
+                            '**cat | kitty**\nGets you a cat picture\nUsage: `r$cat`\n\n'
+                            '**asciify**\nASCIIfies your message\nUsage: `r$asciify {message}`\n\n'
+                            '**apod**\nGets you an Astronomy Picture Of the Day\nUsage: `r$apod`\n\n'
+                            '**joke**\nRandom joke has been delivered!\nUsage: `r$joke`\n\n'
+                            '**pjoke**\nGets you a programming related joke\nUsage: `r$pjoke`\n\n'
+                            '**quotes**\nA random quote\nUsage: `r$quote`\n\n',
                 colour=0x01a901
             )
         fun_embed.set_footer(text='Made by CABREX with ❤')
 
         utils_embed = discord.Embed(
                 title = 'Utility commands for @Rexbot',
-                description='**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: r$avatar | $av {member_name | member_tag | member_id}\nIf nothing is provided then it shows your avatar\n\n'
-                            '**userinfo | ui**\nGives the info of the mentioned user\nUsage: r$userinfo {member_name | member_tag | member_id}\n\n'
-                            '**serverinfo | si**\nGives the info of the server (No arguments required)\n\n'
-                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined (No arguments required)\n\n'
-                            '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: r$wiki {query}\nQuery is necessary\n\n'
-                            '**howdoi**\nInformation from stackoverflow\nUsage: r$howdoi {query}\nQuery is necessary\n\n'
-                            '**cipher | morse**\nConverts your message to morse code\nUsage: r$cypher {message}\n\n'
-                            '**base64**\nEncodes your message to base64\nUsage: r$base64 "{message}" {iteration}\nMessage must be in **quotes**\n\n'
-                            '**dbase64**\nDecodes your base64 encoded message\nUsage: r$dbase64 "{message}"\nMessage must be in **quotes**\n\nUsage',
+                description='**avatar** | **av**\nShows the avatar of the user mentioned\nUsage: `r$avatar | $av {member_name | member_tag | member_id}`\nIf nothing is provided then it shows your avatar\n\n'
+                            '**userinfo | ui**\nGives the info of the mentioned user\nUsage: `r$userinfo {member_name | member_tag | member_id}`\n\n'
+                            '**serverinfo | si**\nGives the info of the server\nUsage: `r$serverinfo`, No arguments required\n\n'
+                            '**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined\nUsage: `r$sc`, No arguments required\n\n'
+                            '**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\nUsage: `r$wiki {query}`\nQuery is necessary\n\n'
+                            '**howdoi**\nInformation from stackoverflow\nUsage: `r$howdoi {query}`\nQuery is necessary\n\n'
+                            '**cipher | morse**\nConverts your message to morse code\nUsage: `r$cypher {message}`\n\n'
+                            '**base64**\nEncodes your message to base64\nUsage: `r$base64 "{message}" {iteration}`\nMessage must be in **quotes**\n\n'
+                            '**dbase64**\nDecodes your base64 encoded message\nUsage: `r$dbase64 "{message}"`\nMessage must be in **quotes**\n\nUsage',
                 colour=0x01a901
             )
         utils_embed.set_footer(text='Made by CABREX with ❤')
 
         mod_embed = discord.Embed(
                 title = 'Moderation commands for @Rexbot',
-                description = '**kick**\nKicks the member out of the server\nUsage: r$kick {member_name | member_id | member_tag} {reason}, reason is not neccessary\n\n'
-                              '**multikick**\nKicks multiple users out of the guild\nUsage: r$multikick {member_name | member_id | member_tag}, reason is not needed\n\n'
-                              '**ban | hardban**\nBans the user from the server, **purging the messages**\nUsage: r$ban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**softban**\nBans the user from the server, **without removing the messages**\nUsage: r$softban {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**multiban**\nBans multiple users out of the guild\nUsage: r$multiban {member_name | member_id | member_tag}, reason is not needed\n\n'
-                              '**unban**\nUnbans the user, you need to know the member\'s name\nUsage: r$unban {member_name#discriminator}\n\n'
-                              '**mute**\nMutes the user\nUsage: r$mute {member_name | member_id | member_tag} {reason}, reason is not necessary\n\n'
-                              '**unmute**\nUnmutes the user\nUsage: r$unmute {member_name | member_id | member_tag}\n\n'
-                              '**clear | remove | purge**\nClears messages from the channel where it is used\nUsage: r$clear {n} where `n` is the number of messages to be purged\n\n'
-                              '**addrole**\nAdds role to member\nUsage: r$addrole {member_name | member_id | member_tag} {role_name}\n\n'
-                              '**removerole | purgerole**\nRemoves role from mentioned member\nUsage: r$removerole {member_name | member_id | member_tag} {role_name}',
+                description = '**kick**\nKicks the member out of the server\nUsage: `r$kick {member_name | member_id | member_tag} {reason}`, reason is not neccessary\n\n'
+                              '**multikick**\nKicks multiple users out of the guild\nUsage: `r$multikick {member_name | member_id | member_tag}`, reason is not needed\n\n'
+                              '**ban | hardban**\nBans the user from the server, **purging the messages**\nUsage: `r$ban {member_name | member_id | member_tag} {reason}`, reason is not necessary\n\n'
+                              '**softban**\nBans the user from the server, **without removing the messages**\nUsage: `r$softban {member_name | member_id | member_tag} {reason}`, reason is not necessary\n\n'
+                              '**multiban**\nBans multiple users out of the guild\nUsage: `r$multiban {member_name | member_id | member_tag}`, reason is not needed\n\n'
+                              '**unban**\nUnbans the user, you need to know the member\'s name\nUsage: `r$unban {member_name#discriminator}`\n\n'
+                              '**warn**\nWarns the user\nUsage: `r$warn {member_name | member_id | member_tag} {infraction}`\n\n'
+                              '**warns | warnings**\nDisplays the infractions of the user mentioned\nUsage: `r$warns {member_name | member_id | member_tag}`\n\n'
+                              '**clearwarns | clearwarn**\nClears all the infractions of the user\nUsage: `r$clearwarns {member_name | member_id | member_tag}`\n\n'
+                              '**setwarnthresh | setwarnthreshold**\nSets the warning threshold for the server, beyond which the member gets banned\nUsage: `r$setwarnthresh {integer}`\n\n'
+                              '**clearwanthresh(old) | delwarnthresh(old)**\nClears the warning threshold of the server\nUsage: `r$clearwarnthresh`\n\n'
+                              '**mute**\nMutes the user\nUsage: `r$mute {member_name | member_id | member_tag} {reason}`, reason is not necessary\n\n'
+                              '**unmute**\nUnmutes the user\nUsage: `r$unmute {member_name | member_id | member_tag}`\n\n'
+                              '**clear | remove | purge**\nClears messages from the channel where it is used\nUsage: `r$clear {n}` where `n` is the number of messages to be purged\n\n'
+                              '**addrole**\nAdds role to member\nUsage: `r$addrole {member_name | member_id | member_tag} {role_name}`\n\n'
+                              '**removerole | purgerole**\nRemoves role from mentioned member\nUsage: `r$removerole {member_name | member_id | member_tag} {role_name}`\n\n',
                 colour=0x01a901
             )
         mod_embed.set_footer(text='Made by CABREX with ❤')
 
         support_embed = discord.Embed(
                 title = 'Support commands for @Rexbot',
-                description = '**bug | bugs**\nReport any bugs found in the bot\nUsage: r$bugs "{message}"\nMessage must be in **quotes** and must be greater than 20 charecters.\nYou can also direct message the bot instead of invoking the command\n\n'
-                              '**invite**\nInvite me to your server! 😁\nUsage: r$invite\nNo arguments required\n\n'
-                              '**source | sourcecode**\nWant to know what was I written in? I\'ll send you a github link 😉\nUsage: r$source\nNo argument required\n\n'
-                              '**supportserver | ss**\nLink to the support server\nUsage: r$ss\nNo arguments required\n\n',
+                description = '**bug | bugs**\nFound any bugs? Use this command to report the bugs\nUsage: `r$bugs "{message}"`\n\nMessage must be greater than 20 charecters.\nYou can also direct message the bot instead of invoking the command\n\n'
+                              '**invite**\nInvite me to your server! 😁\nUsage: `r$invite`\n\n'
+                              '**source | sourcecode**\nWant to know what was I written in? I\'ll send you a github link 😉\n`Usage: r$source`\nNo argument required\n\n'
+                              '**supportserver | ss**\nLink to the support server\nUsage: `r$ss`\n\n',
                 colour=0x01a901
             )
         support_embed.set_footer(text='Made by CABREX with ❤')        
@@ -377,10 +382,10 @@ class GeneralCog(commands.Cog):
         embed.add_field(name='Server region:', value=ctx.guild.region)
         embed.add_field(name='Members:', value=ctx.guild.member_count)
         embed.add_field(name='bots:', value=count)
-        embed.add_field(name='Humans', value=ctx.guild.member_count - count)
+        embed.add_field(name='Humans:', value=ctx.guild.member_count - count)
 
-        embed.add_field(name='Number of roles', value=len(ctx.guild.roles))
-        embed.add_field(name='Number of boosts', value=ctx.guild.premium_subscription_count)
+        embed.add_field(name='Number of roles:', value=len(ctx.guild.roles))
+        embed.add_field(name='Number of boosts:', value=ctx.guild.premium_subscription_count)
 
         embed.add_field(name='Text Channels:', value=len(ctx.guild.text_channels))
         embed.add_field(name='Voice Channels:', value=len(ctx.guild.voice_channels))
@@ -972,7 +977,7 @@ class GeneralCog(commands.Cog):
 
     @commands.command(name='bugs', aliases=['bug', 'Bug', 'Bugs'])
     @cooldown(1, 10, BucketType.guild)
-    async def bug_report(self, ctx, message):
+    async def bug_report(self, ctx, *, message):
 
         if len(message) > 20:
             bugs_channel1 = discord.utils.get(self.bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
