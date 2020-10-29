@@ -60,8 +60,15 @@ async def on_message(message):
         return
     elif (bot.user in message.mentions or (message_var.lower().find('rexbot') != -1 )) and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, **{message.author.display_name}**')
-    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split() or (message_var.lower().find('rexbot') != -1) :
-        await message.channel.send(f'{random.choice(reply_choices)}, **{message.author.display_name}**!')
+    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split() or (message_var.lower().find('rexbot') != -1 or bot.user in message.mentions):
+    	if message_var.lower().find('awesome') != -1 or message_var.lower().find('cool') != -1 or message_var.lower().find('good') != -1 or message_var.lower().find('nice') != -1 :
+    		await message.channel.send(f'Thanks bro 😁')
+    	elif message_var.lower().find('bad') != -1 or message_var.lower().find('horrible') != -1 or message_var.lower().find('suck') != -1 or message_var.lower().find('terrible') != -1 or message_var.lower().find('waste') != -1 or message_var.lower().find('fk') != -1 or message_var.lower().find('fuck') != -1:
+    		await message.channel.send(f'No you\nI do the basic functions okay I aint dyno or mee6\n\nJesus christ.')
+    	elif message_var.lower().find('how are you') != -1 :
+    		await message.channel.send(f'I am fine, {message.author.display_name}')
+    	else:
+        	await message.channel.send(f'{random.choice(reply_choices)}, **{message.author.display_name}**!')
     if str(message.channel.type) == 'private':
     	if len(message.content) > 20:
     		bugs_channel1 = discord.utils.get(bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
@@ -75,6 +82,7 @@ async def on_message(message):
     		embed.add_field(name='Bug: ', value=message.content)
     		if bugs_channel1 is not None:
     			await bugs_channel1.send(embed=embed)
+    			await bugs_channel2.send(embed=embed)
     		elif bugs_channel2 is not None:
     			await bugs_channel2.send(embed=embed)
     		await message.channel.send("Your bug has been reported")
@@ -104,8 +112,16 @@ async def on_member_join(member):
                     description=f'Member **{member.name}** joined the server!',
                     colour=0x008000
                 )
+            members = await member.guild.fetch_members().flatten()
+
+            bot_count = 0
+            for people in members:
+            	if people.bot is True:
+            		bot_count += 1
+
             embed.set_thumbnail(url=member.avatar_url)
-            embed.add_field(name='Number of members', value=len(member.guild.members))
+            embed.add_field(name='Number of members', value=len(members) - bot_count)
+            embed.add_field(name='Number of bots', value=bot_count)
             embed.set_footer(text=f'id: {member.id}')
             await channel.send(embed=embed)
         else:
@@ -127,8 +143,16 @@ async def on_member_remove(member):
                 description=f'Member **{member.name}** has left the server!',
                 colour=0xFF0000
             )
+            members = await member.guild.fetch_members().flatten()
+
+            bot_count = 0
+            for people in members:
+            	if people.bot is True:
+            		bot_count += 1
+
             embed.set_thumbnail(url=member.avatar_url)
-            embed.add_field(name='Number of members', value=len(member.guild.members))
+            embed.add_field(name='Number of members', value=len(members) - bot_count)
+            embed.add_field(name='Number of bots', value=bot_count)
             embed.set_footer(text=f'id: {member.id}')
             await channel.send(embed=embed)
         else:
