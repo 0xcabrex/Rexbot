@@ -11,6 +11,9 @@ import pyfiglet
 import wikipedia
 from howdoi import howdoi
 import base64
+import urllib.parse
+
+from googletrans import Translator
 
 
 class GeneralCog(commands.Cog):
@@ -95,7 +98,10 @@ class GeneralCog(commands.Cog):
                             '**howdoi**\nInformation from stackoverflow\nUsage: `r$howdoi {query}`\nQuery is necessary\n\n'
                             '**cipher | morse**\nConverts your message to morse code\nUsage: `r$cypher {message}`\n\n'
                             '**base64**\nEncodes your message to base64\nUsage: `r$base64 "{message}" {iteration}`\nMessage must be in **quotes**\n\n'
-                            '**dbase64**\nDecodes your base64 encoded message\nUsage: `r$dbase64 "{message}"`\nMessage must be in **quotes**\n\nUsage',
+                            '**dbase64**\nDecodes your base64 encoded message\nUsage: `r$dbase64 "{message}"`\nMessage must be in **quotes**\n\nUsage'
+                            '**qrcode**\nConverts a text to qr code\nUsage: `r$qrcode {message}`\n\n'
+                            '**qrdecode**\nDecodes the qr code link provided\nUsage: `r$qrdecode {url link}`\n\n'
+                            '**translate**\nTranslates your messag to your desired language\nUsage: `r$translate {source_anguage} {destination_language} {text}`\n\n',
                 colour=0x01a901
             )
         utils_embed.set_footer(text='Made by CABREX with ❤')
@@ -134,7 +140,10 @@ class GeneralCog(commands.Cog):
 
         initial_help_dialogue = discord.Embed(
                 title = 'Help command',
-                description = '`r$help Fun`- Some fun commands\n`r$help Moderation` | `r$help mod` - Moderation commands\n`r$help utils` | `r$help util` - Utility commands\n `r$help support` - Support commands',
+                description = '`r$help Fun`\nFun commands\n\n'
+                              '`r$help Moderation` | `r$help mod`\nModeration commands\n\n'
+                              '`r$help utils` | `r$help util`\nUtility commands\n\n'
+                              '`r$help support`\nSupport commands\n\n',
                 colour=0x01a901
             )
         initial_help_dialogue.set_footer(text='Made by CABREX with ❤')
@@ -1092,6 +1101,105 @@ class GeneralCog(commands.Cog):
         else:
             await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
             raise error
+
+
+
+    # QR Code generator
+
+    @commands.command(name='qrcode')
+    @cooldown(1, 5, BucketType.channel)
+    async def qr_code_generator(self, ctx, *, message=None):
+        if message is not None:
+            embed = discord.Embed(
+                title = 'Here is your encoded text',
+                colour = 0x01a901
+            )
+
+            query = urllib.parse.quote(message, safe='')
+
+            url = f'http://api.qrserver.com/v1/create-qr-code/?data={query}'
+
+            embed.set_image(url=url)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("Please enter a message to qrcode encode it")
+
+
+    # QR Code generator: Error handling
+
+    @qr_code_generator.error
+    async def qr_code_generator_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # QR Code reader
+
+    @commands.command(name='qrdecode')
+    @cooldown(1, 5, BucketType.channel)
+    async def qr_code_decode(self, ctx, message):
+
+        encoded_url = urllib.parse.quote(message, safe='')
+        
+
+        url = f'http://api.qrserver.com/v1/read-qr-code/?fileurl={encoded_url}&format=json'
+
+        async with request("GET", url, headers={}) as response:
+            if response.status == 200:
+                data = await response.json()
+                symbol = data[0]["symbol"]
+
+                if symbol[0]["data"] is not None:
+                    await ctx.send(f'Here is the decoded qr code:\n```\n{symbol[0]["data"]}\n```')
+                else:
+                    await ctx.send(f'An error occured: **{symbol[0]["error"]}**')
+
+
+    # QR Code reader: Error handling
+
+    @qr_code_generator.error
+    async def qr_code_generator_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
+
+    # Translator 
+
+    @commands.command(name='translate')
+    @cooldown(1, 5, BucketType.channel)
+    async def translator(self, ctx, source_language: str = 'en', destination_language: str = 'en', *, message):
+
+        translator = Translator()
+
+        translation = translator.translate(
+            message, dest=destination_language, src=source_language
+        )
+        embed = discord.Embed(
+            title="Translation",
+            description=f"Sentence : **{message}**\n\nTranslation : **{translation.text}**\n\nType : **{translation.src} > {translation.dest}**",
+            color=0x008000,
+        )
+        await ctx.send(embed=embed)
+
+
+    # Translator: Error handling
+
+    @translator.error
+    async def translator_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(error)
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("What do you want to translate?")
+        else:
+            await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+            raise error
+
 
 
 def setup(bot):
