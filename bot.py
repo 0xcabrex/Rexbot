@@ -58,9 +58,9 @@ async def on_message(message):
 
     if message.author.bot:
         return
-    elif (bot.user in message.mentions or (message_var.lower().find('rexbot') != -1 )) and message_var.lower().find('prefix') != -1:
+    elif (bot.user in message.mentions) and message_var.lower().find('prefix') != -1:
         await message.channel.send(f'My command prefix is `{command_prefix}`, **{message.author.display_name}**')
-    elif bot.user in message.mentions or '<@&750309678075871293>' in message_var.lower().split() or (message_var.lower().find('rexbot') != -1 or bot.user in message.mentions):
+    elif bot.user in message.mentions:
     	if message_var.lower().find('awesome') != -1 or message_var.lower().find('cool') != -1 or message_var.lower().find('good') != -1 or message_var.lower().find('nice') != -1 :
     		await message.channel.send(f'Thanks bro 😁')
     	elif message_var.lower().find('bad') != -1 or message_var.lower().find('horrible') != -1 or message_var.lower().find('suck') != -1 or message_var.lower().find('terrible') != -1 or message_var.lower().find('waste') != -1 or message_var.lower().find('fk') != -1 or message_var.lower().find('fuck') != -1:
