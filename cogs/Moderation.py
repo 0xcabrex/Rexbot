@@ -1365,7 +1365,10 @@ class ModerationCog(commands.Cog):
 
                     delete = delete_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
-                    await ctx.send(f"{ctx.author.mention}, cleared **{number_of_infractions}** warnings for **{multiple_member_array[0].name}**")
+                    if number_of_infractions == 1:
+                        await ctx.send(f"{ctx.author.mention}, cleared **{number_of_infractions}** warning for **{multiple_member_array[0].name}**")
+                    else:
+                        await ctx.send(f"{ctx.author.mention}, cleared **{number_of_infractions}** warning for **{multiple_member_array[0].name}**")
 
                 else:
                     await ctx.send(f"**{multiple_member_array[0].name}** does not have any infractions to clear")
