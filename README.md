@@ -32,8 +32,8 @@ You would also need a few files to run:
 - `NASA_API_TOKEN.0` - For the Nasa Api [key](https://api.nasa.gov/ "Get your api key here"), the `apod` command requires it.
 - `mongodbclient.0` - A file that contains the url to connect to your [MongoDB](https://mongodb.com "MongoDB") cluster.  
 
-NOTE: The fles are CASE SENSITIVE, please make sure the files are named exactly as given above and put them in the same folder as the 
-`bot.py` file, i.e. in the `Rexbot/` deirectory.  
+NOTE: The files are CASE SENSITIVE, please make sure the files are named exactly as given above and put them in the same folder as the 
+`bot.py` file, i.e. in the `Rexbot/` deirectory. You can also replace **ONLY** the `token.0` and `mongodbclient.0` with environment variables, but as `REXBOT_TOKEN` and `DATABASE_CLIENT_URL` respectively.  
 
 
 ## Running the bot
