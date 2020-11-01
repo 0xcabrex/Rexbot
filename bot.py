@@ -176,17 +176,20 @@ async def on_command_error(ctx, error):
 
 
 TOKEN = os.getenv("REXBOT_TOKEN")
-if TOKEN is None:
-    try:
-        with open('./token.0', 'r', encoding='utf-8') as file_handle:
-            TOKEN = file_handle.read()
-            if TOKEN is not None:
-                print('Using token found in token file..')
-                bot.run(TOKEN)
-            else:
-                print("Token error: Token not found")
-    except FileNotFoundError:
-        print("File handle error")
-else:
-    print('Using token found in Environment variable....')
-    bot.run(TOKEN)
+try:
+	if TOKEN is None:
+	    try:
+	        with open('./token.0', 'r', encoding='utf-8') as file_handle:
+	            TOKEN = file_handle.read()
+	            if TOKEN is not None:
+	                print('Using token found in token file..')
+	                bot.run(TOKEN)
+	            else:
+	                print("Token error: Token not found")
+	    except FileNotFoundError:
+	        print("File handle error")
+	else:
+	    print('Using token found in Environment variable....')
+	    bot.run(TOKEN)
+except discord.errors.LoginFailure:
+	print("\033[1;31;40mFATAL ERROR\033[0m 1;31;40m\nToken is malformed; invalid token")

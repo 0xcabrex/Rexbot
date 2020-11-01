@@ -1,15 +1,26 @@
 import pymongo
 from pymongo import MongoClient
+import os
 
+mongodbclient_token = os.getenv("DATABASE_CLIENT_URL")
 
-with open('./mongodbclient.0', 'r', encoding='utf-8') as client_url:
-	cluster = MongoClient(client_url.read())
+if mongodbclient_token is None:
+	try:
+		with open('./mongodbclient.0', 'r', encoding='utf-8') as client_url:
+			print("Using MongoDB cluster url provided in file")
+			cluster = MongoClient(client_url.read())
+	except FileHandleError:
+		print("File not found [mongodbclient.0]")
+else:
+	print("Using MongoDB cluster url provided in environment variable..")
+	cluster = MongoClient(mongodbclient_token)
+
 
 db = cluster["rexbotdb"]
 collection = db["warnings"]
 warnthresh_collection = db["warnthresh"]
 
-print("Database connection has been established")
+print("Database connection has been established\n")
 
 def insert_warns(guild_id, member_id, mod_id, warning):
 
