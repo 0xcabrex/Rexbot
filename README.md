@@ -3,7 +3,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](CHANGELOG)
 
 A discord bot coded in `Python` for moderation and some fun.  
-The bot's command prefix is `r$`.  
+The bot's default command prefix is `r$`.  
 discord.py version : `1.4.2`
 
 ## Downloading
@@ -59,11 +59,14 @@ python3 bot.py
 | `meme`                  | Sends you a beautifully crafted meme.                                       |
 | `dog, doggo , pupper`   | Gets you a cute pupper using internet magic.                                |
 | `cat, kitty`            | Gets you an adorable kitty picture from the internet.                       |
-| `asciify`               | ASCIIfies your message..                                                    |
+| `fact, facts`           | Gets you a random animal fact of your choice, if it exists.                 |
+| `asciify`               | ASCIIfies your message.                                                     |
 | `apod`                  | Gets you an Astronomy Picture of the Day.                                   |
 | `joke`                  | A random joke.                                                              |
 | `pjoke`                 | Gets you a programming specific joke.                                       |
 | `quotes`                | A random quote.                                                             |
+
+
 
 ### Moderation commands
 
@@ -86,6 +89,8 @@ python3 bot.py
 | `addrole`                   | adds the role to the user, if present in the guild (**CASE SENSITIVE**)                            |
 | `removerole, purgerole`     | Removes the role from the user, if present in the guild and if the user has it (**CASE SENSITIVE**)|
 
+
+
 ### Utility commands
 
 |            Commands               |                                          Description                                           |
@@ -99,6 +104,9 @@ python3 bot.py
 | `cipher, morse`                   | Converts a string to morse code.                                                               |
 | `base64`                          | Encodes your message to base64.                                                                |
 | `dbase64`                         | Decodes your base64 encoded message.                                                           |
+| `prefix`                          | Changes prefix for that server.                                                                |
+
+
 
 ### Support commands
 
@@ -108,6 +116,7 @@ python3 bot.py
 | `invite`              | Sends an embeded invite link for the bot.                             |
 | `source, sourcecode`  | Sends you a link the redirects you to this github page.               |
 | `supportserver, ss`   | Gets the link to the support server so you can ask doubts there.      |
+
 
 
 ### Want to add my bot to your discord server?
