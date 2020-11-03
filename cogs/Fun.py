@@ -1,19 +1,11 @@
 import discord
 import random
-import os
 from discord.ext import commands
 from discord.ext.commands import cooldown,BucketType
 from aiohttp import request
-from discord.ext.commands import MemberConverter
 import aiohttp
 import asyncio
 import pyfiglet
-import wikipedia
-from howdoi import howdoi
-import base64
-import urllib.parse
-
-from googletrans import Translator
 
 
 class FunCog(commands.Cog):
@@ -183,9 +175,11 @@ class FunCog(commands.Cog):
 
 		colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff]
 
-		if animal.lower() in {'dog', 'cat', 'bird'}:
-			fact_url = f"https://some-random-api.ml/facts/{animal}"
-			image_url=f"https://some-random-api.ml/img/{'birb' if animal=='bird' else animal}"
+		if animal.lower() in {'dog', 'cat', 'bird', 'birb', 'koala', 'panda'}:
+
+			fact_url = f"https://some-random-api.ml/facts/{'bird' if animal == 'birb' else animal}"
+			
+			image_url=f"https://some-random-api.ml/img/{'bird' if animal == 'bird' else animal}"
 			async with request("GET", image_url, headers={}) as response:
 				if response.status == 200:
 					data = await response.json()
@@ -214,6 +208,8 @@ class FunCog(commands.Cog):
 
 			await ctx.send(embed=embed)
 
+		else:
+			await ctx.send(f"No facts for {animal}")
 
 	# Animal Facts: Error handling
 
@@ -232,17 +228,20 @@ class FunCog(commands.Cog):
 	@cooldown(1, 1, BucketType.channel)
 	async def asciify_message(self, ctx, *, message=None):
 		if message is not None:
-			if message[0] == '<' and (message[1] == ':'):
-				await ctx.send('im not doing that 😂')
-			elif message[0] == '<' and message[1] == '@':
-				await ctx.send('im not doing that 😂')
-			elif ctx.author.is_on_mobile and len(message) > 8:
-				await ctx.send('The output might look a bit weird on your phone! 😅\n Landscape mode might make it look Better')
-				msg = pyfiglet.figlet_format(message)
-				await ctx.send(f'```css\n{msg}\n```')
+			if len(message) <= 50:
+				if message[0] == '<' and (message[1] == '#'):
+					await ctx.send('im not doing that 😂')
+				elif message[0] == '<' and message[1] == '@':
+					await ctx.send('im not doing that 😂')
+				elif ctx.author.is_on_mobile and len(message) > 8:
+					await ctx.send('The output might look a bit weird on your phone! 😅\n Landscape mode might make it look Better')
+					msg = pyfiglet.figlet_format(message)
+					await ctx.send(f'```\n{msg}\n```')
+				else:
+					msg = pyfiglet.figlet_format(message)
+					await ctx.send(f'```\n{msg}\n```')
 			else:
-				msg = pyfiglet.figlet_format(message)
-				await ctx.send(f'```css\n{msg}\n```')
+				await ctx.send(f"Your character length ({len(message)}) has exceeded a normal of 50.")
 		else:
 			await ctx.send('Whats it you want to asciify?')
 

@@ -1,19 +1,6 @@
 import discord
-import random
-import os
 from discord.ext import commands
 from discord.ext.commands import cooldown,BucketType
-from aiohttp import request
-from discord.ext.commands import MemberConverter
-import aiohttp
-import asyncio
-import pyfiglet
-import wikipedia
-from howdoi import howdoi
-import base64
-import urllib.parse
-
-from googletrans import Translator
 
 class SupportCog(commands.Cog):
 
@@ -37,6 +24,7 @@ class SupportCog(commands.Cog):
 			embed.add_field(name='Username', value=ctx.message.author)
 			embed.add_field(name='User id', value=ctx.message.author.id)
 			embed.add_field(name='Bug: ', value=message)
+
 			if bugs_channel1 is not None:
 				await bugs_channel1.send(embed=embed)
 			elif bugs_channel2 is not None:
@@ -62,8 +50,7 @@ class SupportCog(commands.Cog):
 			await ctx.send("Unexpected quote in non-quoted string")
 		else:
 			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
-			raise error
-	
+			raise error	
 
 
 	# Invite for the bot
@@ -77,10 +64,11 @@ class SupportCog(commands.Cog):
 				description = '**[invite me](https://discord.com/oauth2/authorize?client_id=732538419787595846&permissions=8&scope=bot)**',
 				colour=0x008000
 			)
+		embed.set_thumbnail(url='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRKLLYkHj1JJe1fJzP5wuz6K1X2Z4_HZ9gkvw&usqp=CAU')
 		await ctx.send(embed=embed)
 
 
-	# Source code: Error handling
+	# Invite: Error handling
 	
 	@invite_link.error
 	async def invite_link_error(self, ctx, error):
@@ -102,6 +90,7 @@ class SupportCog(commands.Cog):
 				description = '**[Source code](https://github.com/0xcabrex/Rexbot)**',
 				colour=0x008000
 			)
+		embed.set_thumbnail(url='https://img.pngio.com/github-logo-repository-computer-icons-github-png-download-512-github-logo-png-900_520.jpg')
 		await ctx.send(embed=embed)
 
 
@@ -114,7 +103,6 @@ class SupportCog(commands.Cog):
 		else:
 			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
-
 
 
 	# Support server
