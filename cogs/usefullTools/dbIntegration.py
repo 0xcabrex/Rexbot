@@ -19,8 +19,11 @@ else:
 db = cluster["rexbotdb"]
 collection = db["warnings"]
 warnthresh_collection = db["warnthresh"]
+prefix_collection = db["prefixes"]
 
 print("Database connection has been established\n")
+
+# Warnings
 
 def insert_warns(guild_id, member_id, mod_id, warning):
 
@@ -48,6 +51,8 @@ def delete_warns(guild_id, member_id):
 	results = collection.delete_one({"member_id": str(member_id), "guild_id": str(guild_id)})
 
 
+# Warn threshold
+
 def fetch_warn_thresh(guild_id):
 
 	results = warnthresh_collection.find_one({"guild_id": guild_id})
@@ -66,3 +71,28 @@ def insert_warn_thresh(guild_id, threshold):
 def del_warn_thresh(guild_id):
 
 	results = warnthresh_collection.delete_one({"guild_id": guild_id})
+
+
+# Prefixes
+
+def fetch_prefix(guild_id):
+
+	results = prefix_collection.find_one({"guild_id": guild_id})
+
+	return results
+
+
+def insert_prefix(guild_id, prefix):
+
+	prefix_check = None
+	prefix_check = prefix_collection.find_one({"guild_id": guild_id})
+
+	if prefix_check is None:
+		results = prefix_collection.insert_one({"guild_id": guild_id, "prefix": str(prefix)})
+	else:
+		results = prefix_collection.update_one({"guild_id": guild_id}, {"$set": {"prefix": str(prefix)}})
+
+
+def del_prefix(guild_id):
+
+	results = prefix_collection.delete_one({"guild_id": guild_id})

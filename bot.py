@@ -5,10 +5,17 @@ import random
 import time
 import os
 from discord.ext import commands
+from cogs.usefullTools.dbIntegration import *
 
-command_prefix='r$'
 
-bot = commands.Bot(command_prefix=(f'{command_prefix}', 'R$'))
+# Get prefix
+
+def get_prefix(bot, message):
+
+	return fetch_prefix(message.guild.id)["prefix"]
+
+
+bot = commands.Bot(command_prefix=get_prefix)
 bot.remove_command('help')
 working_directory = os.getcwd()
 
@@ -33,6 +40,7 @@ except Exception as e:
     print("\033[5;37;40m\033[1;33;40mWARNING\033[1;33;40m\033[0;37;40m", end=' ')
     print("Functionality limited!\n")
     print(f"exception thrown:\n{e}")
+
 
 # Shows command prefix if asked
 
@@ -59,7 +67,7 @@ async def on_message(message):
     if message.author.bot:
         return
     elif (bot.user in message.mentions) and message_var.lower().find('prefix') != -1:
-        await message.channel.send(f'My command prefix is `{command_prefix}`, **{message.author.display_name}**')
+        await message.channel.send(f'My command prefix is `{fetch_prefix(message.guild.id)["prefix"]}`, **{message.author.display_name}**')
     elif bot.user in message.mentions:
     	if message_var.lower().find('awesome') != -1 or message_var.lower().find('cool') != -1 or message_var.lower().find('good') != -1 or message_var.lower().find('nice') != -1 :
     		await message.channel.send(f'Thanks bro 😁')
@@ -159,6 +167,19 @@ async def on_member_remove(member):
             pass
     except Exception as e:
         print(e)
+
+
+@bot.event
+async def on_guild_join(guild):
+
+	insert_prefix(guild.id, "r$")
+
+
+@bot.event
+async def on_guild_remove(guild):
+
+	del_prefix(guild.id)
+
 
 
 # Ping
