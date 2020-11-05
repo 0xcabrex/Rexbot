@@ -20,117 +20,6 @@ class GeneralCog(commands.Cog):
 		self.bot = bot
 
 
-	# Help console
-
-	@commands.command()
-	@cooldown(1, 3, BucketType.channel)
-	async def help(self, ctx, argument=None):
-		mod_role = discord.utils.get(ctx.author.roles, name='Moderator')
-		admin_role = discord.utils.get(ctx.author.roles, name='Administrator')
-
-		prefix = fetch_prefix(ctx.guild.id)["prefix"]
-
-		fun_embed = discord.Embed(
-				title = 'Fun commands for @Rexbot',
-				description=f'**8ball**\nUses AI to give you the best answers to your questions\n**Usage:** `{prefix}8ball <question>`\n\n'
-							f'**meme**\nSends you a beautifully crafted meme\nUsage `{prefix}meme`\n\n'
-							f'**dog | doggo | pupper**\nGets you a dog picture\n**Usage:** `{prefix}dog`\n\n'
-							f'**cat | kitty**\nGets you a cat picture\n**Usage:** `{prefix}cat`\n\n'
-							f'**fact | facts**\nGets you a random animal fact if it exists\n**Usage:** `{prefix}fact <animal>`\n\n'
-							f'**asciify**\nASCIIfies your message\n**Usage:** `{prefix}asciify <message>`\n\n'
-							f'**apod**\nGets you an Astronomy Picture Of the Day\n**Usage:** `{prefix}apod`\n\n'
-							f'**joke**\nRandom joke has been delivered!\n**Usage:** `{prefix}joke`\n\n'
-							f'**pjoke**\nGets you a programming related joke\n**Usage:** `{prefix}pjoke`\n\n'
-							f'**quotes**\nA random quote\n**Usage:** `{prefix}quote`\n\n',
-				colour=0x01a901
-			)
-		fun_embed.set_footer(text='Made by CABREX with ❤')
-
-		utils_embed = discord.Embed(
-				title = 'Utility commands for @Rexbot',
-				description=f'**avatar** | **av**\nShows the avatar of the user mentioned\n**Usage:** `{prefix}avatar | $av <member_name | member_tag | member_id>`\nIf nothing is provided then it shows your avatar\n\n'
-							f'**userinfo | ui**\nGives the info of the mentioned user\n**Usage:** `{prefix}userinfo <member_name | member_tag | member_id>`\n\n'
-							f'**serverinfo | si**\nGives the info of the server\n**Usage:** `{prefix}serverinfo`, No arguments required\n\n'
-							f'**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined\n**Usage:** `{prefix}sc`, No arguments required\n\n'
-							f'**wikipedia | wiki | ask | whatis**\nGets you information from the wiki\n**Usage:** `{prefix}wiki <query>`\nQuery is necessary\n\n'
-							f'**howdoi**\nInformation from stackoverflow\n**Usage:** `{prefix}howdoi <query>`\nQuery is necessary\n\n'
-							f'**cipher | morse**\nConverts your message to morse code\n**Usage:** `{prefix}cypher <message>`\n\n'
-							f'**base64**\nEncodes your message to base64\n**Usage:** `{prefix}base64 "<message>" <iteration>`\nMessage must be in **quotes**\n\n'
-							f'**dbase64**\nDecodes your base64 encoded message\n**Usage:** `{prefix}dbase64 "<message>"`\nMessage must be in **quotes**\n\nUsage'
-							f'**qrcode**\nConverts a text to qr code\n**Usage:** `{prefix}qrcode <message>`\n\n'
-							f'**qrdecode**\nDecodes the qr code link provided\n**Usage:** `{prefix}qrdecode <url link>`\n\n'
-							f'**translate**\nTranslates your messag to your desired language\n**Usage:** `{prefix}translate <source_anguage> <destination_language> <text>`\n\n'
-							f'**prefix**\nChanges the prefix of the server\n**Usage:** `{prefix}prefix <prefix>`\n\n',
-				colour=0x01a901
-			)
-		utils_embed.set_footer(text='Made by CABREX with ❤')
-
-		mod_embed = discord.Embed(
-				title = 'Moderation commands for @Rexbot',
-				description = f'**kick**\nKicks the member out of the server\n**Usage:** `{prefix}kick <member_name | member_id | member_tag> <reason>`, reason is not neccessary\n\n'
-							  f'**multikick**\nKicks multiple users out of the guild\n**Usage:** `{prefix}multikick <member_name | member_id | member_tag>`, reason is not needed\n\n'
-							  f'**ban | hardban**\nBans the user from the server, **purging the messages**\n**Usage:** `{prefix}ban <member_name | member_id | member_tag> <reason>`, reason is not necessary\n\n'
-							  f'**softban**\nBans the user from the server, **without removing the messages**\n**Usage:** `{prefix}softban <member_name | member_id | member_tag> <reason>`, reason is not necessary\n\n'
-							  f'**multiban**\nBans multiple users out of the guild\n**Usage:** `{prefix}multiban <member_name | member_id | member_tag>`, reason is not needed\n\n'
-							  f'**unban**\nUnbans the user, you need to know the member\'s name\n**Usage:** `{prefix}unban <member_name#discriminator>`\n\n'
-							  f'**warn**\nWarns the user\n**Usage:** `{prefix}warn <member_name | member_id | member_tag> <infraction>`\n\n'
-							  f'**warns | warnings**\nDisplays the infractions of the user mentioned\n**Usage:** `{prefix}warns <member_name | member_id | member_tag>`\n\n'
-							  f'**clearwarns | clearwarn**\nClears all the infractions of the user\n**Usage:** `{prefix}clearwarns <member_name | member_id | member_tag>`\n\n'
-							  f'**setwarnthresh | setwarnthreshold**\nSets the warning threshold for the server, beyond which the member gets banned\n**Usage:** `{prefix}setwarnthresh <integer>`\n\n'
-							  f'**clearwanthresh(old) | delwarnthresh(old)**\nClears the warning threshold of the server\n**Usage:** `{prefix}clearwarnthresh`\n\n'
-							  f'**mute**\nMutes the user\n**Usage:** `{prefix}mute <member_name | member_id | member_tag> <reason>`, reason is not necessary\n\n'
-							  f'**unmute**\nUnmutes the user\n**Usage:** `{prefix}unmute <member_name | member_id | member_tag>`\n\n'
-							  f'**clear | remove | purge**\nClears messages from the channel where it is used\n**Usage:** `{prefix}clear <n>` where `n` is the number of messages to be purged\n\n'
-							  f'**addrole**\nAdds role to member\n**Usage:** `{prefix}addrole <member_name | member_id | member_tag> <role_name>`\n\n'
-							  f'**removerole | purgerole**\nRemoves role from mentioned member\n**Usage:** `{prefix}removerole <member_name | member_id | member_tag> <role_name>`\n\n',
-				colour=0x01a901
-			)
-		mod_embed.set_footer(text='Made by CABREX with ❤')
-
-		support_embed = discord.Embed(
-				title = 'Support commands for @Rexbot',
-				description = f'**bug | bugs**\nFound any bugs? Use this command to report the bugs\n**Usage:** `{prefix}bugs "<message>"`\n\nMessage must be greater than 20 charecters.\nYou can also direct message the bot instead of invoking the command\n\n'
-							  f'**invite**\nInvite me to your server! 😁\n**Usage:** `{prefix}invite`\n\n'
-							  f'**source | sourcecode**\nWant to know what was I written in? I\'ll send you a github link 😉\n`U**sage:** {prefix}source`\nNo argument required\n\n'
-							  f'**supportserver | ss**\nLink to the support server\n**Usage:** `{prefix}ss`\n\n',
-				colour=0x01a901
-			)
-		support_embed.set_footer(text='Made by CABREX with ❤')        
-
-		initial_help_dialogue = discord.Embed(
-				title = 'Help command',
-				description = f'`{prefix}help Fun`\nFun commands\n\n'
-							  f'`{prefix}help Moderation` | `{prefix}help mod`\nModeration commands\n\n'
-							  f'`{prefix}help utils` | `{prefix}help util`\nUtility commands\n\n'
-							  f'`{prefix}help support`\nSupport commands\n\n',
-				colour=0x01a901
-			)
-		initial_help_dialogue.set_footer(text='Made by CABREX with ❤')
-
-		if argument is None:
-			await ctx.send(embed=initial_help_dialogue)
-		elif argument.lower() == 'fun':
-			await ctx.send(embed=fun_embed)
-		elif argument.lower() == 'moderation' or argument.lower() == 'mod':
-			await ctx.send(embed=mod_embed)
-		elif argument.lower() == 'utils' or argument.lower() == 'util':
-			await ctx.send(embed=utils_embed)
-		elif argument.lower() == 'support':
-			await ctx.send(embed=support_embed)
-		else:
-		  pass
-
-
-	# Help console: Error handling
-
-	@help.error
-	async def help_error(self, ctx, error):
-		if isinstance(error, commands.CommandOnCooldown):
-			await ctx.send(error)
-		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
-			raise error
-
 
 	# Avatar fetcher
 
@@ -222,7 +111,7 @@ class GeneralCog(commands.Cog):
 
 	# Userinfo
 
-	@commands.command(aliases=['ui', 'Ui'])
+	@commands.command(aliases=['ui'])
 	@cooldown(1, 5, BucketType.channel)
 	async def userinfo(self, ctx, member):
 
@@ -324,7 +213,7 @@ class GeneralCog(commands.Cog):
 
 	# Server info
 
-	@commands.command(aliases=['si', 'Si'])
+	@commands.command(aliases=['si'])
 	@cooldown(1, 4, BucketType.channel)
 	async def serverinfo(self, ctx):
 	
@@ -378,7 +267,7 @@ class GeneralCog(commands.Cog):
 
 	# Servercount
 
-	@commands.command(name='servercount', aliases=['Servercount', 'Sc', 'sc'])
+	@commands.command(name='servercount', aliases=['sc'])
 	@cooldown(1, 1, BucketType.channel)
 	async def servercount(self, ctx):
 		
@@ -402,7 +291,7 @@ class GeneralCog(commands.Cog):
 
 	# Wikipedia support
 
-	@commands.command(name='wikipedia', aliases=['ask', 'whatis', 'wiki'])
+	@commands.command(name='wikipedia', aliases=['whatis', 'wiki'])
 	@cooldown(1, 2,BucketType.channel)
 	async def wiki(self, ctx, *, query=None):
 		if query is not None:
@@ -465,7 +354,7 @@ class GeneralCog(commands.Cog):
 
 	# Morse code cypher
 
-	@commands.command(name='cypher', aliases=['Cypher', 'morse', 'Morse'])
+	@commands.command(name='cypher', aliases=['morse'])
 	@cooldown(1, 2, BucketType.channel)
 	async def cypher(self, ctx, *, message):
 		
@@ -511,7 +400,7 @@ class GeneralCog(commands.Cog):
 
 	# Base64 encoding
 
-	@commands.command(name='base64', aliases=['Base64'])
+	@commands.command(name='base64')
 	@cooldown(1, 2, BucketType.channel)
 	async def base64(self, ctx, message, iterations=1):
 
@@ -553,7 +442,7 @@ class GeneralCog(commands.Cog):
 
 	# Base64 decoding
 
-	@commands.command(name='dbase64', aliases=['Dbase64'])
+	@commands.command(name='dbase64')
 	@cooldown(1, 2, BucketType.channel)
 	async def base64_decode(self, ctx, message):
 
@@ -697,9 +586,12 @@ class GeneralCog(commands.Cog):
 	async def prefix(self, ctx, prefix: str):
 		
 		if len(prefix) <= 4:
-			insert_prefix(ctx.guild.id, prefix)
+			if not any(c.isdigit() for c in prefix):
+				insert_prefix(ctx.guild.id, prefix)
 
-			await ctx.send(f"Prefix of this server has been changed to **{prefix}** successfully!")
+				await ctx.send(f"Prefix of this server has been changed to **{prefix}** successfully!")
+			else:
+				await ctx.send("Integers are not allowed in prefixes")
 		else:
 			await ctx.send(f"A prefix must have only 4 or lesser charecters, **{len(prefix)}** is not allowed")
 
@@ -730,8 +622,7 @@ class GeneralCog(commands.Cog):
 
 			await ctx.send("All servers have their prefixes overridden")
 		else:
-			await ctx.send(f'{bot_owner_bool}')
-			await ctx.send("Only the owner can run this command")
+			await ctx.send("Only the owner can run this command, you are not authorized")
 
 
 	# Overwrite prefixes: Error handling
@@ -739,7 +630,7 @@ class GeneralCog(commands.Cog):
 	@overwrite_prefix.error
 	async def overwrite_prefix_error(self, ctx, error):
 		if isinstance(error, commands.CheckFailure):
-			await ctx.send("you do not have enough permissions do perform this action ")
+			await ctx.send("you do not have enough permissions to perform this action ")
 		elif isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:

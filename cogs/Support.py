@@ -10,7 +10,7 @@ class SupportCog(commands.Cog):
 
 	# Bug reporting
 
-	@commands.command(name='bugs', aliases=['bug', 'Bug', 'Bugs'])
+	@commands.command(name='bugs', aliases=['bug'])
 	@cooldown(1, 10, BucketType.guild)
 	async def bug_report(self, ctx, *, message):
 

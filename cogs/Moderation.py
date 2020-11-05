@@ -13,7 +13,7 @@ class ModerationCog(commands.Cog):
 
     # Kick members
 
-    @commands.command(aliases=['Kick'])
+    @commands.command(name='kick')
     async def kick(self, ctx, member, *, reason=None):
         if ctx.message.author.guild_permissions.kick_members:
 
@@ -118,7 +118,7 @@ class ModerationCog(commands.Cog):
 
     # Multi kick
 
-    @commands.command(name = 'multikick', aliases = ['Multikick'])
+    @commands.command(name = 'multikick')
     async def multikick(self, ctx, *, member):
         if ctx.message.author.guild_permissions.kick_members:
 
@@ -223,7 +223,7 @@ class ModerationCog(commands.Cog):
 
     # Multi ban
 
-    @commands.command(name = 'multiban', aliases = ['Multiban'])
+    @commands.command(name = 'multiban')
     async def multiban(self, ctx, *, member):
         if ctx.message.author.guild_permissions.ban_members:
 
@@ -329,7 +329,7 @@ class ModerationCog(commands.Cog):
 
     # Hard ban members
 
-    @commands.command(aliases=['Ban', 'hardban', 'Hardban'])
+    @commands.command(name='ban', aliases=['hardban'])
     async def ban(self, ctx, member, *, reason=None):
         
         if ctx.message.author.guild_permissions.ban_members:
@@ -435,7 +435,7 @@ class ModerationCog(commands.Cog):
 
     # Soft Ban members
 
-    @commands.command(aliases=['Softban'])
+    @commands.command(name='softban')
     async def softban(self, ctx, member, *, reason=None):
         
         if ctx.message.author.guild_permissions.ban_members:
@@ -539,7 +539,7 @@ class ModerationCog(commands.Cog):
 
     # Unban members
 
-    @commands.command(aliases=['Unban'])
+    @commands.command(name='unban')
     async def unban(self, ctx, *, member):
         
         if ctx.message.author.guild_permissions.ban_members:
@@ -593,7 +593,7 @@ class ModerationCog(commands.Cog):
     
     # Clear command
     
-    @commands.command(aliases=['remove','purge','Remove','Purge'])
+    @commands.command(name='clear', aliases=['remove','purge'])
     async def clear(self, ctx, amount: int):
         if ctx.message.author.guild_permissions.manage_messages:
             try:
@@ -643,7 +643,7 @@ class ModerationCog(commands.Cog):
     
     # Mute members
 
-    @commands.command(aliases=['Mute'])
+    @commands.command(name='mute')
     async def mute(self, ctx, member, *, reason=None):
         if ctx.message.author.guild_permissions.manage_roles:
             
@@ -776,7 +776,7 @@ class ModerationCog(commands.Cog):
 
     # Unmute member
 
-    @commands.command(aliases=['Unmute'])
+    @commands.command(name='unmute')
     async def unmute(self, ctx, member):
         if ctx.message.author.guild_permissions.manage_roles:
 
@@ -880,7 +880,7 @@ class ModerationCog(commands.Cog):
 
     # Adding roles
 
-    @commands.command()
+    @commands.command(name='addrole', aliases=['add'])
     async def addrole(self, ctx, member, *, role=None):
         if ctx.message.author.guild_permissions.manage_roles:
 
@@ -1000,7 +1000,7 @@ class ModerationCog(commands.Cog):
 
     # Remove roles
 
-    @commands.command(aliases=['removerole'])
+    @commands.command(name='removerole', aliases=['purgerole'])
     async def purgerole(self, ctx, member, *, role=None):
         
         if ctx.message.author.guild_permissions.manage_roles:
@@ -1118,7 +1118,7 @@ class ModerationCog(commands.Cog):
 
     # Warning user 
 
-    @commands.command(name='warn', aliases=['Warn'])
+    @commands.command(name='warn')
     async def warn(self, ctx, member, *, warning=None):
         if ctx.message.author.guild_permissions.manage_roles:
 
@@ -1224,7 +1224,7 @@ class ModerationCog(commands.Cog):
 
     # Display infractions of the user
 
-    @commands.command(name='warns', aliases=['Warns', 'warnings', 'Warnings'])
+    @commands.command(name='warns', aliases=['warnings'])
     async def warns(self, ctx, member):
         if ctx.message.author.guild_permissions.manage_roles:
 
@@ -1322,7 +1322,7 @@ class ModerationCog(commands.Cog):
 
     # Clear warnings 
 
-    @commands.command(name='clearwarns', aliases=['clearwarn', 'Clearwarn', 'Clearwarns'])
+    @commands.command(name='clearwarns', aliases=['clearwarn'])
     async def clearwarns(self, ctx, member):
         if ctx.message.author.guild_permissions.manage_roles:
 

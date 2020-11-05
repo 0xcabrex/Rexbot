@@ -59,7 +59,7 @@ class FunCog(commands.Cog):
 
 	# Memes
 
-	@commands.command(aliases=['Meme'])
+	@commands.command()
 	@cooldown(1, 3, BucketType.channel)
 	async def meme(self, ctx):
 
@@ -136,7 +136,7 @@ class FunCog(commands.Cog):
 
 	# Cat pictures
 
-	@commands.command(aliases=['Cat'])
+	@commands.command()
 	@cooldown(1, 1, BucketType.channel)
 	async def cat(self, ctx):
 	  
@@ -309,7 +309,7 @@ class FunCog(commands.Cog):
 
 	# Random Jokes 
 
-	@commands.command(name='joke', aliases=['Joke','jokes','Jokes'])
+	@commands.command(name='joke', aliases=['jokes'])
 	@cooldown(1, 2, BucketType.channel)
 	async def jokes(self, ctx):
 
@@ -346,7 +346,7 @@ class FunCog(commands.Cog):
 
 	# Programming jokes
 
-	@commands.command(name='pjoke', aliases=['Pjoke','pjokes','Pjokes'])
+	@commands.command(name='pjoke', aliases=['pjokes'])
 	@cooldown(1, 2, BucketType.channel)
 	async def programmingjokes(self, ctx):
 
@@ -383,7 +383,7 @@ class FunCog(commands.Cog):
 
 	# Quotes 
 
-	@commands.command(name='quotes', aliases=['Quotes', 'quote', 'Quote'])
+	@commands.command(name='quotes', aliases=['quote'])
 	@cooldown(1, 2, BucketType.channel)
 	async def quotes(self, ctx):
 
