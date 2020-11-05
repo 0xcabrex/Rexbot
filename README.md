@@ -4,7 +4,7 @@
 
 A discord bot coded in `Python` for moderation and some fun.  
 The bot's default command prefix is `r$`.  
-discord.py version : `1.4.2`
+discord.py version : `1.5.1`
 
 ## Downloading
 
