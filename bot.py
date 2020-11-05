@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import discord
+from discord import Intents
 import random
 import time
 import os
@@ -14,8 +15,10 @@ def get_prefix(bot, message):
 
 	return fetch_prefix(message.guild.id)["prefix"]
 
+intents = Intents.default()
+intents.members = True
 
-bot = commands.Bot(command_prefix=get_prefix)
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, intents=intents)
 bot.remove_command('help')
 working_directory = os.getcwd()
 
@@ -144,6 +147,9 @@ async def on_member_join(member):
 async def on_member_remove(member):
     try:
         print(f'+[REMOVE_MEMBER]   {member} has left the server: {member.guild.name}')
+
+        delete_warns(member.guild.id, member.id)
+
         channel = discord.utils.get(member.guild.channels, name='moderation-logs')
         if channel is not None:
             embed = discord.Embed(
