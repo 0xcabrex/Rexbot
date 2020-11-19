@@ -65,12 +65,13 @@ class GeneralCog(commands.Cog):
 
 		elif len(multiple_member_array) == 1:
 
-			if isinstance(member, int):
-				embed = discord.Embed(colour=0x0000ff)
-				embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
-			else:
-				embed = discord.Embed(colour=0x0000ff)
-				embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
+			if multiple_member_array[0].name == multiple_member_array[0].display_name:
+				embed = discord.Embed(title=f'{multiple_member_array[0]}',colour=0x0000ff)
+
+			elif multiple_member_array[0].name != multiple_member_array[0].display_name:
+				embed = discord.Embed(title=f'{multiple_member_array[0]}({multiple_member_array[0].display_name})',colour=0x0000ff)
+
+			embed.set_image(url=f'{multiple_member_array[0].avatar_url}')
 			await ctx.send(embed=embed)
 
 		elif len(multiple_member_array) > 1:
@@ -105,7 +106,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -207,7 +208,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, discord.errors.Forbidden):
 			await ctx.send('I am Forbidden from doing this command, please check if `server members intent` is enabled')
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback')
 			raise error
 
 
@@ -261,7 +262,7 @@ class GeneralCog(commands.Cog):
 			await ctx.send(error)
 			raise error
 		else:
-			await ctx.send(f"An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX.")
+			await ctx.send(f"An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX.")
 			raise error
 
 
@@ -285,7 +286,7 @@ class GeneralCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -317,7 +318,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error has occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error has occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -348,7 +349,7 @@ class GeneralCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback')
 			raise error
 
 
@@ -394,7 +395,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.BadArgument):
 			await ctx.send('What do you want to cypher?')
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -436,7 +437,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.UnexpectedQuoteError):
 			await ctx.send("Unexpected quote in non-quoted string")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -476,7 +477,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.UnexpectedQuoteError):
 			await ctx.send("Unexpected quote in non-quoted string")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -508,7 +509,7 @@ class GeneralCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -541,7 +542,7 @@ class GeneralCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -574,7 +575,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.MissingRequiredArgument):
 			await ctx.send("What do you want to translate?")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -603,9 +604,14 @@ class GeneralCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		elif isinstance(error, commands.CheckFailure):
-			await ctx.send("Only administrators can use this command")
+			await ctx.send(f"Only administrators can use this command, {ctx.author.mention}")
+		elif isinstance(error, commands.MissingRequiredArgument):
+
+			prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+			await ctx.send(f"```\n{prefix}prefix <prefix>\n\nMissing required argument prefix\n```")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -634,7 +640,7 @@ class GeneralCog(commands.Cog):
 		elif isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 def setup(bot):

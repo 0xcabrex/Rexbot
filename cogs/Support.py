@@ -49,7 +49,7 @@ class SupportCog(commands.Cog):
 		elif isinstance(error, commands.UnexpectedQuoteError):
 			await ctx.send("Unexpected quote in non-quoted string")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error	
 
 
@@ -75,7 +75,7 @@ class SupportCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -101,7 +101,7 @@ class SupportCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -126,7 +126,7 @@ class SupportCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 

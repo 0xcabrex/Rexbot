@@ -54,7 +54,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 
 
 	# Memes
@@ -96,7 +96,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback')
 			raise error
 
 
@@ -130,7 +130,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback')
 			raise error
 
 
@@ -164,7 +164,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check the console for traceback')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback')
 			raise error
 
 
@@ -218,7 +218,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.MissingRequiredArgument):
 			await ctx.send("Which animal do you want the facts for?")
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error 
 
 
@@ -253,7 +253,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 	# APOD
@@ -303,7 +303,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -340,7 +340,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error            
 
 
@@ -377,7 +377,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 
@@ -410,7 +410,7 @@ class FunCog(commands.Cog):
 		if isinstance(error, commands.CommandOnCooldown):
 			await ctx.send(error)
 		else:
-			await ctx.send(f'An error occured ({error})\nPlease check console for traceback, or raise an issue to CABREX')
+			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
 
 

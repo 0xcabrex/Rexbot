@@ -51,7 +51,6 @@ class ModerationCog(commands.Cog):
 
                 if ctx.guild.me.top_role > multiple_member_array[0].top_role:
 
-                    results = None
                     results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                     if results is not None:
@@ -101,7 +100,10 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.kick_members:
-                await ctx.send('```\nr$kick {member_name | member_id | member_tag} {reason}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}kick <member_name | member_id | member_tag> <reason>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -112,7 +114,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -160,7 +162,6 @@ class ModerationCog(commands.Cog):
 
                     if ctx.guild.me.top_role > multiple_member_array[0].top_role:
 
-                        results = None
                         results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                         if results is not None:
@@ -206,7 +207,10 @@ class ModerationCog(commands.Cog):
     async def error_multikick(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.kick_members:
-                await ctx.send('```\nr$multikick ...{member_name | member_id | member_tag} {reason}\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}multikick ...<member_name | member_id | member_tag> <reason>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -217,7 +221,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -265,7 +269,6 @@ class ModerationCog(commands.Cog):
 
                     if ctx.guild.me.top_role > multiple_member_array[0].top_role:
 
-                        results = None
                         results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                         if results is not None:
@@ -311,7 +314,10 @@ class ModerationCog(commands.Cog):
     async def error_multiban(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.ban_members:
-                await ctx.send('```\nr$multiban ...{member_name | member_id | member_tag} {reason}\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}multiban ...<member_name | member_id | member_tag> <reason>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -322,7 +328,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to ban!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
         
@@ -369,7 +375,6 @@ class ModerationCog(commands.Cog):
                 else:
                     if ctx.guild.me.top_role > multiple_member_array[0].top_role:
 
-                        results = None
                         results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                         if results is not None:
@@ -415,8 +420,11 @@ class ModerationCog(commands.Cog):
     async def ban_error(self, ctx, error):
         
         if isinstance(error, commands.MissingRequiredArgument):
-            if ctx.message.author.guild_permissions.ban_members:                
-                await ctx.send('```\nr$ban {member_name | member_id | member_tag} {reason}\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+            if ctx.message.author.guild_permissions.ban_members:
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}ban <member_name | member_id | member_tag> <reason>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -429,7 +437,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
 
@@ -474,7 +482,6 @@ class ModerationCog(commands.Cog):
                 else:
                     if ctx.guild.me.top_role > multiple_member_array[0].top_role:
 
-                        results = None
                         results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                         if results is not None:
@@ -520,7 +527,10 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.message.author.guild_permissions.ban_members:
-                await ctx.send('```\nr$softban {member_name | member_id | member_tag} {reason}\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}softban <member_name | member_id | member_tag> <reason>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 channel = discord.utils.get(ctx.guild.channels, name='moderation-logs')
@@ -533,7 +543,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to ban !')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error        
 
 
@@ -573,7 +583,10 @@ class ModerationCog(commands.Cog):
         
         if isinstance(error, ValueError):
             if ctx.message.author.guild_permissions.ban_members:
-                await ctx.send("Too few arguments\nSyntax: `r$unban <username>#<discriminator>`")
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f"Too few arguments\nSyntax: `{prefix}unban <username>#<discriminator>`")
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -586,7 +599,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, ValueError):
             await ctx.send("Too few arguments\nSyntax: `$unban <username>#<discriminator>`")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -636,7 +649,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have enough permissions!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -743,8 +756,11 @@ class ModerationCog(commands.Cog):
     @mute.error
     async def mute_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            if ctx.author.guild_permissions.manage_roles:                
-                await ctx.send('```\nr$mute {member_name | member_id | member_tag}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing Required Argument member_name\n```')
+            if ctx.author.guild_permissions.manage_roles:
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}mute <member_name | member_id | member_tag>\nMissing Required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -768,7 +784,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to mute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -859,8 +875,11 @@ class ModerationCog(commands.Cog):
     @unmute.error
     async def unmute_error(self, ctx, error):        
         if isinstance(error, commands.MissingRequiredArgument):
-            if ctx.author.guild_permissions.manage_roles:         
-                await ctx.send('```\nr$unmute {member_name | member_id | member_tag}\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+            if ctx.author.guild_permissions.manage_roles:
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}unmute <member_name | member_id | member_tag>\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -873,7 +892,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough permissions to unmute!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -980,7 +999,10 @@ class ModerationCog(commands.Cog):
     async def addrole_error(self, ctx, error):        
         if isinstance(error, commands.MissingRequiredArgument):
             if ctx.author.guild_permissions.manage_roles:            
-                await ctx.send('```\nr$addrole {member_name | member_id | member_tag} {role}\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+
+                prefix = fetch_prefix(ctx.guid.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}addrole <member_name | member_id | member_tag> <role>\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -992,7 +1014,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have enough enough permissions to add roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
         
                 
@@ -1099,8 +1121,11 @@ class ModerationCog(commands.Cog):
     async def addrole_error(self, ctx, error):
         
         if isinstance(error, commands.MissingRequiredArgument):
-            if ctx.message.author.guild_permissions.manage_roles:         
-                await ctx.send('```\nr$removerole {member_name | member_id | member_tag} {role}\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required Argument member_name\n```')
+            if ctx.message.author.guild_permissions.manage_roles:
+
+                prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+                await ctx.send(f'```\n{prefix}removerole <member_name | member_id | member_tag> <role>\nMissing required Argument member_name\n```')
             else:
                 embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
                 await ctx.send(embed=embed)
@@ -1111,7 +1136,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, discord.Forbidden):
             await ctx.send(f'{ctx.author.mention}, I do not have the enough permissions to remove roles!')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -1160,7 +1185,6 @@ class ModerationCog(commands.Cog):
                     results = None
                     results = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
-                    warn_thresh = None
                     warn_thresh = fetch_warn_thresh(multiple_member_array[0].guild.id)
 
                     if results is not None and warn_thresh is not None:
@@ -1216,9 +1240,12 @@ class ModerationCog(commands.Cog):
     @warn.error
     async def warn_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("```\nr$warn {member_name | member_id | member_tag}\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required argument member name\n```")
+
+            prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+            await ctx.send(f"```\n{prefix}warn <member_name | member_id | member_tag>\nMissing required argument member name\n```")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
             
 
@@ -1257,8 +1284,6 @@ class ModerationCog(commands.Cog):
                         pass
 
             if len(multiple_member_array) == 1:
-
-                warnings = None
 
                 try:
                     warnings = fetch_warns(str(multiple_member_array[0].guild.id), str(multiple_member_array[0].id))["warning"].split('\n')
@@ -1314,9 +1339,12 @@ class ModerationCog(commands.Cog):
     @warns.error
     async def warns_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('```\nr$warns {member_name | member_id | member_tag}\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMissing required argument member name\n```')
+
+            prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+            await ctx.send(f'```\n{prefix}warns <member_name | member_id | member_tag>\nMissing required argument member name\n```')
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -1356,7 +1384,6 @@ class ModerationCog(commands.Cog):
 
             if len(multiple_member_array) == 1:
 
-                data = None
                 data = fetch_warns(multiple_member_array[0].guild.id, multiple_member_array[0].id)
 
                 if data is not None:
@@ -1406,9 +1433,12 @@ class ModerationCog(commands.Cog):
     @clearwarns.error
     async def clear_warns_error(self, ctx, error):
         if isinstance(error,  commands.MissingRequiredArgument):
-            await ctx.send('```\nr$clearwarns {member_name | member_id | member_tag}\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nMssing required argument member name\n```')
+
+            prefix = fetch_prefix(ctx.guild.id)["prefix"]
+
+            await ctx.send(f'```\n{prefix}clearwarns <member_name | member_id | member_tag>\nMssing required argument member name\n```')
         else:    
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -1420,6 +1450,7 @@ class ModerationCog(commands.Cog):
             
             insert_warn_thresh(ctx.guild.id, threshold)
             await ctx.send(f"{ctx.author.mention}, Set warn threshold to **{threshold}** in this server")
+
         else:
             embed = discord.Embed(title='**YOU ARE NOT AUTHORIZED**', description="You do not have the authorization to perform this action\n You action will be reported", colour=0xff0000)
             await ctx.send(embed=embed)
@@ -1438,7 +1469,7 @@ class ModerationCog(commands.Cog):
         elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("Please provide the number for the threshold")
         else:
-            await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+            await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
 
 
@@ -1449,7 +1480,6 @@ class ModerationCog(commands.Cog):
     async def delete_warn_threshold(self, ctx):
         if ctx.message.author.guild_permissions.kick_members:
 
-            results = None
             results = fetch_warn_thresh(ctx.guild.id)
 
             if results is not None:
@@ -1458,7 +1488,7 @@ class ModerationCog(commands.Cog):
                 del_warn_thresh(ctx.guild.id)
                 await ctx.send(f"Deleted warning threshold in this server\nWas previously {warn_thresh}")
             else:
-                await ctx.send(f'{ctx.author.mention}, A warning threshold has not been set on this server,Hence is not removed')
+                await ctx.send(f'{ctx.author.mention}, A warning threshold has not been set on this server\nHence is not removed')
 
 
         else:
@@ -1474,7 +1504,7 @@ class ModerationCog(commands.Cog):
 
     @delete_warn_threshold.error
     async def delete_warn_threshold_error(self, ctx, error):    
-        await ctx.send(f'An error occured ({error})\nPlease check the console for traceback, or raise an issue to CABREX')
+        await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
         raise error
 
                         
