@@ -39,7 +39,7 @@ class HelpCog(commands.Cog):
 
 		utils_embed = discord.Embed(
 				title = 'Utility commands for @Rexbot',
-				description=f'**avatar** | **av**\nShows the avatar of the user mentioned\n**Usage:** `{prefix}avatar <member_name | member_tag | member_id>`\nIf nothing is provided then it shows your avatar\n\n'
+				description=f'**avatar** | **av**\nShows the avatar of the user mentioned\n**Usage:** `{prefix}avatar <member_name | member_tag | member_id>`\n\n'
 							f'**userinfo | ui**\nGives the info of the mentioned user\n**Usage:** `{prefix}userinfo <member_name | member_tag | member_id>`\n\n'
 							f'**serverinfo | si**\nGives the info of the server\n**Usage:** `{prefix}serverinfo`, No arguments required\n\n'
 							f'**servercount | sc**\nShows you how many servers the bot is in and total number of members in those servers combined\n**Usage:** `{prefix}sc`, No arguments required\n\n'
@@ -47,7 +47,7 @@ class HelpCog(commands.Cog):
 							f'**howdoi**\nInformation from stackoverflow\n**Usage:** `{prefix}howdoi <query>`\nQuery is necessary\n\n'
 							f'**cipher | morse**\nConverts your message to morse code\n**Usage:** `{prefix}cypher <message>`\n\n'
 							f'**base64**\nEncodes your message to base64\n**Usage:** `{prefix}base64 "<message>" <iteration>`\nMessage must be in **quotes**\n\n'
-							f'**dbase64**\nDecodes your base64 encoded message\n**Usage:** `{prefix}dbase64 "<message>"`\nMessage must be in **quotes**\n\nUsage'
+							f'**dbase64**\nDecodes your base64 encoded message\n**Usage:** `{prefix}dbase64 "<message>"`\nMessage must be in **quotes**\n\n'
 							f'**qrcode**\nConverts a text to qr code\n**Usage:** `{prefix}qrcode <message>`\n\n'
 							f'**qrdecode**\nDecodes the qr code link provided\n**Usage:** `{prefix}qrdecode <url link>`\n\n'
 							f'**translate**\nTranslates your messag to your desired language\n**Usage:** `{prefix}translate <source_anguage> <destination_language> <text>`\n\n'
