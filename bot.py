@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import discord
 from discord import Intents
 import random
@@ -23,16 +22,6 @@ bot.remove_command('help')
 working_directory = os.getcwd()
 
 
-# Loading cogs
-
-@bot.command()
-async def load(ctx, extension):
-	bot.load_extension(f"cogs.{extension}")
-
-
-@bot.command()
-async def unload(ctx, extension):
-	bot.unload_extension(f"cogs.{extension}")
 
 try:
 	for filename in os.listdir('./cogs'):
@@ -116,7 +105,11 @@ async def on_ready():
 async def on_member_join(member):
 	try:
 		print(f'+[NEW_MEMBER]    {member} has joined the server: {member.guild.name}')
-		channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+		
+		channel = None
+		if fetch_join_log_channel(int(member.guild.id)) is not None:
+			channel = bot.get_channel(fetch_join_log_channel(int(member.guild.id))["channel_id"])
+
 		if channel is not None:
 			embed = discord.Embed(
 					title = 'Member joined the server',
@@ -138,7 +131,7 @@ async def on_member_join(member):
 		else:
 			pass
 	except Exception as e:
-		print(e)
+		raise Exception
 
 
 
@@ -150,29 +143,61 @@ async def on_member_remove(member):
 
 		delete_warns(member.guild.id, member.id)
 
-		channel = discord.utils.get(member.guild.channels, name='moderation-logs')
+		channel = None
+		if fetch_leave_log_channel(int(member.guild.id)):
+			channel = bot.get_channel(fetch_leave_log_channel(int(member.guild.id))["channel_id"])
+
+
 		if channel is not None:
 			embed = discord.Embed(
 				title = 'Member left the server',
 				description=f'Member **{member.name}** has left the server!',
 				colour=0xFF0000
 			)
-			members = await member.guild.fetch_members().flatten()
+			try:
+				members = await member.guild.fetch_members().flatten()
 
-			bot_count = 0
-			for people in members:
-				if people.bot is True:
-					bot_count += 1
+				bot_count = 0
+				for people in members:
+					if people.bot is True:
+						bot_count += 1
 
-			embed.set_thumbnail(url=member.avatar_url)
-			embed.add_field(name='Number of members', value=len(members) - bot_count)
-			embed.add_field(name='Number of bots', value=bot_count)
-			embed.set_footer(text=f'id: {member.id}')
-			await channel.send(embed=embed)
+				embed.set_thumbnail(url=member.avatar_url)
+				embed.add_field(name='Number of members', value=len(members) - bot_count)
+				embed.add_field(name='Number of bots', value=bot_count)
+				embed.set_footer(text=f'id: {member.id}')
+				await channel.send(embed=embed)
+			except:
+				pass
 		else:
 			pass
 	except Exception as e:
-		print(e)
+		raise Exception
+
+@bot.event
+async def on_guild_channel_delete(channel):
+
+	join_channel = None
+	if fetch_join_log_channel(int(channel.guild.id)) is not None:
+		join_channel = fetch_join_log_channel(int(channel.guild.id))["channel_id"]
+
+		if channel.id == join_channel:
+			delete_join_log_channel(int(channel.guild.id))
+
+	leave_channel = None
+	if fetch_leave_log_channel(int(channel.guild.id)) is not None:
+		leave_channel = fetch_leave_log_channel(int(channel.guild.id))["channel_id"]
+
+		if channel.id == leave_channel:
+			delete_leave_log_channel(int(channel.guild.id))
+
+	log_channel = None
+	if fetch_mod_log_channel(int(channel.guild.id)) is not None:
+		mod_channel = fetch_mod_log_channel(int(channel.guild.id))["channel_id"]
+
+		if channel.id == mod_channel:
+			delete_mod_log_channel(int(channel.guild.id))
+
 
 
 @bot.event
@@ -184,7 +209,7 @@ async def on_guild_join(guild):
 @bot.event
 async def on_guild_remove(guild):
 
-	del_prefix(guild.id)
+	clear_server_data(guild.id)
 
 
 
@@ -217,7 +242,7 @@ try:
 				else:
 					print("Token error: Token not found")
 		except FileNotFoundError:
-			print("File handle error")
+			print("No token file or environment variable\nQuitting")
 	else:
 		print('Using token found in Environment variable....')
 		bot.run(TOKEN)

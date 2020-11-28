@@ -24,6 +24,12 @@ collection = db["warnings"]
 warnthresh_collection = db["warnthresh"]
 prefix_collection = db["prefixes"]
 
+mod_log_channel_collection = db["mod_log"]
+join_log_channel_collection  = db["join_log"]
+leave_log_channel_collection = db["leave_log"]
+
+mute_role_collection = db["mute_role"]
+
 print("Database connection has been established\n")
 
 # ----------------------------------------------------------    Warnings     --------------------------------------------------------------
@@ -84,19 +90,19 @@ def del_warn_thresh(guild_id):
 def fetch_prefix(guild_id):
 
 	results = None
-	results = prefix_collection.find_one({"guild_id": guild_id})
+	results = prefix_collection.find_one({"guild_id": int(guild_id)})
 	return results
 
 
 def insert_prefix(guild_id, prefix):
 
 	prefix_check = None
-	prefix_check = prefix_collection.find_one({"guild_id": guild_id})
+	prefix_check = prefix_collection.find_one({"guild_id": int(guild_id)})
 
 	if prefix_check is None:
-		results = prefix_collection.insert_one({"guild_id": guild_id, "prefix": str(prefix)})
+		results = prefix_collection.insert_one({"guild_id": int(guild_id), "prefix": str(prefix)})
 	else:
-		results = prefix_collection.update_one({"guild_id": guild_id}, {"$set": {"prefix": str(prefix)}})
+		results = prefix_collection.update_one({"guild_id": int(guild_id)}, {"$set": {"prefix": str(prefix)}})
 
 
 def del_prefix(guild_id):
@@ -104,7 +110,117 @@ def del_prefix(guild_id):
 	results = prefix_collection.delete_one({"guild_id": guild_id})
 
 
-# -----------------------------------------------     shell session code     -----------------------------------------------
+# ------------------------------------------------     logging channel     ----------------------------------------------------------------
+
+def insert_mod_log_channel(guild_id, channel_id):
+
+	mod_channel = None
+	mod_channel = mod_log_channel_collection.find_one({"guild_id": int(guild_id)})
+
+	if mod_channel is None:
+		results = mod_log_channel_collection.insert_one({"guild_id": int(guild_id), "channel_id": int(channel_id)})
+	else:
+		results = mod_log_channel_collection.update_one({"guild_id": int(guild_id)}, {"$set": {"channel_id": int(channel_id)}})
+
+def fetch_mod_log_channel(guild_id):
+
+	mod_channel = None
+	mod_channel = mod_log_channel_collection.find_one({"guild_id": int(guild_id)})
+
+	return mod_channel
+
+def delete_mod_log_channel(guild_id):
+
+	result = mod_log_channel_collection.delete_one({"guild_id": int(guild_id)})
+
+
+def insert_join_log_channel(guild_id, channel_id):
+
+	join_channel = None
+	join_channel = join_log_channel_collection.find_one({"guild_id": guild_id})
+
+	if join_channel is None:
+		results = join_log_channel_collection.insert_one({"guild_id": int(guild_id), "channel_id": int(channel_id)})
+	else:
+		results = join_log_channel_collection.update_one({"guild_id": int(guild_id)}, {"$set": {"channel_id": int(channel_id)}})
+
+
+def fetch_join_log_channel(guild_id):
+
+	join_channel = None
+	join_channel = join_log_channel_collection.find_one({"guild_id": int(guild_id)})
+
+	return join_channel
+
+def delete_join_log_channel(guild_id):
+
+	result = join_log_channel_collection.delete_one({"guild_id": int(guild_id)})
+
+
+def insert_leave_log_channel(guild_id, channel_id):
+	
+	leave_channel = None
+	leave_channel = leave_log_channel_collection.find_one({"guild_id": int(guild_id)})
+
+	if leave_channel is None:
+		results = leave_log_channel_collection.insert_one({"guild_id": int(guild_id), "channel_id": int(channel_id)})
+	else:
+		results = leave_log_channel_collection.update_one({"guild_id": int(guild_id)}, {"$set": {"channel_id": int(channel_id)}})
+
+def fetch_leave_log_channel(guild_id):
+
+	leave_channel = None
+	leave_channel = leave_log_channel_collection.find_one({"guild_id": guild_id})
+
+	return leave_channel
+
+def delete_leave_log_channel(guild_id):
+
+	result = leave_log_channel_collection.delete_one({"guild_id": guild_id})
+
+
+# ----------------------------------------------     Mute role logging -------------------------------------------------------------------
+
+def insert_mute_role(guild_id, mute_role_id):
+
+	mute_role = None
+	mute_role = mute_role_collection.find_one({"guild_id": guild_id})
+
+	if mute_role is None:
+		results = mute_role_collection.insert_one({"guild_id": guild_id, "mute_role_id": int(mute_role_id)})
+	else:
+		results = mute_role_collection.update_one({"guild_id": guild_id}, {"$set": {"mute_role_id": int(mute_role_id)}})
+
+def delete_mute_role(guild_id):
+
+	result = mute_role_collection.delete_one({"guild_id": guild_id})
+
+def fetch_mute_role(guild_id):
+
+	mute_role = None
+	mute_role = mute_role_collection.find_one({"guild_id": guild_id})
+
+	return mute_role
+
+
+# -----------------------------------------------     leaving server clear     ------------------------------------------------------------
+
+def clear_server_data(guild_id):
+
+	delete_join_log_channel(guild_id)
+	delete_leave_log_channel(guild_id)
+	delete_mod_log_channel(guild_id)
+
+	del_prefix(guild_id)
+
+	del_warn_thresh(guild_id)
+
+	results = collection.delete_one({"guild_id": str(guild_id)}) #warnings
+
+
+
+
+# -----------------------------------------------     shell session code     --------------------------------------------------------------
 
 def help(arg = None):
 	if arg is None or arg == '':
@@ -141,6 +257,11 @@ def help(arg = None):
 		print("  warns [guild_id] [member_id]:\t\tDeletes the warnings of that member_id and guild_id")
 		print("  prefix [guild_id]:\t\t\tDeletes the prefix of that guild_id\n")
 
+	elif arg == 'update':
+		print("Help command for update\n")
+		print("update [args]")
+		print("  prefix [guild_id]:\t\tUpdates the prefix of the guild\n")
+
 
 	else:
 		print(f"No help for {arg}")
@@ -167,7 +288,7 @@ if __name__ == '__main__':
 			
 			elif broken_argument[1].lower() == 'prefix':
 				if len(broken_argument) == 3:
-					if broken_argument[2].isnumeric():
+					if broken_argument[2].isdigit():
 						result = fetch_prefix(int(broken_argument[2]))
 						if result is not None:
 							print(result['prefix'])
@@ -204,7 +325,7 @@ if __name__ == '__main__':
 				print("What to delete?")
 
 			elif broken_argument[1].lower() == 'prefix':
-				if broken_argument[1].isnumeric():
+				if broken_argument[1].isdigit():
 					result = del_prefix(int(broken_argument[2]))
 					print("done")
 				else:
@@ -228,13 +349,15 @@ if __name__ == '__main__':
 
 			elif broken_argument[1].lower() == 'prefix':
 				if len(broken_argument) == 4:
-					if broken_argument[2].isnumeric():
+					if broken_argument[2].isdigit():
 						insert_prefix(int(broken_argument[2]), broken_argument[3])
 						print("Done")
 					else:
 						print("Only integers allowed for guild_id")
+				elif len(broken_argument) == 3:
+					print("Provide a prefix")
 				else:
-					print("provide a preifx")
+					print("1 or more arguments missing")
 
 			elif broken_argument[1].lower() == 'warn' or broken_argument[1].lower() == 'warns':
 				if len(broken_argument) >= 6:
@@ -245,6 +368,25 @@ if __name__ == '__main__':
 					print("Done")
 				else:
 					print(f"{len(broken_argument) - 4} argument(s) missing")
+
+
+		elif broken_argument[0].lower() == 'update':
+
+			if len(broken_argument) == 1 or broken_argument[1] == '':
+				print("What to update?")
+
+			elif broken_argument[1].lower() == 'prefix':
+				if len(broken_argument) == 4:
+					if broken_argument[2].isdigit():
+						insert_prefix(int(broken_argument[2]), broken_argument[3])
+						print("Done updated")
+					else:
+						print("Only integers allowed for guild_id")
+				elif len(broken_argument) == 3:
+					print("Enter a prefix")
+				else:
+					print("1 or more arguments missing")
+
 
 		elif broken_argument[0].lower() == 'exit' or broken_argument[0].lower() == 'quit' or broken_argument[0].lower() == 'q':
 			print("bye")
