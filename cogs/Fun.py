@@ -6,7 +6,12 @@ from aiohttp import request
 import aiohttp
 import asyncio
 import pyfiglet
+import os
+from cogs.usefullTools.dbIntegration import *
 
+
+def NASA_API_KEY():
+	return os.getenv("NASA_API_KEY")
 
 class FunCog(commands.Cog):
 
@@ -263,10 +268,20 @@ class FunCog(commands.Cog):
 	async def apod(self, ctx):
 
 		colour_choices= [0x400000,0x997379,0xeb96aa,0x4870a0,0x49a7c3,0x8b3a3a,0x1e747c,0x0000ff] 
-		
 
-		with open('./NASA_API_TOKEN.0', 'r', encoding='utf-8') as nasa_api_token_file_handle:
-			API = nasa_api_token_file_handle.read()
+		prefix = fetch_prefix(int(ctx.guild.id))["prefix"]
+		
+		API = NASA_API_KEY()
+
+		if API is None:
+			try:
+				with open('./NASA_API_TOKEN.0', 'r', encoding='utf-8') as nasa_api_token_file_handle:
+					API = nasa_api_token_file_handle.read()
+			except FileNotFoundError:
+				await ctx.send(f"There is an issue with the API key, it seems to not exist\nPlease run the `{prefix}bug` command to report")
+				print("\nNo token file or environment variable\nAPOD command failed to execute")
+				return;
+		
 
 		apod_url = f'https://api.nasa.gov/planetary/apod?api_key={API}'
 		data = None
