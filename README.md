@@ -29,11 +29,11 @@ sudo python3 -m pip install -r requirements.txt
 You would also need a few files to run: 
 
 - `token.0` - Contains the bot token.
-- `NASA_API_TOKEN.0` - For the Nasa Api [key](https://api.nasa.gov/ "Get your api key here"), the `apod` command requires it.
+- `NASA_API_KEY.0` - For the Nasa Api [key](https://api.nasa.gov/ "Get your api key here"), the `apod` command requires it.
 - `mongodbclient.0` - A file that contains the url to connect to your [MongoDB](https://mongodb.com "MongoDB") cluster.  
 
 NOTE: The files are CASE SENSITIVE, please make sure the files are named exactly as given above and put them in the same folder as the 
-`bot.py` file, i.e. in the `Rexbot/` deirectory. You can also replace **ONLY** the `token.0` and `mongodbclient.0` with environment variables, but as `REXBOT_TOKEN` and `DATABASE_CLIENT_URL` respectively.  
+`bot.py` file, i.e. in the `Rexbot/` deirectory. You can also replace the `token.0`, `mongodbclient.0` and `NASA_API_KEY.0` with environment variables, but as `REXBOT_TOKEN`, `DATABASE_CLIENT_URL` and `NASA_API_KEY` respectively.  
 
 
 ## Running the bot
@@ -49,9 +49,9 @@ python3 bot.py
 ```
 
 
-## Supported commands
+## Supported Commands
 
-### Fun commands
+### Fun Commands
 
 |        Commmand         |                                 Description                                 |
 |:-----------------------:|:---------------------------------------------------------------------------:|
@@ -68,7 +68,7 @@ python3 bot.py
 
 
 
-### Moderation commands
+### Moderation Commands
 
 |        Commands             |                                         Description                                                |
 |:---------------------------:|:--------------------------------------------------------------------------------------------------:|
@@ -81,13 +81,22 @@ python3 bot.py
 | `warn`                      | Warns the user.                                                                                    |
 | `warns, warnings`           | Display the warnings of the user mentioned.                                                        |
 | `clearwarns`                | Clears the infractions of the mentioned user.                                                      |
-| `setwarnthresh(old)`        | Sets the warning threshold for the server, beyond which the member gets banned                     |
-| `(clear/del)warnthresh(old)`| Clears the warning threshold of the server                                                         |
 | `mute`                      | Mutes the mentioned user.                                                                          |
 | `unmute`                    | Unmutes the mentioned user, if muted.                                                              |
 | `clear, remove, purge`      | Clears messages from the channel where the command has been used.                                  |
 | `addrole`                   | adds the role to the user, if present in the guild (**CASE SENSITIVE**)                            |
 | `removerole, purgerole`     | Removes the role from the user, if present in the guild and if the user has it (**CASE SENSITIVE**)|
+
+
+
+### Server Configuration Commands
+
+|           Commands    	  |   											   Description      								   |
+|:---------------------------:|:--------------------------------------------------------------------------------------------------:|
+| `setwarnthresh(old)`        | Sets the warning threshold for the server, beyond which the member gets banned                     |
+| `(clear/del)warnthresh(old)`| Clears the warning threshold of the server                                                         |
+| `serverconfig, serversetup` | Configures the channels for moderation logging 													   |
+| `showconfig`  			  | Shows the channels that you have configured, or not yet configured								   |
 
 
 
@@ -105,6 +114,7 @@ python3 bot.py
 | `base64`                          | Encodes your message to base64.                                                                |
 | `dbase64`                         | Decodes your base64 encoded message.                                                           |
 | `prefix`                          | Changes prefix for that server.                                                                |
+| `botstats`						| Shows you the bot's stats																		 |
 
 
 
