@@ -1548,7 +1548,7 @@ class ModerationCog(commands.Cog):
                                 pass
                     else:
                         insert_warns(guild_id, member_id, mod_id, warning)
-                        await ctx.send(f"`{multiple_member_array[0].display_name}` has been warned for the `{infraction_count+1}th` time\n**Reason:** `{warning}`")
+                        await ctx.send(f"`{multiple_member_array[0].display_name}` has been warned for the `{infraction_count+1}` times\n**Reason:** `{warning}`")
                         try:
                             await multiple_member_array[0].send(embed=embed_1)
                         except:
