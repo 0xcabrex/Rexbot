@@ -27,6 +27,7 @@ prefix_collection = db["prefixes"]
 mod_log_channel_collection = db["mod_log"]
 join_log_channel_collection  = db["join_log"]
 leave_log_channel_collection = db["leave_log"]
+message_log_channel_collection = db["message_log"]
 
 mute_role_collection = db["mute_role"]
 
@@ -177,6 +178,28 @@ def fetch_leave_log_channel(guild_id):
 def delete_leave_log_channel(guild_id):
 
 	result = leave_log_channel_collection.delete_one({"guild_id": guild_id})
+
+def insert_message_edit_log_channel(guild_id, channel_id):
+
+	message_channel = None
+	message_channel = message_log_channel_collection.find_one({"guild_id": int(guild_id)})
+
+	if message_channel is None:
+		results = message_log_channel_collection.insert_one({"guild_id": int(guild_id), "channel_id": int(channel_id)})
+	else:
+		results = message_log_channel_collection.update_one({"guild_id": int(guild_id)}, {"$set": {"channel_id": int(channel_id)}})
+
+def fetch_message_edit_log_channel(guild_id):
+
+	message_channel = None
+	message_channel = message_log_channel_collection.find_one({"guild_id": guild_id})
+
+	return message_channel
+
+def delete_message_edit_log_channel(guild_id):
+
+	message_channel = None
+	message_channel = message_log_channel_collection.delete_one({"guild_id": guild_id})
 
 
 # ----------------------------------------------     Mute role logging -------------------------------------------------------------------

@@ -89,7 +89,7 @@ class HelpCog(commands.Cog):
 				description=f'**setwarnthresh | setwarnthreshold**\nSets the warning threshold for the server, beyond which the member gets banned\n**Usage:** `{prefix}setwarnthresh <integer>`\n\n'
 							f'**clearwanthresh(old) | delwarnthresh(old)**\nClears the warning threshold of the server\n**Usage:** `{prefix}clearwarnthresh`\n\n'
 							f'**serverconfig | config | serversetup | setup**\nConfigures the channels for moderation logging\n**Usage:** `{prefix}config`\n\n'
-							f'**showconfig**\nShows channels that are for logging\n**Usage:** `{prefix}showconfig`\n\n',
+							f'**showconfig**\nShows channels that are for logging\n**Usage:** `{prefix}showconfig <args>`\nArgs can be optional (type `help` to get a list)\n\n',
 				colour=0x01a901
 			)
 		config_embed.set_footer(text='Made by CABREX with ❤')

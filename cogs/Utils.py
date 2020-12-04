@@ -14,6 +14,7 @@ from cogs.usefullTools.dbIntegration import *
 from googletrans import Translator
 
 from platform import python_version
+import psutil
 from psutil import Process, virtual_memory
 from datetime import datetime, timedelta
 from time import time
@@ -647,44 +648,6 @@ class GeneralCog(commands.Cog):
 		else:
 			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check console for traceback, or raise an issue to CABREX')
 			raise error
-
-
-	# Bot stats
-
-	@commands.command(name='botstats')
-	@cooldown(1, 10, BucketType.channel)
-	async def botstats(self, ctx):
-
-		embed = discord.Embed(
-				title='Bot Stats',
-				colour=ctx.author.color,
-		)
-
-		proc = Process()
-		with proc.oneshot():
-			uptime = timedelta(seconds=time()-proc.create_time())
-			CPU_time = timedelta(seconds=(cpu := proc.cpu_times()).system + cpu.user)
-			mem_total = virtual_memory().total / (1024**2)
-			mem_of_total = proc.memory_percent()
-			mem_usage = mem_total * (mem_of_total / 100)
-
-		embed.set_thumbnail(url=self.bot.user.avatar_url)
-
-		embed.add_field(name='Python Version', value=python_version(), inline=True)
-		embed.add_field(name='discord.py Version', value=discord.__version__, inline=True)
-		embed.add_field(name='Uptime', value=uptime, inline=True)
-		embed.add_field(name='CPU Time', value=CPU_time, inline=True)
-		embed.add_field(name='Memory Usage', value=f'{mem_usage:,.3f} MiB / {mem_total:,.0f} MiB ({mem_of_total:.3f}%)', inline=True)
-
-		await ctx.send(embed=embed)
-
-
-	# Bot stats: Error handling
-
-	@botstats.error
-	async def botstats_error(self, ctx, error):
-		raise error
-
 
 
 def setup(bot):
