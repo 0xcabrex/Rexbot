@@ -135,7 +135,7 @@ Use this [link](https://discord.com/api/oauth2/authorize?client_id=7325384197875
 
 For any bugs, please use the `bug` command and I will try to fix it or raise an issue, if I have the time ':)   
 
-Join the [discord server](https://discord.gg/Gcv69JM "<CyberSpace> Hacking & Coding") for support and other stuff.
+Join the [discord server](https://discord.gg/k8tJf2fMA8 "Rexbot Support") for support and other stuff.
 
 
 ### License
