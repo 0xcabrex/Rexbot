@@ -73,6 +73,7 @@ async def on_message(message):
 		if len(message.content) > 20:
 			bugs_channel1 = discord.utils.get(bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
 			bugs_channel2 = discord.utils.get(bot.get_all_channels(), guild__name='ZeroDeaths', name='bugs')
+			bugs_channel3 = discord.utils.get(bot.get_all_channels(), guild__name='RexBot Support', name='bugs')
 			embed = discord.Embed(
 						title='BUG REPORTED',
 						colour = 0x008000
@@ -83,8 +84,10 @@ async def on_message(message):
 			if bugs_channel1 is not None:
 				await bugs_channel1.send(embed=embed)
 				await bugs_channel2.send(embed=embed)
+				await bugs_channel3.send(embed=embed)
 			elif bugs_channel2 is not None:
 				await bugs_channel2.send(embed=embed)
+				await bugs_channel3.send(embed=embed)
 			await message.channel.send("Your bug has been reported")
 		else:
 			await message.channel.send("Please enter your bug in more than 20 words, try describing everything")
@@ -211,6 +214,63 @@ async def on_guild_remove(guild):
 
 	clear_server_data(guild.id)
 
+@bot.event
+async def on_bulk_message_delete(messages):
+
+
+	message_channel = fetch_message_edit_log_channel(int(messages[0].guild.id))
+	if message_channel is not None:
+
+		message_channel = fetch_message_edit_log_channel(int(messages[0].guild.id))["channel_id"]
+		message_channel = bot.get_channel(message_channel)
+
+		embed = discord.Embed(
+				title='Bulk message delete',
+				description=f'{len(messages)} messages deleted in {messages[0].channel.mention}',
+				color=0xff0000
+		)
+
+		await message_channel.send(embed=embed)
+
+@bot.event
+async def on_message_delete(message):
+	
+	message_channel = fetch_message_edit_log_channel(int(message.guild.id))
+	if message_channel is not None:
+
+		message_channel = fetch_message_edit_log_channel(int(message.guild.id))["channel_id"]
+		message_channel = bot.get_channel(message_channel)
+
+		embed = discord.Embed(
+				title='Message deleted',
+				description=f'Message deleted in {message.channel.mention}\nContents:\n```\n{message.content}\n```\n'
+							f'Author of the message:\n{message.author.mention}',
+				color=0xff0000
+		)
+
+		await message_channel.send(embed=embed)
+
+@bot.event
+async def on_message_edit(before, after):
+
+	if not after.author.bot:
+		if before.content != after.content:
+
+			message_channel = fetch_message_edit_log_channel(int(before.guild.id))
+			if message_channel is not None:
+
+				message_channel = fetch_message_edit_log_channel(int(before.guild.id))["channel_id"]
+				message_channel = bot.get_channel(message_channel)
+
+				embed = discord.Embed(
+						title='Message edited',
+						description=f'Message edited in {before.channel.mention}\nbefore:\n```\n{before.content}\n```\n\nAfter:\n```\n{after.content}\n```\n'
+									f'Author of the message:\n{after.author.mention}\n'
+									f'[jump](https://discordapp.com/channels/{after.guild.id}/{after.channel.id}/{after.id}) to the message',
+						color=0xff0000
+				)	
+
+				await message_channel.send(embed=embed)
 
 
 # Ping

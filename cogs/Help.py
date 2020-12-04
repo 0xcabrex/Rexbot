@@ -47,7 +47,7 @@ class HelpCog(commands.Cog):
 							f'**howdoi**\nInformation from stackoverflow\n**Usage:** `{prefix}howdoi <query>`\nQuery is necessary\n\n'
 							f'**cipher | morse**\nConverts your message to morse code\n**Usage:** `{prefix}cypher <message>`\n\n'
 							f'**base64**\nEncodes your message to base64\n**Usage:** `{prefix}base64 "<message>" <iteration>`\nMessage must be in **quotes**\n\n'
-							f'**dbase64**\nDecodes your base64 encoded message\n**Usage:** `{prefix}dbase64 "<message>"`\nMessage must be in **quotes**\n\nUsage'
+							f'**dbase64**\nDecodes your base64 encoded message\n**Usage:** `{prefix}dbase64 "<message>"`\nMessage must be in **quotes**\n\n'
 							f'**qrcode**\nConverts a text to qr code\n**Usage:** `{prefix}qrcode <message>`\n\n'
 							f'**qrdecode**\nDecodes the qr code link provided\n**Usage:** `{prefix}qrdecode <url link>`\n\n'
 							f'**translate**\nTranslates your messag to your desired language\n**Usage:** `{prefix}translate <source_anguage> <destination_language> <text>`\n\n'
@@ -89,7 +89,7 @@ class HelpCog(commands.Cog):
 				description=f'**setwarnthresh | setwarnthreshold**\nSets the warning threshold for the server, beyond which the member gets banned\n**Usage:** `{prefix}setwarnthresh <integer>`\n\n'
 							f'**clearwanthresh(old) | delwarnthresh(old)**\nClears the warning threshold of the server\n**Usage:** `{prefix}clearwarnthresh`\n\n'
 							f'**serverconfig | config | serversetup | setup**\nConfigures the channels for moderation logging\n**Usage:** `{prefix}config`\n\n'
-							f'**showconfig**\nShows channels that are for logging\n**Usage:** `{prefix}showconfig`\n\n',
+							f'**showconfig**\nShows channels that are for logging\n**Usage:** `{prefix}showconfig <args>`\nArgs can be optional (type `help` to get a list)\n\n',
 				colour=0x01a901
 			)
 		config_embed.set_footer(text='Made by CABREX with ❤')

@@ -1511,9 +1511,11 @@ class ModerationCog(commands.Cog):
 
                     warn_thresh = fetch_warn_thresh(multiple_member_array[0].guild.id)
 
+                    infraction_count = 0
+
                     if results is not None and warn_thresh is not None:
 
-                        infraction_count = 0
+                        
                         infraction_count = len(results["warning"].split('\n'))
                         warn_thresh_count = warn_thresh["threshold"]
 
@@ -1525,7 +1527,7 @@ class ModerationCog(commands.Cog):
 
                         embed_1 = discord.Embed(
                                 title='You have been warned',
-                                description=f'You have been warned for the `{infraction_count+1}th` time in {ctx.guild.name}\n**Reason:** {warning}',
+                                description=f'You have been warned for `{infraction_count+1}` time(s) in {ctx.guild.name}\n**Reason:** {warning}',
                                 colour=0xff0000
                         )
 
