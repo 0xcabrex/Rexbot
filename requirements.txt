@@ -7,3 +7,4 @@ wikipedia
 howdoi
 pymongo
 googletrans
+psutil
