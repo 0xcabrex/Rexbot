@@ -114,7 +114,6 @@ python3 bot.py
 | `base64`                          | Encodes your message to base64.                                                                |
 | `dbase64`                         | Decodes your base64 encoded message.                                                           |
 | `prefix`                          | Changes prefix for that server.                                                                |
-| `botstats`						| Shows you the bot's stats																		 |
 
 
 
