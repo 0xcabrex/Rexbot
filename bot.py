@@ -230,7 +230,8 @@ async def on_bulk_message_delete(messages):
 				color=0xff0000
 		)
 
-		await message_channel.send(embed=embed)
+		if message_channel.id == message.channel.id:
+			await message_channel.send(embed=embed)
 
 @bot.event
 async def on_message_delete(message):
@@ -248,7 +249,8 @@ async def on_message_delete(message):
 				color=0xff0000
 		)
 
-		await message_channel.send(embed=embed)
+		if message_channel.id == message.channel.id:
+			await message_channel.send(embed=embed)
 
 @bot.event
 async def on_message_edit(before, after):
@@ -268,9 +270,10 @@ async def on_message_edit(before, after):
 									f'Author of the message:\n{after.author.mention}\n'
 									f'[jump](https://discordapp.com/channels/{after.guild.id}/{after.channel.id}/{after.id}) to the message',
 						color=0xff0000
-				)	
+				)
 
-				await message_channel.send(embed=embed)
+				if message_channel.id == message.channel.id:
+					await message_channel.send(embed=embed)
 
 
 # Ping
