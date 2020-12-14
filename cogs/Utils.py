@@ -302,7 +302,14 @@ class GeneralCog(commands.Cog):
 	@cooldown(1, 2,BucketType.channel)
 	async def wiki(self, ctx, *, query=None):
 		if query is not None:
-			r = wikipedia.page(query)
+			try:
+				r = wikipedia.page(query)
+			except wikipedia.exceptions.DisambiguationError as e:
+				await ctx.send(f"```\n{e}\n```\nPlease be more accurate with your query")
+			except wikipedia.exceptions.PageError as e:
+ 				await ctx.send(e)
+ 			except wikipedia.exceptions.HTTPTimeoutError:
+				await ctx.send("Timeout, please try again later")
 			embed = discord.Embed(
 				title = r.title,
 				description = r.summary[0 : 2000],
