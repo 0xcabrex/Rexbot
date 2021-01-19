@@ -15,8 +15,11 @@ class SupportCog(commands.Cog):
 	async def bug_report(self, ctx, *, message):
 
 		if len(message) > 20:
-			bugs_channel1 = discord.utils.get(self.bot.get_all_channels(), guild__name='Cyber Experimentation Facility', name='bugs')
-			bugs_channel2 = discord.utils.get(self.bot.get_all_channels(), guild__name='ZeroDeaths', name='bugs')
+
+			bugs_channel1 = self.bot.get_channel(769510637486997514)
+			bugs_channel2 = self.bot.get_channel(769490617771884565)
+			bugs_channel3 = self.bot.get_channel(781472171196678154)
+
 			embed = discord.Embed(
 						title='BUG REPORTED',
 						colour = 0x008000
@@ -27,8 +30,13 @@ class SupportCog(commands.Cog):
 
 			if bugs_channel1 is not None:
 				await bugs_channel1.send(embed=embed)
+				await bugs_channel2.send(embed=embed)
+				await bugs_channel3.send(embed=embed)
 			elif bugs_channel2 is not None:
 				await bugs_channel2.send(embed=embed)
+				await bugs_channel3.send(embed=embed)
+			elif bugs_channel3 is not None:
+				await bugs_channel3.send(embed=embed)
 			await ctx.send("Your bug has been reported")
 		else:
 			await ctx.send("Please enter your bug in more than 20 words, try describing everything\nOr you might have forgotten to use the quotes")
