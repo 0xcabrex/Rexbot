@@ -300,6 +300,8 @@ class ConfigCog(commands.Cog):
 
 			return None, None, None
 
+	# ------------------------------------------------------------------breakpoint----------------------------------------------------------
+
 
 	# Warn threshold
 
@@ -699,6 +701,64 @@ class ConfigCog(commands.Cog):
 		else:
 			await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
 			raise error
+
+
+	# # Reaction roles
+
+	# @commands.command(name='rr',aliases=['reactionroles'])
+	# @commands.has_permissions(administrator=True)
+	# @commands.max_concurrency(1, BucketType.guild)
+	# async def reaction_roles(self, ctx):
+		
+	# 	await ctx.delete()
+
+	# 	await ctx.send(f"Hey! **{ctx.author.name}**\nThis is the setup for reaction roles!")
+
+	# 	# Channel setup
+
+	# 	sent1 = await ctx.send("Which channel do you want it to be in?")
+
+	# 	try:
+
+	# 		msg1 = await self.bot.wait_for(
+	# 				"message",
+	# 				check = lambda message: message.author == ctx.author and message.channel == ctx.message.channel,
+	# 				timeout = 60
+	# 		)
+
+	# 		if msg1:
+
+	# 			converter = TextChannelConverter()
+	# 			new_channel = await converter.convert(ctx, f'{msg3.content}')
+
+	# 			done1 = await ctx.send(f'Okay, {new_channel.mention} is the channel')
+
+
+	# 	except:
+	# 		await sent1.delete()
+
+	# 		await ctx.send("Timeout! Bye!")
+
+	# 	# The message
+
+		
+
+
+
+	# @reaction_roles.error
+	# async def reaction_roles_error(self, error):
+	# 	if isinstance(error, commands.ChannelNotFound):
+	# 		await ctx.send("Channel was not found\nConfig cancelled")
+	# 	elif isinstance(error, commands.RoleNotFound):
+	# 		await ctx.send("Role was not found\nConfig cacelled")
+	# 	elif isinstance(error, commands.MaxConcurrencyReached):
+	# 		await ctx.send("You can only run this command till it executes")
+	# 	elif isinstance(error, commands.CheckFailure):
+	# 		await ctx.send("you do not have enough permissions to perform this action ")
+	# 	else:
+	# 		await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
+	# 		raise error
+
 
 
 
