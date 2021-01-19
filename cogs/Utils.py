@@ -306,10 +306,13 @@ class GeneralCog(commands.Cog):
 				r = wikipedia.page(query)
 			except wikipedia.exceptions.DisambiguationError as e:
 				await ctx.send(f"```\n{e}\n```\nPlease be more accurate with your query")
+				return
 			except wikipedia.exceptions.PageError as e:
- 				await ctx.send(e)
- 			except wikipedia.exceptions.HTTPTimeoutError:
+				await ctx.send(e)
+				return
+			except wikipedia.exceptions.HTTPTimeoutError:
 				await ctx.send("Timeout, please try again later")
+				return
 			embed = discord.Embed(
 				title = r.title,
 				description = r.summary[0 : 2000],
