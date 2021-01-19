@@ -302,7 +302,16 @@ class FunCog(commands.Cog):
 			description=description,
 			color=random.choice(colour_choices)
 		)
-		embed.set_image(url=data["hdurl"])
+		if "hdurl" in data.keys():
+			embed.set_image(url=data["hdurl"])
+		elif "media_type" in data.keys():
+			if data["media_type"] == "video":
+				url = data["url"]
+				embed.add_field(name="video link: ", value=url)
+			else:
+				embed.set_image(url=data["url"])
+
+
 		embed.set_footer(text=f"Here is the Astronomy Picture of the Day")
 
 		async with ctx.typing():
