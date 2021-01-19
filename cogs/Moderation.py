@@ -160,6 +160,7 @@ class ModerationCog(commands.Cog):
     # Multi kick
 
     @commands.command(name = 'multikick')
+    @commands.has_permissions(administrator=True)
     async def multikick(self, ctx, *, member):
         if ctx.message.author.guild_permissions.kick_members:
 
@@ -287,6 +288,19 @@ class ModerationCog(commands.Cog):
                     await channel.send(embed=emb)            
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to kick!')
+        elif isinstance(error, commands.CheckFailure):
+            embed = discord.Embed(
+                    title='**YOU ARE NOT AUTHORIZED**',
+                    description="You do not have the authorization to perform this action\nYour action will be reported",
+                    colour=0xff0000
+            )
+            channel = None
+            if fetch_mod_log_channel(int(ctx.guild.id)) is not None:
+                channel = self.bot.get_channel(fetch_mod_log_channel(int(ctx.guild.id))["channel_id"])
+            await ctx.send(embed=embed)
+            if channel is not None:
+                emb = discord.Embed(title='Illegal use of command **multikick**', description=f'{ctx.author.mention} Used the `multikick` command, Who is not authorized', colour=0xff0000)
+                await channel.send(embed=emb) 
         else:
             await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
@@ -295,6 +309,7 @@ class ModerationCog(commands.Cog):
     # Multi ban
 
     @commands.command(name = 'multiban')
+    @commands.has_permissions(administrator=True)
     async def multiban(self, ctx, *, member):
         if ctx.message.author.guild_permissions.ban_members:
 
@@ -422,6 +437,19 @@ class ModerationCog(commands.Cog):
                     await channel.send(embed=emb)            
         elif isinstance(error, discord.Forbidden):
             await ctx.send('I do not have the required permissions to ban!')
+        elif isinstance(error, commands.CheckFailure):
+            embed = discord.Embed(
+                    title='**YOU ARE NOT AUTHORIZED**',
+                    description="You do not have the authorization to perform this action\nYour action will be reported",
+                    colour=0xff0000
+            )
+            channel = None
+            if fetch_mod_log_channel(int(ctx.guild.id)) is not None:
+                channel = self.bot.get_channel(fetch_mod_log_channel(int(ctx.guild.id))["channel_id"])
+            await ctx.send(embed=embed)
+            if channel is not None:
+                emb = discord.Embed(title='Illegal use of command **multiban**', description=f'{ctx.author.mention} Used the `multiban` command, Who is not authorized', colour=0xff0000)
+                await channel.send(embed=emb) 
         else:
             await ctx.send(f'An error occured \n```\n{error}\n```\nPlease check the console for traceback, or raise an issue to CABREX')
             raise error
