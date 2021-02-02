@@ -70,7 +70,7 @@ async def on_message(message):
 		else:
 			await message.channel.send(f'{random.choice(reply_choices)}, **{message.author.display_name}**!')
 	if str(message.channel.type) == 'private':
-		if len(message.content) > 20:
+		if len(message.content.split()) > 20:
 			bugs_channel1 = bot.get_channel(769510637486997514)
 			bugs_channel2 = bot.get_channel(769490617771884565)
 			bugs_channel3 = bot.get_channel(782252610874638347)

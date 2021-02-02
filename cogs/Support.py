@@ -14,11 +14,11 @@ class SupportCog(commands.Cog):
 	@cooldown(1, 10, BucketType.guild)
 	async def bug_report(self, ctx, *, message):
 
-		if len(message) > 20:
+		if len(message.split()) > 20:
 
 			bugs_channel1 = self.bot.get_channel(769510637486997514)
 			bugs_channel2 = self.bot.get_channel(769490617771884565)
-			bugs_channel3 = self.bot.get_channel(781472171196678154)
+			bugs_channel3 = self.bot.get_channel(782252610874638347)
 
 			embed = discord.Embed(
 						title='BUG REPORTED',
