@@ -1,14 +1,17 @@
 import pymongo
 from pymongo import MongoClient
 import os
+import certifi
 
+
+ca = certifi.where()
 mongodbclient_token = os.getenv("DATABASE_CLIENT_URL")
 
 if mongodbclient_token is None:
 	try:
 		with open('./mongodbclient.0', 'r', encoding='utf-8') as client_url:
 			print("Using MongoDB cluster url provided in file")
-			cluster = MongoClient(client_url.read())
+			cluster = MongoClient(client_url.read(), tlsCAFile=ca)
 	except FileNotFoundError:
 		print("File not found [mongodbclient.0]")
 		print("Neither environment variable nor client file exist")
@@ -16,7 +19,8 @@ if mongodbclient_token is None:
 		exit()
 else:
 	print("Using MongoDB cluster url provided in environment variable..")
-	cluster = MongoClient(mongodbclient_token)
+	print(mongodbclient_token)
+	cluster = MongoClient(mongodbclient_token, tlsCAFile=ca)
 
 
 db = cluster["rexbotdb"]
