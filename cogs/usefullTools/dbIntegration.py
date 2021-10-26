@@ -19,7 +19,6 @@ if mongodbclient_token is None:
 		exit()
 else:
 	print("Using MongoDB cluster url provided in environment variable..")
-	print(mongodbclient_token)
 	cluster = MongoClient(mongodbclient_token, tlsCAFile=ca)
 
 
